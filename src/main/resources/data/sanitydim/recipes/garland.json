@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "xxx",
+    "x x",
+    "xxx"
+  ],
+  "key": {
+    "x": {
+      "tag": "minecraft:small_flowers"
+    }
+  },
+  "result": {
+    "item": "sanitydim:garland",
+    "count": 1
+  }
+}

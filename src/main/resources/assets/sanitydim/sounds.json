@@ -1,0 +1,34 @@
+{
+	"insanity": {
+		"category": "ambient",
+		"sounds": [
+			"sanitydim:insanity1"
+		]
+	},
+	"heartbeat": {
+		"category": "ambient",
+		"sounds": [
+			"sanitydim:heartbeat"
+		]
+	},
+	"swish": {
+		"category": "ambient",
+		"sounds": [
+			"sanitydim:swish0",
+			"sanitydim:swish1",
+			"sanitydim:swish2",
+			"sanitydim:swish3",
+			"sanitydim:swish4"
+		]
+	},
+	"flowers_equip": {
+		"sounds": [
+			"sanitydim:leaves_rustle"
+		]
+	},
+	"inner_entity_hurt": {
+		"sounds": [
+			"sanitydim:whoosh"
+		]
+	}
+}
