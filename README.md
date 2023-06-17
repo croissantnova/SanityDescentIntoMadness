@@ -17,7 +17,7 @@ A Minecraft mod that brings the sanity mechanic from [Don't Starve](https://stor
 
 This mod adds a new vital for you to manage - sanity, your mental health scale.
 Failing to keep your sanity at high levels may have drastic consequences on your survival,
-including fatal outcomes.
+including fatal outcome.
 <br/><br/>
 As your sanity drops, you start hearing and seeing things, your vision becomes muddy and blurry,
 as well as your mind cloudy, until eventually you start getting attacked by the creations of your own mind, inner entities.
@@ -41,6 +41,8 @@ You're free to include this mod in your modpacks.
 
 croissantnova - programmer and artist,<br/>
 [toujourspareil](https://twitter.com/toujourspareil_) - artist.
+<br/><br/>
+Sound effects provided by [Zapsplat](https://www.zapsplat.com/)
 
 ## License
 See [license](https://raw.githubusercontent.com/croissantnova/SanityDescentIntoMadness/main/LICENSE).

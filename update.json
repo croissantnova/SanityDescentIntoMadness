@@ -1,0 +1,10 @@
+{
+  "homepage": "https://modrinth.com/mod/sanity-descent-into-madness",
+  "1.19.4": {
+    "1.0.0": "https://raw.githubusercontent.com/croissantnova/SanityDescentIntoMadness/main/changelog.txt"
+  },
+  "promos": {
+    "1.19.4-latest": "1.0.0",
+    "1.19.4-recommended": "1.0.0"
+  }
+}

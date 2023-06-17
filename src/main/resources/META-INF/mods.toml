@@ -11,7 +11,7 @@ loaderVersion="[45,)" #mandatory This is typically bumped every Minecraft versio
 # Review your options at https://choosealicense.com/. All rights reserved is the default copyright stance, and is thus the default here.
 license="All rights reserved"
 # A URL to refer people to when problems occur with this mod
-#issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/" #optional
+issueTrackerURL="https://github.com/croissantnova/SanityDescentIntoMadness/issues" #optional
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
 # The modid of the mod
@@ -23,13 +23,13 @@ version="${file.jarVersion}" #mandatory
  # A display name for the mod
 displayName="Sanity: Descent Into Madness" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification https://docs.minecraftforge.net/en/latest/misc/updatechecker/
-#updateJSONURL="https://change.me.example.invalid/updates.json" #optional
+updateJSONURL="https://raw.githubusercontent.com/croissantnova/SanityDescentIntoMadness/main/update.json" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
-#displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
+displayURL="https://modrinth.com/mod/sanity-descent-into-madness" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
 logoFile= "sanitydim512.png" #optional
 # A text field displayed in the mod UI
-credits="toujourspareil" #optional
+credits="toujourspareil, Zapsplat" #optional
 # A text field displayed in the mod UI
 authors="croissantnova" #optional
 # Display Test controls the display for your mod in the server connection screen
