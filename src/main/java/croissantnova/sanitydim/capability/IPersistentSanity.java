@@ -1,8 +1,12 @@
 package croissantnova.sanitydim.capability;
 
+import java.util.Map;
+
 public interface IPersistentSanity
 {
-    int[] getActiveSourcesCds();
+    int[] getActiveSourcesCooldowns();
+
+    Map<Integer, Integer> getItemCooldowns();
 
     void setEnderManAngerTimer(int value);
 

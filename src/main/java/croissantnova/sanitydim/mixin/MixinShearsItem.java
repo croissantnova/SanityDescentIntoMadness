@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ShearsItem.class)
-public class MixinShearsItem
+public abstract class MixinShearsItem
 {
     @Inject(method = "interactLivingEntity", at = @At(
                     value = "INVOKE_ASSIGN",

@@ -39,7 +39,12 @@ public class ConfigHandler
 
     public static void onConfigLoading(final ModConfigEvent.Loading event)
     {
-        ConfigProxy.onConfigLoading(event);
+        ConfigProxy.onConfigLoading();
+    }
+
+    public static void onConfigReloading(final ModConfigEvent.Reloading event)
+    {
+        ConfigProxy.onConfigLoading();
     }
 
     public static boolean stringEntryIsValid(Object entry)
@@ -55,9 +60,12 @@ public class ConfigHandler
         {
             String[] params = entry.split(";", 3);
             if (params.length != 3)
+            {
+                SanityMod.LOGGER.error("config format error in " + entry + " -> the number of parameters is not 3");
                 continue;
+            }
 
-            float sanity = 0;
+            float sanity;
             try
             {
                 sanity = Float.parseFloat(params[1]);
@@ -69,7 +77,7 @@ public class ConfigHandler
             }
             sanity /= -2000.0f;
 
-            float rad = 0;
+            float rad;
             try
             {
                 rad = Float.parseFloat(params[2]);
@@ -108,5 +116,108 @@ public class ConfigHandler
         }
 
         return list;
+    }
+
+    public static List<ConfigItem> processItems(List<? extends String> raw)
+    {
+        List<ConfigItem> list = Lists.newArrayList();
+
+        for (String entry : raw)
+        {
+            String[] params = entry.split(";", 3);
+            if (params.length != 3)
+            {
+                SanityMod.LOGGER.error("config format error in " + entry + " -> the number of parameters is not 3");
+                continue;
+            }
+
+            float sanity;
+            try
+            {
+                sanity = Float.parseFloat(params[1]);
+            }
+            catch (NumberFormatException e)
+            {
+                SanityMod.LOGGER.error("config format error in " + entry + " -> can't convert " + params[1] + " to float");
+                continue;
+            }
+            sanity /= -100.0f;
+
+            int cat;
+            try
+            {
+                cat = Integer.parseInt(params[2]);
+            }
+            catch (NumberFormatException e)
+            {
+                SanityMod.LOGGER.error("config format error in " + entry + " -> can't convert " + params[2] + " to integer");
+                continue;
+            }
+
+            ConfigItem item = new ConfigItem();
+            item.m_name = new ResourceLocation(params[0]);
+            item.m_sanity = sanity;
+            item.m_cat = cat;
+            list.add(item);
+        }
+
+        return list;
+    }
+
+    public static List<ConfigItemCategory> processItemCats(List<? extends String> raw)
+    {
+        List<ConfigItemCategory> list = Lists.newArrayList();
+
+        for (String entry : raw)
+        {
+            String[] params = entry.split(";", 2);
+            if (params.length != 2)
+            {
+                SanityMod.LOGGER.error("config format error in " + entry + " -> the number of parameters is not 2");
+                continue;
+            }
+
+            int id;
+            try
+            {
+                id = Integer.parseInt(params[0]);
+            }
+            catch (NumberFormatException e)
+            {
+                SanityMod.LOGGER.error("config format error in " + entry + " -> can't convert " + params[0] + " to integer");
+                continue;
+            }
+
+            float cdf;
+            try
+            {
+                cdf = Float.parseFloat(params[1]);
+            }
+            catch (NumberFormatException e)
+            {
+                SanityMod.LOGGER.error("config format error in " + entry + " -> can't convert " + params[1] + " to float");
+                continue;
+            }
+            int cd = Math.round(cdf * 20f);
+
+            ConfigItemCategory cat = new ConfigItemCategory();
+            cat.m_id = id;
+            cat.m_cd = cd;
+            list.add(cat);
+        }
+
+        return list;
+    }
+
+    public static Map<Integer, ConfigItemCategory> getMapFromCats(List<ConfigItemCategory> cats)
+    {
+        Map<Integer, ConfigItemCategory> map = Maps.newHashMap();
+
+        for (ConfigItemCategory cat : cats)
+        {
+            map.put(cat.m_id, cat);
+        }
+
+        return map;
     }
 }

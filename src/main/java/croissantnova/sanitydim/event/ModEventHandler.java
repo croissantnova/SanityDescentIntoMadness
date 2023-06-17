@@ -28,6 +28,12 @@ public class ModEventHandler
     }
 
     @SubscribeEvent
+    public static void onConfigReloading(final ModConfigEvent.Reloading event)
+    {
+        ConfigHandler.onConfigReloading(event);
+    }
+
+    @SubscribeEvent
     public static void registerOverlaysEvent(final RegisterGuiOverlaysEvent event)
     {
         SanityMod.getInstance().initGui();

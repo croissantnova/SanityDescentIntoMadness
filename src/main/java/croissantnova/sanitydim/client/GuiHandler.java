@@ -11,6 +11,7 @@ import croissantnova.sanitydim.capability.IPassiveSanity;
 import croissantnova.sanitydim.capability.ISanity;
 import croissantnova.sanitydim.capability.SanityProvider;
 import croissantnova.sanitydim.config.ConfigProxy;
+import croissantnova.sanitydim.config.SanityIndicatorLocation;
 import croissantnova.sanitydim.sound.SwishSoundInstance;
 import croissantnova.sanitydim.util.MathHelper;
 import net.minecraft.client.Minecraft;
@@ -96,15 +97,6 @@ public class GuiHandler
                 return true;
             });
         });
-//    	m_post.addSinglePassEntry("fisheye", pass ->
-//    	{
-//    		return processPlayer(mc.player, cap ->
-//    		{
-//    			pass.getEffect().safeGetUniform("Resolution").set((float)pass.inTarget.width, (float)pass.inTarget.height);
-//    			pass.getEffect().safeGetUniform("Factor").set(-0.14f);
-//    			return true;
-//    		});
-//    	});
     }
 
     private boolean processPlayer(LocalPlayer player, Function<ISanity, Boolean> action)
@@ -122,20 +114,51 @@ public class GuiHandler
         if (m_mc.player == null || m_mc.player.isCreative() || m_mc.player.isSpectator() || m_cap == null || !ConfigProxy.getRenderIndicator(m_mc.player.level.dimension().location()))
             return;
 
-        float scale = ConfigProxy.getIndicatorScale(m_mc.player.level.dimension().location());
+        ResourceLocation dim = m_mc.player.level.dimension().location();
+        float scale = ConfigProxy.getIndicatorScale(dim);
         if (scale <= 0f)
             return;
 
+        SanityIndicatorLocation loc = ConfigProxy.getIndicatorLocation(dim);
+
         poseStack.pushPose();
-        poseStack.translate(scw / 2.0f - 96, sch - 5, 0f);
+
+        if (loc == SanityIndicatorLocation.HOTBAR_LEFT)
+            poseStack.translate(scw / 2f - 97f - (!m_mc.player.getOffhandItem().isEmpty() ? 29f : 0f), sch - 5f, 0f);
+        else if (loc == SanityIndicatorLocation.HOTBAR_RIGHT)
+            poseStack.translate(97f, 0f, 0f);
+        else if (loc == SanityIndicatorLocation.TOP_LEFT)
+            poseStack.translate(5f, 5f, 0f);
+        else if (loc == SanityIndicatorLocation.TOP_RIGHT)
+            poseStack.translate(scw - 5f, 5f, 0f);
+        else if (loc == SanityIndicatorLocation.BOTTOM_LEFT)
+            poseStack.translate(5f, sch - 5f, 0f);
+        else if (loc == SanityIndicatorLocation.BOTTOM_RIGHT)
+            poseStack.translate(scw - 5f, sch - 5f, 0f);
+
         poseStack.scale(scale, scale, 1f);
 
         int texw = 256;
         int texh = 128;
         int spritew = 33;
         int spriteh = 24;
-        int x = -spritew;
-        int y = -spriteh;
+        int x = 0;
+        int y = 0;
+
+        if (loc == SanityIndicatorLocation.HOTBAR_LEFT || loc == SanityIndicatorLocation.BOTTOM_RIGHT)
+        {
+            x = -spritew;
+            y = -spriteh;
+        }
+        else if (loc == SanityIndicatorLocation.HOTBAR_RIGHT || loc == SanityIndicatorLocation.BOTTOM_LEFT)
+        {
+            y = -spriteh;
+        }
+        else if (loc == SanityIndicatorLocation.TOP_RIGHT)
+        {
+            x = -spritew;
+        }
+
         if (ConfigProxy.getTwitchIndicator(m_mc.player.level.dimension().location()))
             y += m_indicatorOffset;
         int vOffset = Math.round(m_cap.getSanity() * (spriteh - 2)) + 1;

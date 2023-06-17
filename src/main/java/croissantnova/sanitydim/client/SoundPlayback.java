@@ -37,7 +37,9 @@ public class SoundPlayback
             SoundEvents.ENDERMAN_AMBIENT,
             SoundEvents.HOSTILE_BIG_FALL,
             SoundEvents.CHEST_OPEN,
+            SoundEvents.CHEST_CLOSE,
             SoundEvents.WOODEN_DOOR_OPEN,
+            SoundEvents.WOODEN_TRAPDOOR_OPEN,
             SoundEvents.WOLF_GROWL,
     };
     public static final int STEP_COOLDOWN_MIN = 600;
@@ -97,7 +99,7 @@ public class SoundPlayback
                         currentStepBlockPos,
                         currentStepSoundType.getStepSound(),
                         SoundSource.AMBIENT,
-                        currentStepSoundType.getVolume() * .45f,
+                        currentStepSoundType.getVolume() * .5f,
                         currentStepSoundType.getPitch(),
                         false);
             }

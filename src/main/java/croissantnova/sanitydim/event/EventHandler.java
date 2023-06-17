@@ -29,6 +29,7 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.AdvancementEvent;
+import net.minecraftforge.event.entity.player.ItemFishedEvent;
 import net.minecraftforge.event.entity.player.TradeWithVillagerEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.event.level.SleepFinishedTimeEvent;
@@ -136,11 +137,20 @@ public class EventHandler
     }
 
     @SubscribeEvent
-    public void onPlayerUseItem(final LivingEntityUseItemEvent.Finish event)
+    public void onPlayerUsedItem(final LivingEntityUseItemEvent.Finish event)
     {
-        if (event.getEntity() instanceof ServerPlayer sp && event.getItem().getItem().isEdible())
+        if (event.getEntity() instanceof ServerPlayer sp)
         {
-            SanityProcessor.handlePlayerAte(sp, event.getItem());
+            SanityProcessor.handlePlayerUsedItem(sp, event.getItem());
+        }
+    }
+
+    @SubscribeEvent
+    public void onItemFished(final ItemFishedEvent event)
+    {
+        if (event.getEntity() instanceof ServerPlayer sp)
+        {
+            SanityProcessor.handlePlayerFishedItem(sp);
         }
     }
 

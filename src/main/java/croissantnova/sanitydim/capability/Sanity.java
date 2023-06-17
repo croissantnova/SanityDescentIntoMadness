@@ -1,13 +1,11 @@
 package croissantnova.sanitydim.capability;
 
+import com.google.common.collect.Maps;
 import croissantnova.sanitydim.ActiveSanitySources;
-import croissantnova.sanitydim.config.ConfigProxy;
 import croissantnova.sanitydim.util.MathHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.NotNull;
+import java.util.Map;
 
 public class Sanity implements ISanity, IPassiveSanity, IPersistentSanity
 {
@@ -16,6 +14,7 @@ public class Sanity implements ISanity, IPassiveSanity, IPersistentSanity
     private float m_sanityVal;
     private float m_passive;
     private final int[] m_cds = new int[ActiveSanitySources.AMOUNT];
+    private final Map<Integer, Integer> m_itemCds = Maps.newHashMap();
 
     public Sanity()
     {
@@ -31,6 +30,9 @@ public class Sanity implements ISanity, IPassiveSanity, IPersistentSanity
         tag.putInt("villager_trade", m_cds[ActiveSanitySources.VILLAGER_TRADE]);
         tag.putInt("shearing", m_cds[ActiveSanitySources.SHEARING]);
         tag.putInt("eating", m_cds[ActiveSanitySources.EATING]);
+        tag.putInt("fishing", m_cds[ActiveSanitySources.FISHING]);
+
+        serializeItemCds(tag);
     }
 
     @Override
@@ -43,6 +45,9 @@ public class Sanity implements ISanity, IPassiveSanity, IPersistentSanity
         m_cds[ActiveSanitySources.VILLAGER_TRADE] = tag.getInt("villager_trade");
         m_cds[ActiveSanitySources.SHEARING] = tag.getInt("shearing");
         m_cds[ActiveSanitySources.EATING] = tag.getInt("eating");
+        m_cds[ActiveSanitySources.FISHING] = tag.getInt("fishing");
+
+        deserializeItemCds(tag);
     }
 
     public void serialize(FriendlyByteBuf buf)
@@ -94,9 +99,15 @@ public class Sanity implements ISanity, IPassiveSanity, IPersistentSanity
     }
 
     @Override
-    public int[] getActiveSourcesCds()
+    public int[] getActiveSourcesCooldowns()
     {
         return m_cds;
+    }
+
+    @Override
+    public Map<Integer, Integer> getItemCooldowns()
+    {
+        return m_itemCds;
     }
 
     @Override
@@ -111,14 +122,33 @@ public class Sanity implements ISanity, IPassiveSanity, IPersistentSanity
         return m_emAngerTimer;
     }
 
-    public static void addSanity(@NotNull ISanity sanity, float value, @NotNull ResourceLocation dim)
+    private void serializeItemCds(CompoundTag tag)
     {
-        float mul = value >= 0 ? ConfigProxy.getNegMul(dim) : ConfigProxy.getPosMul(dim);
-        sanity.setSanity(sanity.getSanity() + value * mul);
+        long[] itemCds = new long[m_itemCds.size()];
+        int i = 0;
+
+        for (Map.Entry<Integer, Integer> entry : m_itemCds.entrySet())
+        {
+            long val = entry.getKey();
+            val <<= Long.SIZE / 2;
+            val |= entry.getValue();
+
+            itemCds[i] = val;
+
+            i++;
+        }
+
+        tag.putLongArray("item_cooldowns", itemCds);
     }
 
-    public static void addSanity(@NotNull ISanity sanity, float value, @NotNull Player player)
+    private void deserializeItemCds(CompoundTag tag)
     {
-        addSanity(sanity, value, player.level.dimension().location());
+        long[] itemCds = tag.getLongArray("item_cooldowns");
+        m_itemCds.clear();
+
+        for (long itemCd : itemCds)
+        {
+            m_itemCds.put((int)(itemCd >> Long.SIZE / 2), (int)itemCd);
+        }
     }
 }

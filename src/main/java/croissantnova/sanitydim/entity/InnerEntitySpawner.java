@@ -1,4 +1,4 @@
-package croissantnova.sanitydim;
+package croissantnova.sanitydim.entity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -6,7 +6,6 @@ import java.util.Map;
 
 import croissantnova.sanitydim.capability.ISanity;
 import croissantnova.sanitydim.capability.SanityProvider;
-import croissantnova.sanitydim.entity.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -16,13 +15,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class InnerEntitySpawner
+public abstract class InnerEntitySpawner
 {
-    private static final RandomSource random = RandomSource.create();
-    public static final Map<ServerPlayer, Integer> playerToSpawnTimeout = new HashMap<ServerPlayer, Integer>();
+    private static final RandomSource RAND = RandomSource.create();
+
     public static int spawnRad = 20;
     public static int detectionRad = 40;
     public static int spawnTimeout = 20 * 20;
+
+    public static final float SPAWN_THRESHOLD = .75f;
+    public static final Map<ServerPlayer, Integer> PLAYER_TO_SPAWN_TIMEOUT = new HashMap<ServerPlayer, Integer>();
 
     private static int getHeightForSpawning(Level level, BlockPos blockPos, int radius)
     {
@@ -44,28 +46,31 @@ public class InnerEntitySpawner
         return 0;
     }
 
-    public static boolean trySpawnForPlayer(ServerPlayer player, float sanityThreshold)
+    public static boolean trySpawnForPlayer(ServerPlayer player)
     {
         if (player == null || player.isCreative() || player.isSpectator() || player.level == null)
             return false;
 
-        playerToSpawnTimeout.putIfAbsent(player, 0);
-        int t = playerToSpawnTimeout.get(player);
+        PLAYER_TO_SPAWN_TIMEOUT.putIfAbsent(player, 0);
+        int t = PLAYER_TO_SPAWN_TIMEOUT.get(player);
         if (t > 0)
         {
-            playerToSpawnTimeout.put(player, t - 1);
+            PLAYER_TO_SPAWN_TIMEOUT.put(player, t - 1);
             return false;
         }
 
         ISanity s = player.getCapability(SanityProvider.CAP).orElse(null);
         if (s == null)
             return false;
-        if (s.getSanity() < sanityThreshold || getInnerEntitiesInRadius(player.level, player.blockPosition(), detectionRad).size() >= 3)
+        if (s.getSanity() < SPAWN_THRESHOLD || getInnerEntitiesInRadius(player.level, player.blockPosition(), detectionRad).size() >= 3)
             return false;
 
         RottingStalker entity = EntityRegistry.ROTTING_STALKER.get().create(player.level);
+        if (entity == null)
+            return false;
+
 //        CreepingNightmare entity = EntityRegistry.CREEPING_NIGHTMARE.get().create(player.level);
-        BlockPos trialPos = BlockPos.randomBetweenClosed(random, 1,
+        BlockPos trialPos = BlockPos.randomBetweenClosed(RAND, 1,
                 player.blockPosition().getX() - spawnRad,
                 player.blockPosition().getY(),
                 player.blockPosition().getZ() - spawnRad,
@@ -83,7 +88,7 @@ public class InnerEntitySpawner
                 player.level.noCollision(entity) &&
                 ((ServerLevel)player.level).tryAddFreshEntityWithPassengers(entity))
         {
-            playerToSpawnTimeout.put(player, spawnTimeout);
+            PLAYER_TO_SPAWN_TIMEOUT.put(player, spawnTimeout);
             return true;
         }
 

@@ -3,6 +3,7 @@ package croissantnova.sanitydim.item.material;
 import croissantnova.sanitydim.SanityMod;
 import croissantnova.sanitydim.sound.SoundRegistry;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
@@ -41,19 +42,7 @@ public class FlowerArmorMaterial implements ArmorMaterial
     @NotNull
     public Ingredient getRepairIngredient()
     {
-        return Ingredient.of(
-                Items.DANDELION,
-                Items.POPPY,
-                Items.BLUE_ORCHID,
-                Items.ALLIUM,
-                Items.AZURE_BLUET,
-                Items.ORANGE_TULIP,
-                Items.PINK_TULIP,
-                Items.RED_TULIP,
-                Items.WHITE_TULIP,
-                Items.OXEYE_DAISY,
-                Items.CORNFLOWER,
-                Items.LILY_OF_THE_VALLEY);
+        return Ingredient.of(ItemTags.SMALL_FLOWERS);
     }
 
     @Override

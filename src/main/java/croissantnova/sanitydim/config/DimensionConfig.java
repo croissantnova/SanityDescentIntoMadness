@@ -29,6 +29,8 @@ public class DimensionConfig
     public static final Map<ResourceLocation, Double> monster = new HashMap<>();
     public static final Map<ResourceLocation, Double> darkness = new HashMap<>();
     public static final Map<ResourceLocation, Integer> darknessThreshold = new HashMap<>();
+    public static final Map<ResourceLocation, Double> jukeboxPleasant = new HashMap<>();
+    public static final Map<ResourceLocation, Double> jukeboxUnsettling = new HashMap<>();
     public static final Map<ResourceLocation, List<? extends String>> passiveBlocks = new HashMap<>();
     public static final Map<ResourceLocation, List<ConfigPassiveBlock>> passiveBlocksProcessed = new HashMap<>();
 
@@ -48,6 +50,13 @@ public class DimensionConfig
     public static final Map<ResourceLocation, Double> shearingCd = new HashMap<>();
     public static final Map<ResourceLocation, Double> eating = new HashMap<>();
     public static final Map<ResourceLocation, Double> eatingCd = new HashMap<>();
+    public static final Map<ResourceLocation, Double> fishing = new HashMap<>();
+    public static final Map<ResourceLocation, Double> fishingCd = new HashMap<>();
+    public static final Map<ResourceLocation, List<? extends String>> items = new HashMap<>();
+    public static final Map<ResourceLocation, List<ConfigItem>> itemsProcessed = new HashMap<>();
+    public static final Map<ResourceLocation, List<? extends String>> itemCats = new HashMap<>();
+    public static final Map<ResourceLocation, List<ConfigItemCategory>> itemCatsProcessed = new HashMap<>();
+    public static final Map<ResourceLocation, Map<Integer, ConfigItemCategory>> idToItemCat = new HashMap<>();
 
     public static final Map<ResourceLocation, Double> sanePlayerCompany = new HashMap<>();
     public static final Map<ResourceLocation, Double> insanePlayerCompany = new HashMap<>();
@@ -55,6 +64,7 @@ public class DimensionConfig
     public static final Map<ResourceLocation, Boolean> renderIndicator = new HashMap<>();
     public static final Map<ResourceLocation, Boolean> twitchIndicator = new HashMap<>();
     public static final Map<ResourceLocation, Double> indicatorScale = new HashMap<>();
+    public static final Map<ResourceLocation, SanityIndicatorLocation> indicatorLocation = new HashMap<>();
 
     public static final Map<ResourceLocation, Boolean> renderHint = new HashMap<>();
     public static final Map<ResourceLocation, Boolean> twitchHint = new HashMap<>();
@@ -90,6 +100,10 @@ public class DimensionConfig
             darkness.put(name, config.get("sanity.passive.darkness"));
         if (config.contains("sanity.passive.darkness_threshold"))
             darknessThreshold.put(name, config.get("sanity.passive.darkness_threshold"));
+        if (config.contains("sanity.passive.jukebox_pleasant"))
+            jukeboxPleasant.put(name, config.get("sanity.passive.jukebox_pleasant"));
+        if (config.contains("sanity.passive.jukebox_unsettling"))
+            jukeboxUnsettling.put(name, config.get("sanity.passive.jukebox_unsettling"));
         if (config.contains("sanity.passive.blocks"))
         {
             List<? extends String> pb = config.get("sanity.passive.blocks");
@@ -129,6 +143,23 @@ public class DimensionConfig
             eating.put(name, config.get("sanity.active.eating"));
         if (config.contains("sanity.active.eating_cd"))
             eatingCd.put(name, config.get("sanity.active.eating_cd"));
+        if (config.contains("sanity.active.fishing"))
+            fishing.put(name, config.get("sanity.active.fishing"));
+        if (config.contains("sanity.active.fishing_cd"))
+            fishingCd.put(name, config.get("sanity.active.fishing_cd"));
+        if (config.contains("sanity.active.items"))
+        {
+            List<? extends String> it3ms = config.get("sanity.active.items");
+            items.put(name, it3ms);
+            itemsProcessed.put(name, ConfigHandler.processItems(it3ms));
+        }
+        if (config.contains("sanity.active.item_categories"))
+        {
+            List<? extends String> it3mCats = config.get("sanity.active.item_categories");
+            itemCats.put(name, it3mCats);
+            itemCatsProcessed.put(name, ConfigHandler.processItemCats(it3mCats));
+            idToItemCat.put(name, ConfigHandler.getMapFromCats(itemCatsProcessed.get(name)));
+        }
 
         if (config.contains("sanity.multiplayer.sane_player_company"))
             sanePlayerCompany.put(name, config.get("sanity.multiplayer.insane_player_company"));
@@ -141,6 +172,8 @@ public class DimensionConfig
             twitchIndicator.put(name, config.get("sanity.client.indicator.twitch"));
         if (config.contains("sanity.client.indicator.scale"))
             indicatorScale.put(name, config.get("sanity.client.indicator.scale"));
+        if (config.contains("sanity.client.indicator.location"))
+            indicatorLocation.put(name, config.get("sanity.client.indicator.location"));
 
         if (config.contains("sanity.client.hints.render"))
             renderHint.put(name, config.get("sanity.client.hints.render"));
@@ -200,6 +233,8 @@ public class DimensionConfig
         monster.clear();
         darkness.clear();
         darknessThreshold.clear();
+        jukeboxPleasant.clear();
+        jukeboxUnsettling.clear();
         passiveBlocks.clear();
         passiveBlocksProcessed.clear();
         sleeping.clear();
@@ -218,11 +253,18 @@ public class DimensionConfig
         shearingCd.clear();
         eating.clear();
         eatingCd.clear();
+        fishing.clear();
+        fishingCd.clear();
+        items.clear();
+        itemsProcessed.clear();
+        itemCats.clear();
+        itemCatsProcessed.clear();
         sanePlayerCompany.clear();
         insanePlayerCompany.clear();
         renderIndicator.clear();
         twitchIndicator.clear();
         indicatorScale.clear();
+        indicatorLocation.clear();
         renderHint.clear();
         twitchHint.clear();
         renderPost.clear();

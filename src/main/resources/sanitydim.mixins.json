@@ -7,7 +7,8 @@
     "MixinGameRenderer",
     "MixinThrownEgg",
     "MixinEnderMan",
-    "MixinShearsItem"
+    "MixinShearsItem",
+    "MixinJukeboxBlockEntity"
   ],
   "client": [],
   "server": []
