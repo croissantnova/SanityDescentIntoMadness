@@ -81,7 +81,7 @@ public class SoundPlayback
             {
                 miscCd = (int)(miscCd * (1f - MathHelper.clampNorm((Mth.inverseLerp(cap.getSanity(), .4f, .8f))) * .5f));
                 SoundEvent sound = MISC_SOUNDS[RAND.nextInt(MISC_SOUNDS.length)];
-                player.level.playLocalSound(
+                player.level().playLocalSound(
                         pickFakeStepPos(player),
                         sound,
                         SoundSource.AMBIENT,
@@ -95,7 +95,7 @@ public class SoundPlayback
         {
             if (currentStepCd % 7 == 0)
             {
-                player.level.playLocalSound(
+                player.level().playLocalSound(
                         currentStepBlockPos,
                         currentStepSoundType.getStepSound(),
                         SoundSource.AMBIENT,
@@ -109,7 +109,7 @@ public class SoundPlayback
 
     public static void playSounds(LocalPlayer player)
     {
-        if (player == null || player.isCreative() || player.isSpectator() || !ConfigProxy.getPlaySounds(player.level.dimension().location()))
+        if (player == null || player.isCreative() || player.isSpectator() || !ConfigProxy.getPlaySounds(player.level().dimension().location()))
         {
             if (insanity != null)
                 insanity.doStop();

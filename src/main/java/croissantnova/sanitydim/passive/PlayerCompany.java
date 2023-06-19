@@ -25,7 +25,7 @@ public class PlayerCompany implements IPassiveSanitySource
         float sane = ConfigProxy.getSanePlayerCompany(dim);
         float insane = ConfigProxy.getInsanePlayerCompany(dim);
 
-        for (Player p : player.level.getNearbyPlayers(TargetingConditions.forNonCombat(), player, new AABB(
+        for (Player p : player.level().getNearbyPlayers(TargetingConditions.forNonCombat(), player, new AABB(
                 player.position().subtract(offset),
                 player.position().add(offset)
         )))

@@ -14,15 +14,15 @@ import org.jetbrains.annotations.NotNull;
 public class FlowerArmorMaterial implements ArmorMaterial
 {
     @Override
-    public int m_266425_(ArmorItem.Type p_266807_)
+    public int getDefenseForType(ArmorItem.@NotNull Type type)
     {
-        return 150;
+        return 0;
     }
 
     @Override
-    public int getDurabilityForSlot(ArmorItem.Type p_266807_)
+    public int getDurabilityForType(ArmorItem.@NotNull Type type)
     {
-        return 0;
+        return 150;
     }
 
     @Override

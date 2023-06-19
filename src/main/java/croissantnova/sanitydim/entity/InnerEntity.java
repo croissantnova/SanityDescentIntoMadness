@@ -24,7 +24,7 @@ public abstract class InnerEntity extends Monster
     @Override
     public void tick()
     {
-        if (getLevel().isClientSide())
+        if (level().isClientSide())
         {
             super.tick();
             return;

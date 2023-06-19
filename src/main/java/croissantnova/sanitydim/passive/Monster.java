@@ -24,7 +24,7 @@ public class Monster implements IPassiveSanitySource
         float monster = ConfigProxy.getMonster(dim);
         if (monster != 0.0f)
         {
-            List<net.minecraft.world.entity.monster.Monster> monstersAround = player.level.getEntities(
+            List<net.minecraft.world.entity.monster.Monster> monstersAround = player.level().getEntities(
                     EntityTypeTest.forClass(net.minecraft.world.entity.monster.Monster.class),
                     playerSurroundings,
                     player::hasLineOfSight);

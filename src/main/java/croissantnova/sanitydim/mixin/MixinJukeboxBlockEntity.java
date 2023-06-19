@@ -21,21 +21,21 @@ public abstract class MixinJukeboxBlockEntity extends BlockEntity implements Cle
         super(pType, pPos, pBlockState);
     }
 
-    @Inject(method = "m_271687_()V", at = @At("TAIL"))
+    @Inject(method = "startPlaying()V", at = @At("TAIL"))
     private void startPlaying(CallbackInfo ci)
     {
         if (this.getLevel() == null || this.getLevel().isClientSide())
             return;
 
-        Jukebox.handleJukeboxStartedPlaying(getBlockPos(), m_272036_());
+        Jukebox.handleJukeboxStartedPlaying(getBlockPos(), getFirstItem());
     }
 
-    @Inject(method = "m_272088_()V", at = @At("TAIL"))
+    @Inject(method = "stopPlaying()V", at = @At("TAIL"))
     private void stopPlaying(CallbackInfo ci)
     {
         if (this.getLevel() == null || this.getLevel().isClientSide())
             return;
 
-        Jukebox.handleJukeboxStoppedPlaying(getBlockPos(), m_272036_());
+        Jukebox.handleJukeboxStoppedPlaying(getBlockPos(), getFirstItem());
     }
 }

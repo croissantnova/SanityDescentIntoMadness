@@ -24,7 +24,7 @@ public final class InsanitySoundInstance extends AbstractTickableSoundInstance
     {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player != null)
-            volume = factor * ConfigProxy.getInsanityVolume(mc.player.level.dimension().location());
+            volume = factor * ConfigProxy.getInsanityVolume(mc.player.level().dimension().location());
         else
             volume = 0;
     }

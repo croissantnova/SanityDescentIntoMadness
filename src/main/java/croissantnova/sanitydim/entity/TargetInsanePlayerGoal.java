@@ -22,13 +22,13 @@ public class TargetInsanePlayerGoal extends TargetGoal
     @Override
     public boolean canUse()
     {
-        return SanityProcessor.getMostInsanePlayer(mob.level) != null;
+        return SanityProcessor.getMostInsanePlayer(mob.level()) != null;
     }
 
     @Override
     public void start()
     {
-        Player target = SanityProcessor.getMostInsanePlayer(mob.level);
+        Player target = SanityProcessor.getMostInsanePlayer(mob.level());
         if (target != null)
         {
             mob.setTarget(target);

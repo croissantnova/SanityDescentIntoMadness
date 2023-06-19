@@ -57,7 +57,7 @@ public final class SanityProcessor
 
     private static float calcPassive(ServerPlayer player, ISanity sanity)
     {
-        ResourceLocation dim = player.level.dimension().location();
+        ResourceLocation dim = player.level().dimension().location();
         float passive = 0;
 
         for (IPassiveSanitySource pss : PASSIVE_SANITY_SOURCES)
@@ -108,7 +108,7 @@ public final class SanityProcessor
 
     public static float getSanityMultiplier(ServerPlayer player, float value)
     {
-        ResourceLocation dim = player.level.dimension().location();
+        ResourceLocation dim = player.level().dimension().location();
         return value >= 0 ? ConfigProxy.getNegMul(dim) * getGarlandMultiplier(player) : ConfigProxy.getPosMul(dim);
     }
 
@@ -127,7 +127,7 @@ public final class SanityProcessor
 
         player.getCapability(SanityProvider.CAP).ifPresent(s ->
         {
-            ResourceLocation dim = player.level.dimension().location();
+            ResourceLocation dim = player.level().dimension().location();
 
             float passive = calcPassive(player, s);
             float snapshot = s.getSanity();
@@ -236,7 +236,7 @@ public final class SanityProcessor
 
         player.getCapability(SanityProvider.CAP).ifPresent(s ->
         {
-            ResourceLocation dimLoc = player.level.dimension().location();
+            ResourceLocation dimLoc = player.level().dimension().location();
             int cd = cdSupplier.apply(dimLoc);
 
             if (s instanceof IPersistentSanity ps && cd > 0.0f)
@@ -259,7 +259,7 @@ public final class SanityProcessor
 
         player.getCapability(SanityProvider.CAP).ifPresent(s ->
         {
-            ResourceLocation dimLoc = player.level.dimension().location();
+            ResourceLocation dimLoc = player.level().dimension().location();
             addSanity(s, amount * ConfigProxy.getHurtRatio(dimLoc), player);
 //            s.setSanity(s.getSanity() + amount * ConfigProxy.getHurtRatio(player.level.dimension().location()));
         });
@@ -272,8 +272,8 @@ public final class SanityProcessor
 
         player.getCapability(SanityProvider.CAP).ifPresent(s ->
         {
-            ResourceLocation dimLoc = player.level.dimension().location();
-            addSanity(s, amount * ConfigProxy.getAnimalHurtRatio(player.level.dimension().location()) * (animal.isBaby() ? 2.0f : 1.0f), player);
+            ResourceLocation dimLoc = player.level().dimension().location();
+            addSanity(s, amount * ConfigProxy.getAnimalHurtRatio(player.level().dimension().location()) * (animal.isBaby() ? 2.0f : 1.0f), player);
 //            s.setSanity(s.getSanity() + amount * ConfigProxy.getAnimalHurtRatio(player.level.dimension().location()) * (animal.isBaby() ? 2.0f : 1.0f));
         });
     }
@@ -285,8 +285,8 @@ public final class SanityProcessor
 
         player.getCapability(SanityProvider.CAP).ifPresent(s ->
         {
-            ResourceLocation dimLoc = player.level.dimension().location();
-            addSanity(s, ConfigProxy.getPetDeath(player.level.dimension().location()), player);
+            ResourceLocation dimLoc = player.level().dimension().location();
+            addSanity(s, ConfigProxy.getPetDeath(player.level().dimension().location()), player);
 //            s.setSanity(s.getSanity() + ConfigProxy.getPetDeath(player.level.dimension().location()));
         });
     }
@@ -315,7 +315,7 @@ public final class SanityProcessor
 
         player.getCapability(SanityProvider.CAP).ifPresent(s ->
         {
-            ResourceLocation dimLoc = player.level.dimension().location();
+            ResourceLocation dimLoc = player.level().dimension().location();
             addSanity(s, ConfigProxy.getAdvancement(dimLoc), player);
 //            s.setSanity(s.getSanity() + ConfigProxy.getAdvancement(player.level.dimension().location()));
         });
@@ -362,7 +362,7 @@ public final class SanityProcessor
         {
             if (s instanceof IPersistentSanity ps)
             {
-                ResourceLocation dim = player.level.dimension().location();
+                ResourceLocation dim = player.level().dimension().location();
                 Map<Integer, Integer> itemCds = ps.getItemCooldowns();
 
                 for (ConfigItem citem : ConfigProxy.getItems(dim))

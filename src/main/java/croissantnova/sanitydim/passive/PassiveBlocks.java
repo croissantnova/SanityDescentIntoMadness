@@ -43,7 +43,7 @@ public class PassiveBlocks implements IPassiveSanitySource
                     for (float z = (float)player.position().z - block.m_rad; z < player.position().z + block.m_rad; ++z)
                     {
                         BlockPos posAt = new BlockPos((int)x, (int)y, (int)z);
-                        BlockState stateAt = player.level.getBlockState(posAt);
+                        BlockState stateAt = player.level().getBlockState(posAt);
 
                         if (regBlock == stateAt.getBlock())
                         {
@@ -60,7 +60,7 @@ public class PassiveBlocks implements IPassiveSanitySource
                             if (flag1)
                                 continue;
 
-                            HitResult hit = player.level.clip(new ClipContext(
+                            HitResult hit = player.level().clip(new ClipContext(
                                     player.getEyePosition(),
                                     posAt.getCenter(),
                                     ClipContext.Block.COLLIDER,

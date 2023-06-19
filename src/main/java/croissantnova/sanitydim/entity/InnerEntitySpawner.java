@@ -48,7 +48,7 @@ public abstract class InnerEntitySpawner
 
     public static boolean trySpawnForPlayer(ServerPlayer player)
     {
-        if (player == null || player.isCreative() || player.isSpectator() || player.level == null)
+        if (player == null || player.isCreative() || player.isSpectator())
             return false;
 
         PLAYER_TO_SPAWN_TIMEOUT.putIfAbsent(player, 0);
@@ -62,10 +62,10 @@ public abstract class InnerEntitySpawner
         ISanity s = player.getCapability(SanityProvider.CAP).orElse(null);
         if (s == null)
             return false;
-        if (s.getSanity() < SPAWN_THRESHOLD || getInnerEntitiesInRadius(player.level, player.blockPosition(), detectionRad).size() >= 3)
+        if (s.getSanity() < SPAWN_THRESHOLD || getInnerEntitiesInRadius(player.level(), player.blockPosition(), detectionRad).size() >= 3)
             return false;
 
-        RottingStalker entity = EntityRegistry.ROTTING_STALKER.get().create(player.level);
+        RottingStalker entity = EntityRegistry.ROTTING_STALKER.get().create(player.level());
         if (entity == null)
             return false;
 
@@ -77,16 +77,16 @@ public abstract class InnerEntitySpawner
                 player.blockPosition().getX() + spawnRad,
                 player.blockPosition().getY(),
                 player.blockPosition().getZ() + spawnRad).iterator().next();
-        int h = getHeightForSpawning(player.level, trialPos, spawnRad);
+        int h = getHeightForSpawning(player.level(), trialPos, spawnRad);
 
         if (h == 0)
             return false;
 
         trialPos = new BlockPos(trialPos.getX(), h, trialPos.getZ());
         entity.setPos(new Vec3(trialPos.getX() + .5f, trialPos.getY() + .5f, trialPos.getZ() + .5f));
-        if (entity.checkSpawnObstruction(player.level) &&
-                player.level.noCollision(entity) &&
-                ((ServerLevel)player.level).tryAddFreshEntityWithPassengers(entity))
+        if (entity.checkSpawnObstruction(player.level()) &&
+                player.level().noCollision(entity) &&
+                ((ServerLevel)player.level()).tryAddFreshEntityWithPassengers(entity))
         {
             PLAYER_TO_SPAWN_TIMEOUT.put(player, spawnTimeout);
             return true;

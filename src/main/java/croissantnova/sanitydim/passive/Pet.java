@@ -26,7 +26,7 @@ public class Pet implements IPassiveSanitySource
         if (pet != 0.0f)
         {
             List<TamableAnimal> tamablesAround = Lists.newArrayList();
-            player.level.getEntities(
+            player.level().getEntities(
                     EntityTypeTest.forClass(TamableAnimal.class),
                     playerSurroundings,
                     ta -> ta.isOwnedBy(player) && player.hasLineOfSight(ta),

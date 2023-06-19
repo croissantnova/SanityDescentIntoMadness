@@ -71,7 +71,7 @@ public class PostProcessor
         m_time += partialTicks;
 
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null || mc.player.isCreative() || mc.player.isSpectator() || !ConfigProxy.getRenderPost(mc.player.level.dimension().location()))
+        if (mc.player == null || mc.player.isCreative() || mc.player.isSpectator() || !ConfigProxy.getRenderPost(mc.player.level().dimension().location()))
             return;
 
         for (PostPassEntry entry : passEntries)

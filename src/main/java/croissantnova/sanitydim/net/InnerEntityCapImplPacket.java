@@ -55,7 +55,7 @@ public class InnerEntityCapImplPacket
                 if (mc.player == null)
                     return;
 
-                Entity ent = Minecraft.getInstance().player.level.getEntity(packet.m_id);
+                Entity ent = Minecraft.getInstance().player.level().getEntity(packet.m_id);
 
                 if (!(ent instanceof InnerEntity))
                     return;

@@ -51,11 +51,11 @@ public class SanityCommand
 
         if (targets.size() == 1)
         {
-            stack.sendSuccess(Component.translatable("commands.sanity.set.success.single", targets.iterator().next().getDisplayName(), value), true);
+            stack.sendSuccess(() -> Component.translatable("commands.sanity.set.success.single", targets.iterator().next().getDisplayName(), value), true);
         }
         else
         {
-            stack.sendSuccess(Component.translatable("commands.sanity.set.success.multiple", value, targets.size()), true);
+            stack.sendSuccess(() -> Component.translatable("commands.sanity.set.success.multiple", value, targets.size()), true);
         }
 
         return (int)value;
@@ -73,11 +73,11 @@ public class SanityCommand
 
         if (targets.size() == 1)
         {
-            stack.sendSuccess(Component.translatable("commands.sanity.add.success.single", value, targets.iterator().next().getDisplayName()), true);
+            stack.sendSuccess(() -> Component.translatable("commands.sanity.add.success.single", value, targets.iterator().next().getDisplayName()), true);
         }
         else
         {
-            stack.sendSuccess(Component.translatable("commands.sanity.add.success.multiple", targets.size(), value), true);
+            stack.sendSuccess(() -> Component.translatable("commands.sanity.add.success.multiple", targets.size(), value), true);
         }
 
         return (int)value;
@@ -86,7 +86,7 @@ public class SanityCommand
     private static int reloadConfig(CommandSourceStack stack)
     {
         DimensionConfig.init();
-        stack.sendSuccess(Component.translatable("commands.sanity.config.reload"), true);
+        stack.sendSuccess(() -> Component.translatable("commands.sanity.config.reload"), true);
         return 1;
     }
 }
