@@ -1,2 +1,2 @@
-mc1.19.4-forge45.1.0-1.0.0:
+mc1.20-forge46.0.14-1.0.0:
 - Initial release
