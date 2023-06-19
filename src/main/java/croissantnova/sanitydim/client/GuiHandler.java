@@ -345,7 +345,7 @@ public class GuiHandler
     public void initOverlays(final RegisterGuiOverlaysEvent event)
     {
         event.registerBelow(VanillaGuiOverlay.HOTBAR.id(), SanityMod.MODID.concat(".sanity_indicator"), this::renderSanityIndicator);
-        event.registerAboveAll(SanityMod.MODID.concat(".hint"), this::renderHint);
+        event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), SanityMod.MODID.concat(".hint"), this::renderHint);
     }
 
     public void initPostProcessor()

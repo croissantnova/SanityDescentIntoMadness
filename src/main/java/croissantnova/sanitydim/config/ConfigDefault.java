@@ -270,10 +270,14 @@ public class ConfigDefault
 
         list.add("minecraft:pufferfish;-5;0");
         list.add("minecraft:poisonous_potato;-5;0");
-        list.add("minecraft:rotten_flesh;-3;0");
+        list.add("minecraft:spider_eye;-5;0");
+        list.add("minecraft:rotten_flesh;-5;0");
         list.add("minecraft:chorus_fruit;-3;0");
         list.add("minecraft:ender_pearl;-1;0");
         list.add("minecraft:honey_bottle;6;1");
+        list.add("minecraft:golden_carrot;7;1");
+        list.add("minecraft:golden_apple;8;1");
+        list.add("minecraft:enchanted_golden_apple;13;1");
 
         return list;
     }
@@ -283,7 +287,7 @@ public class ConfigDefault
         List<String> list = Lists.newArrayList();
 
         list.add("0;0");
-        list.add("1;600.0");
+        list.add("1;800.0");
 
         return list;
     }

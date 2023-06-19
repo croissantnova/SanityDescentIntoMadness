@@ -1,10 +1,21 @@
 {
   "homepage": "https://modrinth.com/mod/sanity-descent-into-madness",
+  "1.20.1": {
+    "1.0.0": "https://raw.githubusercontent.com/croissantnova/SanityDescentIntoMadness/mc1.20/changelog.txt"
+  },
+  "1.20": {
+    "1.0.0": "https://raw.githubusercontent.com/croissantnova/SanityDescentIntoMadness/mc1.20/changelog.txt"
+  },
   "1.19.4": {
+    "1.0.1": "https://raw.githubusercontent.com/croissantnova/SanityDescentIntoMadness/main/changelog.txt",
     "1.0.0": "https://raw.githubusercontent.com/croissantnova/SanityDescentIntoMadness/main/changelog.txt"
   },
   "promos": {
-    "1.19.4-latest": "1.0.0",
-    "1.19.4-recommended": "1.0.0"
+    "1.20.1-latest": "1.0.0",
+    "1.20.1-recommended": "1.0.0",
+    "1.20-latest": "1.0.0",
+    "1.20-recommended": "1.0.0",
+    "1.19.4-latest": "1.0.1",
+    "1.19.4-recommended": "1.0.1"
   }
 }
