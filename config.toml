@@ -30,6 +30,7 @@
 		#Players will gain this amount of sanity per second while being near their pets
 		#Range: -100.0 ~ 100.0
 		pet = 0.15
+		#Players will gain this amount of sanity per second while being near any monsters
 		#This value is doubled if the monster is aggressive towards the player
 		#Range: -100.0 ~ 100.0
 		monster = -0.1
@@ -45,6 +46,9 @@
 		#Nearby jukebox playing an unsettling melody gives this amount of sanity per second (this takes priority over pleasant melodies)
 		#Range: -100.0 ~ 100.0
 		jukebox_unsettling = -0.11
+		#Define a list of blocks that affect sanity of players standing near them
+		#A block should be included as follows: block_registry_name[property1=value1,property2=value2];A;B
+		#Where A is how much sanity is gained per second and B is radius in blocks
 		#Supports boolean block state properties (can be omitted together with brackets)
 		blocks = ["minecraft:campfire[lit=true];0.1;4"]
 
@@ -74,6 +78,7 @@
 		#Breeding animals cooldown (see notes above), real time in seconds
 		#Range: 0.0 ~ 3.4028234663852886E38
 		animal_breeding_cd = 600.0
+		#Players gain this amount of sanity for every point of damage dealt to peaceful animals (incl. neutral ones)
 		#This value is doubled for baby animals
 		#Range: -100.0 ~ 100.0
 		animal_hurt_ratio = -0.5
@@ -104,8 +109,14 @@
 		#Fishing cooldown (see notes above), real time in seconds
 		#Range: 0.0 ~ 3.4028234663852886E38
 		fishing_cd = 0.0
+		#Define a list of items that will affect sanity upon their usage
+		#An item should be included as follows: item_registry_name;A;B
+		#Where A is how much sanity is gained upon usage and B is a custom category
+		#Items with same categories share the same cooldown
 		#The sanity gained will be multiplied by (timeSinceLastUsage / categoryCooldown) capping at 1.0
 		items = ["minecraft:pufferfish;-5;0", "minecraft:poisonous_potato;-5;0", "minecraft:spider_eye;-5;0", "minecraft:rotten_flesh;-5;0", "minecraft:chorus_fruit;-3;0", "minecraft:ender_pearl;-1;0", "minecraft:honey_bottle;6;1", "minecraft:golden_carrot;7;1", "minecraft:golden_apple;8;1", "minecraft:enchanted_golden_apple;13;1"]
+		#Define a list of custom categories for items specified in <items>
+		#A category should be included as follows: A;B
 		#Where A is a category id (integer) and B is a cooldown (in seconds) all items in this category share
 		item_categories = ["0;0", "1;800.0"]
 
