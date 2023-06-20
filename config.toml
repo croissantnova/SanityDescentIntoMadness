@@ -114,11 +114,11 @@
 		#Where A is how much sanity is gained upon usage and B is a custom category
 		#Items with same categories share the same cooldown
 		#The sanity gained will be multiplied by (timeSinceLastUsage / categoryCooldown) capping at 1.0
-		items = ["minecraft:pufferfish;-5;0", "minecraft:poisonous_potato;-5;0", "minecraft:rotten_flesh;-3;0", "minecraft:chorus_fruit;-3;0", "minecraft:ender_pearl;-1;0", "minecraft:honey_bottle;6;1"]
+		items = ["minecraft:pufferfish;-5;0", "minecraft:poisonous_potato;-5;0", "minecraft:spider_eye;-5;0", "minecraft:rotten_flesh;-5;0", "minecraft:chorus_fruit;-3;0", "minecraft:ender_pearl;-1;0", "minecraft:honey_bottle;6;1", "minecraft:golden_carrot;7;1", "minecraft:golden_apple;8;1", "minecraft:enchanted_golden_apple;13;1"]
 		#Define a list of custom categories for items specified in <items>
 		#A category should be included as follows: A;B
 		#Where A is a category id (integer) and B is a cooldown (in seconds) all items in this category share
-		item_categories = ["0;0", "1;600.0"]
+		item_categories = ["0;0", "1;800.0"]
 
 	#Multiplayer configuration
 	[sanity.multiplayer]

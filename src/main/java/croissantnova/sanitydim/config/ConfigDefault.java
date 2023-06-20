@@ -98,8 +98,8 @@ public class ConfigDefault
                 .comment("Players will gain this amount of sanity per second while being near their pets")
                 .defineInRange("pet", .15, -100.0, 100.0);
         m_monster = builder
-                .comment("Players will gain this amount of sanity per second while being near any monsters")
-                .comment("This value is doubled if the monster is aggressive towards the player")
+                .comment("Players will gain this amount of sanity per second while being near any monsters",
+                    "This value is doubled if the monster is aggressive towards the player")
                 .defineInRange("monster", -.1, -100.0, 100.0);
         m_darkness = builder
                 .comment("Players will gain this amount of sanity per second while being in the dark")
@@ -118,10 +118,10 @@ public class ConfigDefault
         path.add("blocks");
 
         m_passiveBlocks = builder
-                .comment("Define a list of blocks that affect sanity of players standing near them")
-                .comment("A block should be included as follows: block_registry_name[property1=value1,property2=value2];A;B")
-                .comment("Where A is how much sanity is gained per second and B is radius in blocks")
-                .comment("Supports boolean block state properties (can be omitted together with brackets)")
+                .comment("Define a list of blocks that affect sanity of players standing near them",
+                    "A block should be included as follows: block_registry_name[property1=value1,property2=value2];A;B",
+                    "Where A is how much sanity is gained per second and B is radius in blocks",
+                    "Supports boolean block state properties (can be omitted together with brackets)")
                 .defineListAllowEmpty(path, ConfigDefault::passiveBlocksDefault, ConfigHandler::stringEntryIsValid);
 
         builder.pop();
@@ -152,8 +152,8 @@ public class ConfigDefault
                 .comment("Breeding animals cooldown (see notes above), real time in seconds")
                 .defineInRange("animal_breeding_cd", 600.0, 0.0, Float.MAX_VALUE);
         m_animalHurtRatio = builder
-                .comment("Players gain this amount of sanity for every point of damage dealt to peaceful animals (incl. neutral ones)")
-                .comment("This value is doubled for baby animals")
+                .comment("Players gain this amount of sanity for every point of damage dealt to peaceful animals (incl. neutral ones)",
+                    "This value is doubled for baby animals")
                 .defineInRange("animal_hurt_ratio", -.5, -100.0, 100.0);
         m_petDeath = builder
                 .comment("Players gain this amount of sanity upon their pets' death")
@@ -187,20 +187,20 @@ public class ConfigDefault
         path.add("items");
 
         m_items = builder
-                .comment("Define a list of items that will affect sanity upon their usage")
-                .comment("An item should be included as follows: item_registry_name;A;B")
-                .comment("Where A is how much sanity is gained upon usage and B is a custom category")
-                .comment("Items with same categories share the same cooldown")
-                .comment("The sanity gained will be multiplied by (timeSinceLastUsage / categoryCooldown) capping at 1.0")
+                .comment("Define a list of items that will affect sanity upon their usage",
+                    "An item should be included as follows: item_registry_name;A;B",
+                    "Where A is how much sanity is gained upon usage and B is a custom category",
+                    "Items with same categories share the same cooldown",
+                    "The sanity gained will be multiplied by (timeSinceLastUsage / categoryCooldown) capping at 1.0")
                 .defineListAllowEmpty(path, ConfigDefault::itemsDefault, ConfigHandler::stringEntryIsValid);
 
         path.clear();
         path.add("item_categories");
 
         m_itemCats = builder
-                .comment("Define a list of custom categories for items specified in <items>")
-                .comment("A category should be included as follows: A;B")
-                .comment("Where A is a category id (integer) and B is a cooldown (in seconds) all items in this category share")
+                .comment("Define a list of custom categories for items specified in <items>",
+                    "A category should be included as follows: A;B",
+                    "Where A is a category id (integer) and B is a cooldown (in seconds) all items in this category share")
                 .defineListAllowEmpty(path, ConfigDefault::itemCatsDefault, ConfigHandler::stringEntryIsValid);
 
         builder.pop();
