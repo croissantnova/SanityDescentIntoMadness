@@ -9,14 +9,14 @@ import com.mojang.blaze3d.pipeline.TextureTarget;
 import croissantnova.sanitydim.config.ConfigProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.PostPass;
-import org.joml.Matrix4f;
+import com.mojang.math.Matrix4f;
 
 public class PostProcessor
 {
     private float m_time;
     private final RenderTarget m_swapBuffer;
-    private final Matrix4f m_orthoMat = new Matrix4f();
-    public final List<PostPassEntry> passEntries = new ArrayList<>();
+    private Matrix4f m_orthoMat = new Matrix4f();
+    public final List<PostPassEntry> m_passEntries = new ArrayList<>();
 
     public PostProcessor()
     {
@@ -57,7 +57,7 @@ public class PostProcessor
             return null;
         }
         PostPassEntry entry = new PostPassEntry(inPass, outPass, inProcessor, outProcessor);
-        passEntries.add(entry);
+        m_passEntries.add(entry);
         return entry;
     }
 
@@ -74,7 +74,7 @@ public class PostProcessor
         if (mc.player == null || mc.player.isCreative() || mc.player.isSpectator() || !ConfigProxy.getRenderPost(mc.player.level.dimension().location()))
             return;
 
-        for (PostPassEntry entry : passEntries)
+        for (PostPassEntry entry : m_passEntries)
         {
             if (entry.getInPass() == null || entry.getOutPass() == null ||
                     entry.getInProcessor() != null && !entry.getInProcessor().apply(entry.getInPass()) ||
@@ -89,8 +89,8 @@ public class PostProcessor
     public void updateOrthoMatrix()
     {
         Minecraft mc = Minecraft.getInstance();
-        m_orthoMat.setOrtho(0.0f, (float)mc.getMainRenderTarget().width, 0.0f, (float)mc.getMainRenderTarget().height, .1f, 1000.0f);
-        for (PostPassEntry entry : passEntries)
+        m_orthoMat = Matrix4f.orthographic(0.0f, (float)mc.getMainRenderTarget().width, (float)mc.getMainRenderTarget().height, 0.0f, .1f, 1000.0f);
+        for (PostPassEntry entry : m_passEntries)
         {
             entry.getInPass().setOrthoMatrix(m_orthoMat);
             entry.getOutPass().setOrthoMatrix(m_orthoMat);
@@ -104,12 +104,12 @@ public class PostProcessor
         updateOrthoMatrix();
     }
 
-    public class PostPassEntry
+    public static class PostPassEntry
     {
-        private PostPass m_in;
-        private PostPass m_out;
-        private Function<PostPass, Boolean> m_inProcessor;
-        private Function<PostPass, Boolean> m_outProcessor;
+        private final PostPass m_in;
+        private final PostPass m_out;
+        private final Function<PostPass, Boolean> m_inProcessor;
+        private final Function<PostPass, Boolean> m_outProcessor;
 
         public PostPassEntry(PostPass in, PostPass out, Function<PostPass, Boolean> inProcessor, Function<PostPass, Boolean> outProcessor)
         {

@@ -14,9 +14,10 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.Random;
 
 public class SoundPlayback
 {
@@ -46,7 +47,7 @@ public class SoundPlayback
     public static final int STEP_COOLDOWN_MAX = 1200;
     public static final int MISC_COOLDOWN_MIN = 800;
     public static final int MISC_COOLDOWN_MAX = 1400;
-    public static final RandomSource RAND = RandomSource.create();
+    public static final Random RAND = new Random();
 
     static
     {
@@ -69,7 +70,7 @@ public class SoundPlayback
             if (cap.getSanity() >= .4f)
             {
                 stepCd = (int)(stepCd * (1f - MathHelper.clampNorm((Mth.inverseLerp(cap.getSanity(), .4f, .9f))) * .4f));
-                currentStepSoundType = player.getBlockStateOn().getSoundType();
+                currentStepSoundType = player.getLevel().getBlockState(player.blockPosition()).getSoundType();
                 currentStepBlockPos = pickFakeStepPos(player);
                 currentStepCd = (RAND.nextInt(3) + 2) * 7;
             }
@@ -81,8 +82,11 @@ public class SoundPlayback
             {
                 miscCd = (int)(miscCd * (1f - MathHelper.clampNorm((Mth.inverseLerp(cap.getSanity(), .4f, .8f))) * .5f));
                 SoundEvent sound = MISC_SOUNDS[RAND.nextInt(MISC_SOUNDS.length)];
-                player.level.playLocalSound(
-                        pickFakeStepPos(player),
+                BlockPos fakeStepPos = pickFakeStepPos(player);
+                player.getLevel().playLocalSound(
+                        fakeStepPos.getX() + .5f,
+                        fakeStepPos.getY() + .5f,
+                        fakeStepPos.getZ() + .5f,
                         sound,
                         SoundSource.AMBIENT,
                         1.0f,
@@ -95,8 +99,10 @@ public class SoundPlayback
         {
             if (currentStepCd % 7 == 0)
             {
-                player.level.playLocalSound(
-                        currentStepBlockPos,
+                player.getLevel().playLocalSound(
+                        currentStepBlockPos.getX() + .5f,
+                        currentStepBlockPos.getY() + .5f,
+                        currentStepBlockPos.getZ() + .5f,
                         currentStepSoundType.getStepSound(),
                         SoundSource.AMBIENT,
                         currentStepSoundType.getVolume() * .5f,
@@ -109,7 +115,7 @@ public class SoundPlayback
 
     public static void playSounds(LocalPlayer player)
     {
-        if (player == null || player.isCreative() || player.isSpectator() || !ConfigProxy.getPlaySounds(player.level.dimension().location()))
+        if (player == null || player.isCreative() || player.isSpectator() || !ConfigProxy.getPlaySounds(player.getLevel().dimension().location()))
         {
             if (insanity != null)
                 insanity.doStop();

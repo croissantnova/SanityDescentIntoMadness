@@ -16,15 +16,14 @@ import croissantnova.sanitydim.sound.SwishSoundInstance;
 import croissantnova.sanitydim.util.MathHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
+import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.OverlayRegistry;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiHandler
@@ -62,12 +61,12 @@ public class GuiHandler
         HINTS0 = new MutableComponent[11];
         for (int i = 0; i < HINTS0.length; i++)
         {
-            HINTS0[i] = Component.translatable("gui." + SanityMod.MODID + ".hint0" + i);
+            HINTS0[i] = new TranslatableComponent("gui." + SanityMod.MODID + ".hint0" + i);
         }
         HINTS1 = new MutableComponent[8];
         for (int i = 0; i < HINTS1.length; i++)
         {
-            HINTS1[i] = Component.translatable("gui." + SanityMod.MODID + ".hint1" + i);
+            HINTS1[i] = new TranslatableComponent("gui." + SanityMod.MODID + ".hint1" + i);
         }
     }
 
@@ -109,7 +108,7 @@ public class GuiHandler
                 action.apply(cap);
     }
 
-    private void renderSanityIndicator(ForgeGui gui, PoseStack poseStack, float partialTicks, int scw, int sch)
+    private void renderSanityIndicator(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int scw, int sch)
     {
         if (m_mc.player == null || m_mc.player.isCreative() || m_mc.player.isSpectator() || m_cap == null || !ConfigProxy.getRenderIndicator(m_mc.player.level.dimension().location()))
             return;
@@ -166,20 +165,20 @@ public class GuiHandler
         RenderSystem.setShaderTexture(0, SANITY_INDICATOR);
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         // bg
-        ForgeGui.blit(poseStack, x, y, 0, 0, 0, spritew, spriteh, texw, texh);
+        ForgeIngameGui.blit(poseStack, x, y, 0, 0, 0, spritew, spriteh, texw, texh);
         if (m_flashTimer > 0 && ((int) m_flashTimer / 3) % 2 == 0)
         {
             // bg flash
-            ForgeGui.blit(poseStack, x, y, 0, spritew, 0, spritew, spriteh, texw, texh);
+            ForgeIngameGui.blit(poseStack, x, y, 0, spritew, 0, spritew, spriteh, texw, texh);
             if (m_flashSanityGain > 0)
             {
                 int flashOffset = Math.round((m_cap.getSanity() - m_flashSanityGain) * (spriteh - 2)) + 1;
                 // brain flash
-                ForgeGui.blit(poseStack, x, y + flashOffset, 0, spritew * 3, flashOffset, spritew, spriteh - flashOffset, texw, texh);
+                ForgeIngameGui.blit(poseStack, x, y + flashOffset, 0, spritew * 3, flashOffset, spritew, spriteh - flashOffset, texw, texh);
             }
         }
         // brain
-        ForgeGui.blit(poseStack, x, y + vOffset, 0, spritew * 2, vOffset, spritew, spriteh - vOffset, texw, texh);
+        ForgeIngameGui.blit(poseStack, x, y + vOffset, 0, spritew * 2, vOffset, spritew, spriteh - vOffset, texw, texh);
         if (m_cap instanceof IPassiveSanity)
         {
             float p = ((IPassiveSanity)m_cap).getPassiveIncrease();
@@ -205,26 +204,26 @@ public class GuiHandler
                 {
                     if (absp < m_passiveThreshold)
                     {
-                        ForgeGui.blit(poseStack, x, y + os, 0, 0, spriteh, spritew, spriteh, texw, texh);
-                        ForgeGui.blit(poseStack, x, y + vOffset, 0, spritew, spriteh + vOffset - os, spritew, spriteh - vOffset + os, texw, texh);
+                        ForgeIngameGui.blit(poseStack, x, y + os, 0, 0, spriteh, spritew, spriteh, texw, texh);
+                        ForgeIngameGui.blit(poseStack, x, y + vOffset, 0, spritew, spriteh + vOffset - os, spritew, spriteh - vOffset + os, texw, texh);
                     }
                     else
                     {
-                        ForgeGui.blit(poseStack, x, y + os, 0, spritew * 2, spriteh, spritew, spriteh, texw, texh);
-                        ForgeGui.blit(poseStack, x, y + vOffset, 0, spritew * 3, spriteh + vOffset - os, spritew, spriteh - vOffset + os, texw, texh);
+                        ForgeIngameGui.blit(poseStack, x, y + os, 0, spritew * 2, spriteh, spritew, spriteh, texw, texh);
+                        ForgeIngameGui.blit(poseStack, x, y + vOffset, 0, spritew * 3, spriteh + vOffset - os, spritew, spriteh - vOffset + os, texw, texh);
                     }
                 }
                 else
                 {
                     if (absp < m_passiveThreshold)
                     {
-                        ForgeGui.blit(poseStack, x, y + os, 0, 0, spriteh * 2, spritew, spriteh, texw, texh);
-                        ForgeGui.blit(poseStack, x, y + vOffset, 0, spritew, spriteh * 2 + vOffset - os, spritew, spriteh - vOffset + os, texw, texh);
+                        ForgeIngameGui.blit(poseStack, x, y + os, 0, 0, spriteh * 2, spritew, spriteh, texw, texh);
+                        ForgeIngameGui.blit(poseStack, x, y + vOffset, 0, spritew, spriteh * 2 + vOffset - os, spritew, spriteh - vOffset + os, texw, texh);
                     }
                     else
                     {
-                        ForgeGui.blit(poseStack, x, y + os, 0, spritew * 2, spriteh * 2, spritew, spriteh, texw, texh);
-                        ForgeGui.blit(poseStack, x, y + vOffset, 0, spritew * 3, spriteh * 2 + vOffset - os, spritew, spriteh - vOffset + os, texw, texh);
+                        ForgeIngameGui.blit(poseStack, x, y + os, 0, spritew * 2, spriteh * 2, spritew, spriteh, texw, texh);
+                        ForgeIngameGui.blit(poseStack, x, y + vOffset, 0, spritew * 3, spriteh * 2 + vOffset - os, spritew, spriteh - vOffset + os, texw, texh);
                     }
                 }
             }
@@ -233,7 +232,7 @@ public class GuiHandler
         poseStack.popPose();
     }
 
-    private void renderHint(ForgeGui gui, PoseStack poseStack, float partialTicks, int scw, int sch)
+    private void renderHint(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int scw, int sch)
     {
         if (m_mc.player == null || m_mc.player.isCreative() || m_mc.player.isSpectator() || m_hint == null || m_cap == null || m_cap.getSanity() < .5f
             || !ConfigProxy.getRenderHint(m_mc.player.level.dimension().location()))
@@ -265,7 +264,7 @@ public class GuiHandler
 
     private void tickHint(float dt)
     {
-        if (m_cap.getSanity() <= .4f || !ConfigProxy.getRenderHint(m_mc.player.level.dimension().location()))
+        if (m_cap.getSanity() <= .4f || m_mc.player == null || !ConfigProxy.getRenderHint(m_mc.player.level.dimension().location()))
             return;
 
         if (m_hintTimer <= 0f && m_showingHintTimer <= 0f)
@@ -342,10 +341,10 @@ public class GuiHandler
         m_prevSanity = m_cap.getSanity();
     }
 
-    public void initOverlays(final RegisterGuiOverlaysEvent event)
+    public void initOverlays()
     {
-        event.registerBelow(VanillaGuiOverlay.HOTBAR.id(), SanityMod.MODID.concat(".sanity_indicator"), this::renderSanityIndicator);
-        event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), SanityMod.MODID.concat(".hint"), this::renderHint);
+        OverlayRegistry.registerOverlayBelow(ForgeIngameGui.HOTBAR_ELEMENT, SanityMod.MODID.concat(".sanity_indicator"), this::renderSanityIndicator);
+        OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, SanityMod.MODID.concat(".hint"), this::renderHint);
     }
 
     public void initPostProcessor()

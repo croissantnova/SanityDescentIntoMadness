@@ -4,7 +4,6 @@ import croissantnova.sanitydim.config.ConfigProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 
 public class HeartbeatSoundInstance extends AbstractTickableSoundInstance
@@ -13,7 +12,7 @@ public class HeartbeatSoundInstance extends AbstractTickableSoundInstance
 
     public HeartbeatSoundInstance()
     {
-        super(SoundRegistry.HEARTBEAT.get(), SoundSource.AMBIENT, RandomSource.create());
+        super(SoundRegistry.HEARTBEAT.get(), SoundSource.AMBIENT);
         volume = 0;
         delay = 0;
         looping = true;

@@ -11,10 +11,8 @@ import croissantnova.sanitydim.client.SoundPlayback;
 import croissantnova.sanitydim.command.SanityCommand;
 import croissantnova.sanitydim.config.ConfigProxy;
 import croissantnova.sanitydim.entity.InnerEntity;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -30,12 +28,10 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.AdvancementEvent;
 import net.minecraftforge.event.entity.player.ItemFishedEvent;
-import net.minecraftforge.event.entity.player.TradeWithVillagerEvent;
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.event.level.SleepFinishedTimeEvent;
+import net.minecraftforge.event.world.SleepFinishedTimeEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
 public class EventHandler
@@ -70,9 +66,9 @@ public class EventHandler
     }
 
     @SubscribeEvent
-    public void tickLevel(final TickEvent.LevelTickEvent event)
+    public void tickLevel(final TickEvent.WorldTickEvent event)
     {
-        if (event.side == LogicalSide.SERVER && event.phase == TickEvent.Phase.END && event.level instanceof ServerLevel sl)
+        if (event.side == LogicalSide.SERVER && event.phase == TickEvent.Phase.END && event.world instanceof ServerLevel sl)
         {
             SanityProcessor.tickLevel(sl);
         }
@@ -101,7 +97,7 @@ public class EventHandler
     }
 
     @SubscribeEvent
-    public void onPlayerGotAdvancement(final AdvancementEvent.AdvancementEarnEvent event)
+    public void onPlayerGotAdvancement(final AdvancementEvent event)
     {
         SanityProcessor.handlePlayerGotAdvancement((ServerPlayer)event.getEntity(), event.getAdvancement());
     }
@@ -118,21 +114,12 @@ public class EventHandler
     @SubscribeEvent
     public void onSleepFinished(final SleepFinishedTimeEvent event)
     {
-        if (!event.getLevel().isClientSide())
+        if (!event.getWorld().isClientSide())
         {
-            for (Player player : event.getLevel().players())
+            for (Player player : event.getWorld().players())
             {
                 SanityProcessor.handleActiveSourceForPlayer((ServerPlayer)player, ActiveSanitySources.SLEEPING, ConfigProxy::getSleepingCooldown, ConfigProxy::getSleeping);
             }
-        }
-    }
-
-    @SubscribeEvent
-    public void onTradeWithVillager(final TradeWithVillagerEvent event)
-    {
-        if (event.getEntity() instanceof ServerPlayer sp)
-        {
-            SanityProcessor.handlePlayerTradedWithVillager(sp);
         }
     }
 
@@ -161,17 +148,17 @@ public class EventHandler
         if (event.side == LogicalSide.CLIENT && event.phase == TickEvent.Phase.END && event.player instanceof LocalPlayer)
         {
             SoundPlayback.playSounds((LocalPlayer)event.player);
-            SanityMod.getInstance().getGui().tick(Minecraft.getInstance().getPartialTick());
+            SanityMod.getInstance().getGui().tick(.95f);
         }
     }
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
-    public void localLevelLoad(final LevelEvent.Load event)
+    public void localLevelLoad(final WorldEvent.Load event)
     {
-        if (event.getLevel() instanceof ClientLevel)
+        if (event.getWorld() instanceof ClientLevel)
         {
-            SoundPlayback.onClientLevelLoad((ClientLevel) event.getLevel());
+            SoundPlayback.onClientLevelLoad((ClientLevel) event.getWorld());
         }
     }
 

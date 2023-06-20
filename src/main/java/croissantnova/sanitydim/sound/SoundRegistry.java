@@ -20,7 +20,7 @@ public class SoundRegistry
 
     public static RegistryObject<SoundEvent> registerSoundEvent(String name)
     {
-        return DEFERRED_REGISTER.register(name, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(SanityMod.MODID, name)));
+        return DEFERRED_REGISTER.register(name, () -> new SoundEvent(new ResourceLocation(SanityMod.MODID, name)));
     }
 
     public static void register(IEventBus eventBus)

@@ -1,12 +1,6 @@
 package croissantnova.sanitydim.entity;
 
-import croissantnova.sanitydim.SanityMod;
-import croissantnova.sanitydim.SanityProcessor;
 import croissantnova.sanitydim.capability.InnerEntityCapImplProvider;
-import croissantnova.sanitydim.capability.SanityProvider;
-import croissantnova.sanitydim.sound.SoundRegistry;
-import net.minecraft.client.Minecraft;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -17,20 +11,24 @@ import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.constant.DefaultAnimations;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-public class RottingStalker extends InnerEntity implements GeoEntity
+public class RottingStalker extends InnerEntity implements IAnimatable
 {
-    private final AnimatableInstanceCache m_animCache = GeckoLibUtil.createInstanceCache(this);
+    private final AnimationFactory m_factory = GeckoLibUtil.createFactory(this);
+
+    public static final AnimationBuilder ANIM_IDLE = new AnimationBuilder().addAnimation("misc.idle");
+    public static final AnimationBuilder ANIM_WALK = new AnimationBuilder().addAnimation("move.walk");
+    public static final AnimationBuilder ANIM_RUN = new AnimationBuilder().addAnimation("move.run");
+    public static final AnimationBuilder ANIM_ATTACK_SWING = new AnimationBuilder().addAnimation("attack.swing");
 
     protected RottingStalker(EntityType<? extends Monster> entityType, Level level)
     {
@@ -50,39 +48,6 @@ public class RottingStalker extends InnerEntity implements GeoEntity
         super.registerGoals();
     }
 
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar)
-    {
-        controllerRegistrar.add(new AnimationController<GeoAnimatable>(this, 0, state ->
-        {
-            if (attackAnim > 0.0f)
-            {
-                return state.setAndContinue(DefaultAnimations.ATTACK_SWING);
-            }
-
-            AtomicReference<RawAnimation> anim = new AtomicReference<>(DefaultAnimations.IDLE);
-
-            if (state.isMoving())
-            {
-                getCapability(InnerEntityCapImplProvider.CAP).ifPresent(iec ->
-                {
-                    if (!iec.hasTarget() || isInWater())
-                        anim.set(DefaultAnimations.WALK);
-                    else
-                        anim.set(DefaultAnimations.RUN);
-                });
-            }
-
-            return state.setAndContinue(anim.get());
-        }));
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache()
-    {
-        return m_animCache;
-    }
-
     public static AttributeSupplier buildAttributes()
     {
         return Monster.createMonsterAttributes()
@@ -91,5 +56,40 @@ public class RottingStalker extends InnerEntity implements GeoEntity
                 .add(Attributes.ATTACK_DAMAGE, 9.0d)
                 .add(Attributes.MOVEMENT_SPEED, 0.45d)
                 .build();
+    }
+
+    @Override
+    public void registerControllers(AnimationData data)
+    {
+        data.addAnimationController(new AnimationController<>(this, "main", 0, event ->
+        {
+            if (attackAnim > 0.0f)
+            {
+                event.getController().setAnimation(ANIM_ATTACK_SWING);
+                return PlayState.CONTINUE;
+            }
+
+            AtomicReference<AnimationBuilder> anim = new AtomicReference<>(ANIM_IDLE);
+
+            if (event.isMoving())
+            {
+                getCapability(InnerEntityCapImplProvider.CAP).ifPresent(iec ->
+                {
+                    if (!iec.hasTarget() || isInWater())
+                        anim.set(ANIM_WALK);
+                    else
+                        anim.set(ANIM_RUN);
+                });
+            }
+
+            event.getController().setAnimation(anim.get());
+            return PlayState.CONTINUE;
+        }));
+    }
+
+    @Override
+    public AnimationFactory getFactory()
+    {
+        return m_factory;
     }
 }

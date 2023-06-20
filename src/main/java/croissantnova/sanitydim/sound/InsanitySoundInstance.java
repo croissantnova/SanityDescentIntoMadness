@@ -4,7 +4,6 @@ import croissantnova.sanitydim.config.ConfigProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 
 public final class InsanitySoundInstance extends AbstractTickableSoundInstance
@@ -13,7 +12,7 @@ public final class InsanitySoundInstance extends AbstractTickableSoundInstance
 
     public InsanitySoundInstance()
     {
-        super(SoundRegistry.INSANITY.get(), SoundSource.AMBIENT, RandomSource.create());
+        super(SoundRegistry.INSANITY.get(), SoundSource.AMBIENT);
         volume = 0;
         delay = 0;
         looping = true;

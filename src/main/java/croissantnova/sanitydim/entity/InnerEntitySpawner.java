@@ -3,6 +3,7 @@ package croissantnova.sanitydim.entity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import croissantnova.sanitydim.capability.ISanity;
 import croissantnova.sanitydim.capability.SanityProvider;
@@ -10,14 +11,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 public abstract class InnerEntitySpawner
 {
-    private static final RandomSource RAND = RandomSource.create();
+    private static final Random RAND = new Random();
 
     public static int spawnRad = 20;
     public static int detectionRad = 40;

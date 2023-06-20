@@ -1,12 +1,10 @@
 package croissantnova.sanitydim.event;
 
-import croissantnova.sanitydim.SanityMod;
 import croissantnova.sanitydim.client.render.RendererRottingStalker;
 import croissantnova.sanitydim.config.ConfigHandler;
 import croissantnova.sanitydim.entity.EntityRegistry;
 import croissantnova.sanitydim.entity.RottingStalker;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
@@ -31,13 +29,6 @@ public class ModEventHandler
     public static void onConfigReloading(final ModConfigEvent.Reloading event)
     {
         ConfigHandler.onConfigReloading(event);
-    }
-
-    @SubscribeEvent
-    public static void registerOverlaysEvent(final RegisterGuiOverlaysEvent event)
-    {
-        SanityMod.getInstance().initGui();
-        SanityMod.getInstance().getGui().initOverlays(event);
     }
 
     @SubscribeEvent

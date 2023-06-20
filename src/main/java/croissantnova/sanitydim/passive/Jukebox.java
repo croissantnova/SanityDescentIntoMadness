@@ -2,6 +2,7 @@ package croissantnova.sanitydim.passive;
 
 import croissantnova.sanitydim.capability.ISanity;
 import croissantnova.sanitydim.config.ConfigProxy;
+import croissantnova.sanitydim.util.BlockPosHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,12 +25,12 @@ public class Jukebox implements IPassiveSanitySource
     {
         for (BlockPos blockPos : UNSETTLING_JUKEBOXES)
         {
-            if (player.getEyePosition().distanceTo(blockPos.getCenter()) <= 60)
+            if (player.getEyePosition().distanceTo(BlockPosHelper.getCenter(blockPos)) <= 60)
                 return ConfigProxy.getJukeboxUnsettling(dim);
         }
         for (BlockPos blockPos : JUKEBOXES)
         {
-            if (player.getEyePosition().distanceTo(blockPos.getCenter()) <= 60)
+            if (player.getEyePosition().distanceTo(BlockPosHelper.getCenter(blockPos)) <= 60)
                 return ConfigProxy.getJukeboxPleasant(dim);
         }
 
@@ -39,7 +40,6 @@ public class Jukebox implements IPassiveSanitySource
     public static boolean isMusicDiscUnsettling(Item disc)
     {
         return
-                disc == Items.MUSIC_DISC_5 ||
                 disc == Items.MUSIC_DISC_11 ||
                 disc == Items.MUSIC_DISC_13;
     }
@@ -56,7 +56,7 @@ public class Jukebox implements IPassiveSanitySource
             Jukebox.JUKEBOXES.add(blockPos);
     }
 
-    public static void handleJukeboxStoppedPlaying(BlockPos blockPos, ItemStack record)
+    public static void handleJukeboxStoppedPlaying(BlockPos blockPos)
     {
         for (; Jukebox.JUKEBOXES.remove(blockPos););
         for (; Jukebox.UNSETTLING_JUKEBOXES.remove(blockPos););

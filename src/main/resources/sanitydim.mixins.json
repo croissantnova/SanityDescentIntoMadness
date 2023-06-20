@@ -8,7 +8,8 @@
     "MixinThrownEgg",
     "MixinEnderMan",
     "MixinShearsItem",
-    "MixinJukeboxBlockEntity"
+    "MixinJukeboxBlockEntity",
+    "MixinMerchantResultSlot"
   ],
   "client": [],
   "server": []

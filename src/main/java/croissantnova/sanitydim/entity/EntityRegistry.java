@@ -10,7 +10,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class EntityRegistry
 {
-    public static final DeferredRegister<EntityType<?>> DEFERRED_REGISTER = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, SanityMod.MODID);
+    public static final DeferredRegister<EntityType<?>> DEFERRED_REGISTER = DeferredRegister.create(ForgeRegistries.ENTITIES, SanityMod.MODID);
 
 //    public static final RegistryObject<EntityType<CreepingNightmare>> CREEPING_NIGHTMARE
 //            = DEFERRED_REGISTER.register(
