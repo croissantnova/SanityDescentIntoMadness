@@ -6,6 +6,7 @@ import croissantnova.sanitydim.capability.*;
 import croissantnova.sanitydim.config.ConfigItem;
 import croissantnova.sanitydim.config.ConfigItemCategory;
 import croissantnova.sanitydim.config.ConfigProxy;
+import croissantnova.sanitydim.entity.EntityRegistry;
 import croissantnova.sanitydim.entity.InnerEntity;
 import croissantnova.sanitydim.entity.InnerEntitySpawner;
 import croissantnova.sanitydim.item.ItemRegistry;
@@ -15,22 +16,21 @@ import croissantnova.sanitydim.net.SanityPacket;
 import croissantnova.sanitydim.passive.*;
 import croissantnova.sanitydim.util.MathHelper;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
-import net.minecraftforge.network.PacketDistributor;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public final class SanityProcessor
 {
@@ -54,7 +54,7 @@ public final class SanityProcessor
 
     private SanityProcessor() {}
 
-    private static float calcPassive(ServerPlayer player, ISanity sanity)
+    private static float calcPassive(ServerPlayerEntity player, ISanity sanity)
     {
         ResourceLocation dim = player.level.dimension().location();
         float passive = 0;
@@ -67,8 +67,8 @@ public final class SanityProcessor
         }
 
         garlandTimer--;
-        ItemStack headItem = player.getItemBySlot(EquipmentSlot.HEAD);
-        if (headItem.is(ItemRegistry.GARLAND.get()))
+        ItemStack headItem = player.getItemBySlot(EquipmentSlotType.HEAD);
+        if (headItem.getItem() == ItemRegistry.GARLAND.get())
         {
             // FIXME: garland is hardcoded
             passive -= .00005 * ConfigProxy.getPosMul(dim);
@@ -81,7 +81,7 @@ public final class SanityProcessor
         return passive;
     }
 
-    private static void shareSanity(ServerPlayer player, Sanity cap)
+    private static void shareSanity(ServerPlayerEntity player, Sanity cap)
     {
         if (cap.getDirty())
         {
@@ -91,27 +91,27 @@ public final class SanityProcessor
         }
     }
 
-    private static void handlePlayerAte(ServerPlayer player, ItemStack itemStack)
+    private static void handlePlayerAte(ServerPlayerEntity player, ItemStack itemStack)
     {
         handleActiveSourceForPlayer(
                 player,
                 ActiveSanitySources.EATING,
                 ConfigProxy::getEatingCooldown,
-                dim -> itemStack.getFoodProperties(player).getNutrition() * ConfigProxy.getEating(dim));
+                dim -> itemStack.getItem().getFoodProperties().getNutrition() * ConfigProxy.getEating(dim));
     }
 
-    public static float getGarlandMultiplier(ServerPlayer player)
+    public static float getGarlandMultiplier(ServerPlayerEntity player)
     {
-        return player.getItemBySlot(EquipmentSlot.HEAD).is(ItemRegistry.GARLAND.get()) ? .92f : 1.0f;
+        return player.getItemBySlot(EquipmentSlotType.HEAD).getItem() == ItemRegistry.GARLAND.get() ? .92f : 1.0f;
     }
 
-    public static float getSanityMultiplier(ServerPlayer player, float value)
+    public static float getSanityMultiplier(ServerPlayerEntity player, float value)
     {
         ResourceLocation dim = player.level.dimension().location();
         return value >= 0 ? ConfigProxy.getNegMul(dim) * getGarlandMultiplier(player) : ConfigProxy.getPosMul(dim);
     }
 
-    public static void addSanity(@NotNull ISanity sanity, float value, @NotNull ServerPlayer player)
+    public static void addSanity(@Nonnull ISanity sanity, float value, @Nonnull ServerPlayerEntity player)
     {
         if (value == 0.0f)
             return;
@@ -119,7 +119,7 @@ public final class SanityProcessor
         sanity.setSanity(sanity.getSanity() + value * getSanityMultiplier(player, value));
     }
 
-    public static void tickPlayer(final ServerPlayer player)
+    public static void tickPlayer(final ServerPlayerEntity player)
     {
         if (player == null || player.isCreative() || player.isSpectator())
             return;
@@ -132,15 +132,17 @@ public final class SanityProcessor
             float snapshot = s.getSanity();
             // passive premultiplied so no need for Sanity#addSanity
             s.setSanity(s.getSanity() + passive);
-            if (s instanceof IPassiveSanity ps)
+            if (s instanceof IPassiveSanity)
             {
-                ps.setPassiveIncrease(snapshot != s.getSanity() ? passive : 0);
+                ((IPassiveSanity)s).setPassiveIncrease(snapshot != s.getSanity() ? passive : 0);
             }
-            if (s instanceof IPersistentSanity ps)
+            if (s instanceof IPersistentSanity)
             {
+                IPersistentSanity ps = (IPersistentSanity)s;
+
                 int[] cds = ps.getActiveSourcesCooldowns();
                 for (int i = 0; i < cds.length; ++i)
-                    cds[i] = Mth.clamp(cds[i] - 1, 0, Integer.MAX_VALUE);
+                    cds[i] = net.minecraft.util.math.MathHelper.clamp(cds[i] - 1, 0, Integer.MAX_VALUE);
 
                 Map<Integer, Integer> itemCds = ps.getItemCooldowns();
                 for (Iterator<Map.Entry<Integer, Integer>> it = itemCds.entrySet().iterator(); it.hasNext();)
@@ -157,16 +159,19 @@ public final class SanityProcessor
         InnerEntitySpawner.trySpawnForPlayer(player);
     }
 
-    public static void tickLevel(final ServerLevel level)
+    public static void tickLevel(final ServerWorld level)
     {
-        for (Entity ent : level.getEntities().getAll())
+        for (Entity ent : level.getEntities(EntityRegistry.ROTTING_STALKER.get(), e -> true))
         {
-            if (ent instanceof InnerEntity ie)
+            if (ent instanceof InnerEntity)
             {
+                InnerEntity ie = (InnerEntity)ent;
                 ie.getCapability(InnerEntityCapImplProvider.CAP).ifPresent(iec ->
                 {
-                    if (iec instanceof InnerEntityCapImpl ieci)
+                    if (iec instanceof InnerEntityCapImpl)
                     {
+                        InnerEntityCapImpl ieci = (InnerEntityCapImpl)iec;
+
                         if (ieci.hasTarget() && ie.getTarget() == null || !ieci.hasTarget() && ie.getTarget() != null)
                             ieci.setHasTarget(ie.getTarget() != null);
 
@@ -182,14 +187,14 @@ public final class SanityProcessor
         }
     }
 
-    public static List<Player> getInsanePlayersInArea(final Level levelIn, BlockPos center, int blockRadius)
+    public static List<ServerPlayerEntity> getInsanePlayersInArea(final World levelIn, BlockPos center, int blockRadius)
     {
         if (levelIn == null || center == null)
             return null;
-        List<Player> list = new ArrayList<Player>();
-        for (Player player : levelIn.getEntitiesOfClass(
-                Player.class,
-                new AABB(center.offset(blockRadius, blockRadius, blockRadius), center.offset(-blockRadius, -blockRadius, -blockRadius))))
+        List<ServerPlayerEntity> list = new ArrayList<ServerPlayerEntity>();
+        for (ServerPlayerEntity player : levelIn.getEntitiesOfClass(
+                ServerPlayerEntity.class,
+                new AxisAlignedBB(center.offset(blockRadius, blockRadius, blockRadius), center.offset(-blockRadius, -blockRadius, -blockRadius))))
         {
             player.getCapability(SanityProvider.CAP).ifPresent(s ->
             {
@@ -200,14 +205,14 @@ public final class SanityProcessor
         return list;
     }
 
-    public static Player getMostInsanePlayer(final Level levelIn)
+    public static PlayerEntity getMostInsanePlayer(final World levelIn)
     {
         if (levelIn == null)
             return null;
 
-        Player toReturn = null;
+        PlayerEntity toReturn = null;
         float maxSanity = Float.MIN_VALUE;
-        for (Player player : levelIn.players())
+        for (PlayerEntity player : levelIn.players())
         {
             if (player.isCreative() || player.isSpectator())
                 continue;
@@ -225,7 +230,7 @@ public final class SanityProcessor
     }
 
     public static void handleActiveSourceForPlayer(
-            ServerPlayer player,
+            ServerPlayerEntity player,
             int id,
             Function<ResourceLocation, Integer> cdSupplier,
             Function<ResourceLocation, Float> sanitySupplier)
@@ -238,8 +243,9 @@ public final class SanityProcessor
             ResourceLocation dimLoc = player.level.dimension().location();
             int cd = cdSupplier.apply(dimLoc);
 
-            if (s instanceof IPersistentSanity ps && cd > 0.0f)
+            if (s instanceof IPersistentSanity && cd > 0.0f)
             {
+                IPersistentSanity ps = (IPersistentSanity)s;
                 int timePassed = cd - ps.getActiveSourcesCooldowns()[id];
                 addSanity(s, sanitySupplier.apply(dimLoc) * MathHelper.clampNorm((float) timePassed / cd), player);
 //                s.setSanity(s.getSanity() + sanitySupplier.apply(dimLoc) * MathHelper.clampNorm((float) timePassed / cd));
@@ -251,7 +257,7 @@ public final class SanityProcessor
         });
     }
 
-    public static void handlePlayerHurt(ServerPlayer player, float amount)
+    public static void handlePlayerHurt(ServerPlayerEntity player, float amount)
     {
         if (player == null || player.isCreative() || player.isSpectator() || amount <= 0)
             return;
@@ -264,7 +270,7 @@ public final class SanityProcessor
         });
     }
 
-    public static void handlePlayerHurtAnimal(ServerPlayer player, Animal animal, float amount)
+    public static void handlePlayerHurtAnimal(ServerPlayerEntity player, AnimalEntity animal, float amount)
     {
         if (player == null || player.isCreative() || player.isSpectator() || amount <= 0)
             return;
@@ -277,7 +283,7 @@ public final class SanityProcessor
         });
     }
 
-    public static void handlePlayerPetDeath(ServerPlayer player, TamableAnimal pet)
+    public static void handlePlayerPetDeath(ServerPlayerEntity player, TameableEntity pet)
     {
         if (player == null || player.isCreative() || player.isSpectator() || pet.isOwnedBy(player))
             return;
@@ -290,21 +296,21 @@ public final class SanityProcessor
         });
     }
 
-    public static void handlePlayerEnderManAngered(ServerPlayer player)
+    public static void handlePlayerEnderManAngered(ServerPlayerEntity player)
     {
         if (player == null || player.isCreative() || player.isSpectator())
             return;
 
         player.getCapability(SanityProvider.CAP).ifPresent(s ->
         {
-            if (s instanceof IPersistentSanity ps && ps.getEnderManAngerTimer() <= 0)
+            if (s instanceof IPersistentSanity && ((IPersistentSanity)s).getEnderManAngerTimer() <= 0)
             {
-                ps.setEnderManAngerTimer(100);
+                ((IPersistentSanity)s).setEnderManAngerTimer(100);
             }
         });
     }
 
-    public static void handlePlayerGotAdvancement(ServerPlayer player, Advancement adv)
+    public static void handlePlayerGotAdvancement(ServerPlayerEntity player, Advancement adv)
     {
         if (player == null || player.isCreative() || player.isSpectator())
             return;
@@ -320,7 +326,7 @@ public final class SanityProcessor
         });
     }
 
-    public static void handlePlayerBredAnimals(ServerPlayer player)
+    public static void handlePlayerBredAnimals(ServerPlayerEntity player)
     {
         if (player == null || player.isCreative() || player.isSpectator())
             return;
@@ -328,7 +334,7 @@ public final class SanityProcessor
         handleActiveSourceForPlayer(player, ActiveSanitySources.BREEDING_ANIMALS, ConfigProxy::getAnimalBreedingCooldown, ConfigProxy::getAnimalBreeding);
     }
 
-    public static void handlePlayerTradedWithVillager(ServerPlayer player)
+    public static void handlePlayerTradedWithVillager(ServerPlayerEntity player)
     {
         if (player == null || player.isCreative() || player.isSpectator())
             return;
@@ -336,7 +342,7 @@ public final class SanityProcessor
         handleActiveSourceForPlayer(player, ActiveSanitySources.VILLAGER_TRADE, ConfigProxy::getVillagerTradeCooldown, ConfigProxy::getVillagerTrade);
     }
 
-    public static void handlePlayerUsedShears(ServerPlayer player)
+    public static void handlePlayerUsedShears(ServerPlayerEntity player)
     {
         if (player == null || player.isCreative() || player.isSpectator())
             return;
@@ -344,7 +350,7 @@ public final class SanityProcessor
         handleActiveSourceForPlayer(player, ActiveSanitySources.SHEARING, ConfigProxy::getShearingCooldown, ConfigProxy::getShearing);
     }
 
-    public static void handlePlayerSpawnedChicken(ServerPlayer player)
+    public static void handlePlayerSpawnedChicken(ServerPlayerEntity player)
     {
         if (player == null || player.isCreative() || player.isSpectator())
             return;
@@ -352,21 +358,22 @@ public final class SanityProcessor
         handleActiveSourceForPlayer(player, ActiveSanitySources.SPAWNING_BABY_CHICKEN, ConfigProxy::getBabyChickenSpawningCooldown, ConfigProxy::getBabyChickenSpawning);
     }
 
-    public static void handlePlayerUsedItem(ServerPlayer player, ItemStack itemStack)
+    public static void handlePlayerUsedItem(ServerPlayerEntity player, ItemStack itemStack)
     {
         if (player == null || player.isCreative() || player.isSpectator())
             return;
 
         player.getCapability(SanityProvider.CAP).ifPresent(s ->
         {
-            if (s instanceof IPersistentSanity ps)
+            if (s instanceof IPersistentSanity)
             {
+                IPersistentSanity ps = (IPersistentSanity)s;
                 ResourceLocation dim = player.level.dimension().location();
                 Map<Integer, Integer> itemCds = ps.getItemCooldowns();
 
                 for (ConfigItem citem : ConfigProxy.getItems(dim))
                 {
-                    if (!itemStack.is(ForgeRegistries.ITEMS.getValue(citem.m_name)))
+                    if (!(itemStack.getItem() == ForgeRegistries.ITEMS.getValue(citem.m_name)))
                         continue;
 
                     if (!ConfigProxy.getIdToItemCat(dim).containsKey(citem.m_cat))
@@ -403,7 +410,7 @@ public final class SanityProcessor
         });
     }
 
-    public static void handlePlayerFishedItem(ServerPlayer player)
+    public static void handlePlayerFishedItem(ServerPlayerEntity player)
     {
         if (player == null || player.isCreative() || player.isSpectator())
             return;

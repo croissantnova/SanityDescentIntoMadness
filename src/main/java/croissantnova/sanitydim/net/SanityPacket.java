@@ -5,15 +5,15 @@ import java.util.function.Supplier;
 import croissantnova.sanitydim.capability.Sanity;
 import croissantnova.sanitydim.capability.SanityProvider;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.fml.network.NetworkEvent;
 
 public class SanityPacket
 {
     public Sanity m_cap;
-    public FriendlyByteBuf m_buf;
+    public PacketBuffer m_buf;
 
     public SanityPacket()
     {
@@ -25,12 +25,12 @@ public class SanityPacket
         this.m_cap = cap;
     }
 
-    public static void encode(SanityPacket packet, FriendlyByteBuf buf)
+    public static void encode(SanityPacket packet, PacketBuffer buf)
     {
         packet.m_cap.serialize(buf);
     }
 
-    public static SanityPacket decode(FriendlyByteBuf buf)
+    public static SanityPacket decode(PacketBuffer buf)
     {
         SanityPacket packet = new SanityPacket();
         packet.m_buf = buf;
@@ -49,8 +49,8 @@ public class SanityPacket
             {
                 Minecraft.getInstance().player.getCapability(SanityProvider.CAP).ifPresent(s ->
                 {
-                    if (s instanceof Sanity sc)
-                        sc.deserialize(packet.m_buf);
+                    if (s instanceof Sanity)
+                        ((Sanity)s).deserialize(packet.m_buf);
                 });
             });
         });

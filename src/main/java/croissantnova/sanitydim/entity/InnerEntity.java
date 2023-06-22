@@ -1,16 +1,16 @@
 package croissantnova.sanitydim.entity;
 
 import croissantnova.sanitydim.sound.SoundRegistry;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.world.World;
+import javax.annotation.Nonnull;
 
-public abstract class InnerEntity extends Monster
+public abstract class InnerEntity extends MonsterEntity
 {
-    protected InnerEntity(EntityType<? extends Monster> entityType, Level level)
+    protected InnerEntity(EntityType<? extends MonsterEntity> entityType, World level)
     {
         super(entityType, level);
     }
@@ -24,7 +24,7 @@ public abstract class InnerEntity extends Monster
     @Override
     public void tick()
     {
-        if (getLevel().isClientSide())
+        if (this.level.isClientSide())
         {
             super.tick();
             return;
@@ -33,7 +33,7 @@ public abstract class InnerEntity extends Monster
     }
 
     @Override
-    protected SoundEvent getHurtSound(@NotNull DamageSource damageSource)
+    protected SoundEvent getHurtSound(@Nonnull DamageSource damageSource)
     {
         return SoundRegistry.INNER_ENTITY_HURT.get();
     }

@@ -2,34 +2,34 @@ package croissantnova.sanitydim.passive;
 
 import croissantnova.sanitydim.capability.ISanity;
 import croissantnova.sanitydim.config.ConfigProxy;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.level.entity.EntityTypeTest;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
-
+import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.vector.Vector3d;
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class Pet implements IPassiveSanitySource
 {
     @Override
-    public float get(@NotNull ServerPlayer player, @NotNull ISanity cap, @NotNull ResourceLocation dim)
+    public float get(@Nonnull ServerPlayerEntity player, @Nonnull ISanity cap, @Nonnull ResourceLocation dim)
     {
-        AABB playerSurroundings = new AABB(
-                player.position().add(new Vec3(-8.0f, -8.0f, -8.0f)),
-                player.position().add(new Vec3(8.0f, 8.0f, 8.0f)));
+        AxisAlignedBB playerSurroundings = new AxisAlignedBB(
+                player.position().add(new Vector3d(-8.0f, -8.0f, -8.0f)),
+                player.position().add(new Vector3d(8.0f, 8.0f, 8.0f)));
 
         float pet = ConfigProxy.getPet(dim);
         if (pet != 0.0f)
         {
-            List<TamableAnimal> tamablesAround = player.level.getEntities(
-                    EntityTypeTest.forClass(TamableAnimal.class),
-                    playerSurroundings,
-                    ta -> ta.isOwnedBy(player) && player.hasLineOfSight(ta));
-            if (!tamablesAround.isEmpty())
-                return pet;
+            List<TameableEntity> tamablesAround = player.level.getEntitiesOfClass(
+                    TameableEntity.class,
+                    playerSurroundings);
+            for (TameableEntity ent : tamablesAround)
+            {
+                if (ent.isOwnedBy(player) && player.canSee(ent))
+                    return pet;
+            }
         }
 
         return 0;

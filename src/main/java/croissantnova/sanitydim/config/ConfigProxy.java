@@ -1,18 +1,17 @@
 package croissantnova.sanitydim.config;
 
 import com.google.common.collect.Maps;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
-import org.apache.commons.compress.utils.Lists;
+import net.minecraft.util.ResourceLocation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class ConfigProxy
 {
-    private static List<ConfigPassiveBlock> defPassiveBlocks = Lists.newArrayList();
-    private static List<ConfigItem> defItems = Lists.newArrayList();
-    private static List<ConfigItemCategory> defItemCats = Lists.newArrayList();
+    private static List<ConfigPassiveBlock> defPassiveBlocks = new ArrayList<>();
+    private static List<ConfigItem> defItems = new ArrayList<>();
+    private static List<ConfigItemCategory> defItemCats = new ArrayList<>();
     private static Map<Integer, ConfigItemCategory> defIdToItemCat = Maps.newHashMap();
 
     public static float getPosMul(ResourceLocation dimension)

@@ -1,14 +1,14 @@
 {
   "minVersion": "0.7.11",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_8",
   "package": "croissantnova.sanitydim.mixin",
   "refmap": "sanitydim.refmap.json",
   "mixins": [
     "MixinGameRenderer",
-    "MixinThrownEgg",
-    "MixinEnderMan",
+    "MixinEggEntity",
+    "MixinEndermanEntity",
     "MixinShearsItem",
-    "MixinJukeboxBlockEntity",
+    "MixinJukeboxTileEntity",
     "MixinMerchantResultSlot"
   ],
   "client": [],

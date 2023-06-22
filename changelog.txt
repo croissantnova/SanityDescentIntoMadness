@@ -1,5 +1,2 @@
-mc1.18-forge40.2.0-1.0.1:
-- Fixed config comments
-
-mc1.18-forge40.2.0-1.0.0:
+mc1.16-forge36.2.34-1.0.0:
 - Initial release

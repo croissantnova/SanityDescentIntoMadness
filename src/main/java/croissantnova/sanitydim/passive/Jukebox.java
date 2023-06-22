@@ -3,34 +3,33 @@ package croissantnova.sanitydim.passive;
 import croissantnova.sanitydim.capability.ISanity;
 import croissantnova.sanitydim.config.ConfigProxy;
 import croissantnova.sanitydim.util.BlockPosHelper;
-import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import org.apache.commons.compress.utils.Lists;
-import org.jetbrains.annotations.NotNull;
-
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Jukebox implements IPassiveSanitySource
 {
-    public static final List<BlockPos> JUKEBOXES = Lists.newArrayList();
-    public static final List<BlockPos> UNSETTLING_JUKEBOXES = Lists.newArrayList();
+    public static final List<BlockPos> JUKEBOXES = new ArrayList<>();
+    public static final List<BlockPos> UNSETTLING_JUKEBOXES = new ArrayList<>();
 
     @Override
-    public float get(@NotNull ServerPlayer player, @NotNull ISanity cap, @NotNull ResourceLocation dim)
+    public float get(@Nonnull ServerPlayerEntity player, @Nonnull ISanity cap, @Nonnull ResourceLocation dim)
     {
         for (BlockPos blockPos : UNSETTLING_JUKEBOXES)
         {
-            if (player.getEyePosition().distanceTo(BlockPosHelper.getCenter(blockPos)) <= 60)
+            if (player.getEyePosition(1f).distanceTo(BlockPosHelper.getCenter(blockPos)) <= 60)
                 return ConfigProxy.getJukeboxUnsettling(dim);
         }
         for (BlockPos blockPos : JUKEBOXES)
         {
-            if (player.getEyePosition().distanceTo(BlockPosHelper.getCenter(blockPos)) <= 60)
+            if (player.getEyePosition(1f).distanceTo(BlockPosHelper.getCenter(blockPos)) <= 60)
                 return ConfigProxy.getJukeboxPleasant(dim);
         }
 
@@ -46,7 +45,7 @@ public class Jukebox implements IPassiveSanitySource
 
     public static void handleJukeboxStartedPlaying(BlockPos blockPos, ItemStack record)
     {
-        if (!record.is(ItemTags.MUSIC_DISCS))
+        if (!record.getItem().is(ItemTags.MUSIC_DISCS))
             return;
 
         boolean unsettling = isMusicDiscUnsettling(record.getItem());

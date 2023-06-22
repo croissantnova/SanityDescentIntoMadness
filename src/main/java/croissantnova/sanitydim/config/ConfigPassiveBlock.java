@@ -1,7 +1,7 @@
 package croissantnova.sanitydim.config;
 
 import com.google.common.collect.Maps;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.Map;
 

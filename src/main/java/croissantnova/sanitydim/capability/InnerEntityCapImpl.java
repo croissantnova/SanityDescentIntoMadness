@@ -1,6 +1,6 @@
 package croissantnova.sanitydim.capability;
 
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.PacketBuffer;
 
 public class InnerEntityCapImpl implements IInnerEntityCap
 {
@@ -30,12 +30,12 @@ public class InnerEntityCapImpl implements IInnerEntityCap
         m_dirty = value;
     }
 
-    public void serialize(FriendlyByteBuf buf)
+    public void serialize(PacketBuffer buf)
     {
         buf.writeBoolean(m_hasTarget);
     }
 
-    public void deserialize(FriendlyByteBuf buf)
+    public void deserialize(PacketBuffer buf)
     {
         m_hasTarget = buf.readBoolean();
     }

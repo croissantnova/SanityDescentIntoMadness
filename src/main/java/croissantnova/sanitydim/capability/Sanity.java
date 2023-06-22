@@ -3,8 +3,9 @@ package croissantnova.sanitydim.capability;
 import com.google.common.collect.Maps;
 import croissantnova.sanitydim.ActiveSanitySources;
 import croissantnova.sanitydim.util.MathHelper;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
+
 import java.util.Map;
 
 public class Sanity implements ISanity, IPassiveSanity, IPersistentSanity
@@ -21,7 +22,7 @@ public class Sanity implements ISanity, IPassiveSanity, IPersistentSanity
     }
 
     @Override
-    public void serializeNBT(CompoundTag tag)
+    public void serializeNBT(CompoundNBT tag)
     {
         tag.putFloat("sanity", m_sanityVal);
         tag.putInt("sleeping", m_cds[ActiveSanitySources.SLEEPING]);
@@ -36,7 +37,7 @@ public class Sanity implements ISanity, IPassiveSanity, IPersistentSanity
     }
 
     @Override
-    public void deserializeNBT(CompoundTag tag)
+    public void deserializeNBT(CompoundNBT tag)
     {
         setSanity(tag.getFloat("sanity"));
         m_cds[ActiveSanitySources.SLEEPING] = tag.getInt("sleeping");
@@ -50,13 +51,13 @@ public class Sanity implements ISanity, IPassiveSanity, IPersistentSanity
         deserializeItemCds(tag);
     }
 
-    public void serialize(FriendlyByteBuf buf)
+    public void serialize(PacketBuffer buf)
     {
         buf.writeFloat(m_sanityVal);
         buf.writeFloat(m_passive);
     }
 
-    public void deserialize(FriendlyByteBuf buf)
+    public void deserialize(PacketBuffer buf)
     {
         m_sanityVal = buf.readFloat();
         m_passive = buf.readFloat();
@@ -122,7 +123,7 @@ public class Sanity implements ISanity, IPassiveSanity, IPersistentSanity
         return m_emAngerTimer;
     }
 
-    private void serializeItemCds(CompoundTag tag)
+    private void serializeItemCds(CompoundNBT tag)
     {
         long[] itemCds = new long[m_itemCds.size()];
         int i = 0;
@@ -141,7 +142,7 @@ public class Sanity implements ISanity, IPassiveSanity, IPersistentSanity
         tag.putLongArray("item_cooldowns", itemCds);
     }
 
-    private void deserializeItemCds(CompoundTag tag)
+    private void deserializeItemCds(CompoundNBT tag)
     {
         long[] itemCds = tag.getLongArray("item_cooldowns");
         m_itemCds.clear();

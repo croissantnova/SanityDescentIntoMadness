@@ -4,16 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
 import croissantnova.sanitydim.capability.ISanity;
 import croissantnova.sanitydim.capability.SanityProvider;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 public abstract class InnerEntitySpawner
 {
@@ -24,11 +22,11 @@ public abstract class InnerEntitySpawner
     public static int spawnTimeout = 20 * 20;
 
     public static final float SPAWN_THRESHOLD = .75f;
-    public static final Map<ServerPlayer, Integer> PLAYER_TO_SPAWN_TIMEOUT = new HashMap<ServerPlayer, Integer>();
+    public static final Map<ServerPlayerEntity, Integer> PLAYER_TO_SPAWN_TIMEOUT = new HashMap<>();
 
-    private static int getHeightForSpawning(Level level, BlockPos blockPos, int radius)
+    private static int getHeightForSpawning(World level, BlockPos blockPos, int radius)
     {
-        BlockPos.MutableBlockPos mutable = blockPos.mutable();
+        BlockPos.Mutable mutable = blockPos.mutable();
         for (int i = 0; i < radius; i++)
         {
             if (!level.getBlockState(mutable).isAir() && level.getBlockState(mutable.move(Direction.UP)).isAir())
@@ -46,7 +44,7 @@ public abstract class InnerEntitySpawner
         return 0;
     }
 
-    public static boolean trySpawnForPlayer(ServerPlayer player)
+    public static boolean trySpawnForPlayer(ServerPlayerEntity player)
     {
         if (player == null || player.isCreative() || player.isSpectator() || player.level == null)
             return false;
@@ -62,7 +60,7 @@ public abstract class InnerEntitySpawner
         ISanity s = player.getCapability(SanityProvider.CAP).orElse(null);
         if (s == null)
             return false;
-        if (s.getSanity() < SPAWN_THRESHOLD || getInnerEntitiesInRadius(player.level, player.blockPosition(), detectionRad).size() >= 3)
+        if (s.getSanity() < SPAWN_THRESHOLD || getInnerEntitiesInRadius(player.getLevel(), player.blockPosition(), detectionRad).size() >= 3)
             return false;
 
         RottingStalker entity = EntityRegistry.ROTTING_STALKER.get().create(player.level);
@@ -83,10 +81,10 @@ public abstract class InnerEntitySpawner
             return false;
 
         trialPos = new BlockPos(trialPos.getX(), h, trialPos.getZ());
-        entity.setPos(new Vec3(trialPos.getX() + .5f, trialPos.getY() + .5f, trialPos.getZ() + .5f));
+        entity.setPos(trialPos.getX() + .5f, trialPos.getY() + .5f, trialPos.getZ() + .5f);
         if (entity.checkSpawnObstruction(player.level) &&
                 player.level.noCollision(entity) &&
-                ((ServerLevel)player.level).tryAddFreshEntityWithPassengers(entity))
+                ((ServerWorld)player.level).tryAddFreshEntityWithPassengers(entity))
         {
             PLAYER_TO_SPAWN_TIMEOUT.put(player, spawnTimeout);
             return true;
@@ -95,8 +93,8 @@ public abstract class InnerEntitySpawner
         return false;
     }
 
-    public static List<InnerEntity> getInnerEntitiesInRadius(Level level, BlockPos blockPos, int radius)
+    public static List<InnerEntity> getInnerEntitiesInRadius(ServerWorld level, BlockPos blockPos, int radius)
     {
-        return level.getEntitiesOfClass(InnerEntity.class, new AABB(blockPos).inflate(radius));
+        return level.getEntitiesOfClass(InnerEntity.class, new AxisAlignedBB(blockPos).inflate(radius));
     }
 }

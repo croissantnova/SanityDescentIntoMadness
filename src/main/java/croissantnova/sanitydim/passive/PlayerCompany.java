@@ -3,29 +3,29 @@ package croissantnova.sanitydim.passive;
 import croissantnova.sanitydim.capability.ISanity;
 import croissantnova.sanitydim.capability.SanityProvider;
 import croissantnova.sanitydim.config.ConfigProxy;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.entity.EntityPredicate;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.vector.Vector3d;
+import javax.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class PlayerCompany implements IPassiveSanitySource
 {
     @Override
-    public float get(@NotNull ServerPlayer player, @NotNull ISanity cap, @NotNull ResourceLocation dim)
+    public float get(@Nonnull ServerPlayerEntity player, @Nonnull ISanity cap, @Nonnull ResourceLocation dim)
     {
         // FIXME: untested
 
         AtomicReference<Float> result = new AtomicReference<>(0.0f);
         AtomicReference<Boolean> flag = new AtomicReference<>(false);
-        Vec3 offset = new Vec3(8.0d, 8.0d, 8.0d);
+        Vector3d offset = new Vector3d(8.0d, 8.0d, 8.0d);
         float sane = ConfigProxy.getSanePlayerCompany(dim);
         float insane = ConfigProxy.getInsanePlayerCompany(dim);
 
-        for (Player p : player.level.getNearbyPlayers(TargetingConditions.forNonCombat(), player, new AABB(
+        for (PlayerEntity p : player.level.getNearbyPlayers(new EntityPredicate(), player, new AxisAlignedBB(
                 player.position().subtract(offset),
                 player.position().add(offset)
         )))

@@ -1,10 +1,10 @@
 package croissantnova.sanitydim;
 
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.CompoundNBT;
 
 public interface ICompoundTagSerializable
 {
-    void serializeNBT(CompoundTag tag);
+    void serializeNBT(CompoundNBT tag);
 
-    void deserializeNBT(CompoundTag tag);
+    void deserializeNBT(CompoundNBT tag);
 }

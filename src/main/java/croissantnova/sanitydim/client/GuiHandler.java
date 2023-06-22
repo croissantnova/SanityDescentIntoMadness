@@ -3,9 +3,8 @@ package croissantnova.sanitydim.client;
 import java.util.Random;
 import java.util.function.Function;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-
 import croissantnova.sanitydim.SanityMod;
 import croissantnova.sanitydim.capability.IPassiveSanity;
 import croissantnova.sanitydim.capability.ISanity;
@@ -14,23 +13,25 @@ import croissantnova.sanitydim.config.ConfigProxy;
 import croissantnova.sanitydim.config.SanityIndicatorLocation;
 import croissantnova.sanitydim.sound.SwishSoundInstance;
 import croissantnova.sanitydim.util.MathHelper;
+import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.IngameGui;
+import net.minecraft.client.renderer.texture.SimpleTexture;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.OverlayRegistry;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiHandler
 {
     public static final ResourceLocation SANITY_INDICATOR = new ResourceLocation(SanityMod.MODID, "textures/sanity_indicator.png");
-    public static final MutableComponent[] HINTS0;
-    public static final MutableComponent[] HINTS1;
+    public static final TextComponent[] HINTS0;
+    public static final TextComponent[] HINTS1;
 
     private final Minecraft m_mc;
     private ISanity m_cap;
@@ -49,24 +50,25 @@ public class GuiHandler
     private float m_hintTimer;
     private float m_showingHintTimer;
     private float m_maxShowingHintTimer;
-    private MutableComponent m_hint;
+    private TextComponent m_hint;
 
     public GuiHandler()
     {
         m_mc = Minecraft.getInstance();
+//        m_mc.getTextureManager().register(SANITY_INDICATOR, new SimpleTexture(SANITY_INDICATOR));
     }
 
     static
     {
-        HINTS0 = new MutableComponent[11];
+        HINTS0 = new TextComponent[11];
         for (int i = 0; i < HINTS0.length; i++)
         {
-            HINTS0[i] = new TranslatableComponent("gui." + SanityMod.MODID + ".hint0" + i);
+            HINTS0[i] = new TranslationTextComponent("gui." + SanityMod.MODID + ".hint0" + i);
         }
-        HINTS1 = new MutableComponent[8];
+        HINTS1 = new TextComponent[8];
         for (int i = 0; i < HINTS1.length; i++)
         {
-            HINTS1[i] = new TranslatableComponent("gui." + SanityMod.MODID + ".hint1" + i);
+            HINTS1[i] = new TranslationTextComponent("gui." + SanityMod.MODID + ".hint1" + i);
         }
     }
 
@@ -80,8 +82,8 @@ public class GuiHandler
             {
                 if (cap.getSanity() < .4f)
                     return false;
-                pass.getEffect().safeGetUniform("DesaturateFactor").set(MathHelper.clampNorm(Mth.inverseLerp(cap.getSanity(), .4f, .8f)) * .69f);
-                pass.getEffect().safeGetUniform("SpreadFactor").set(MathHelper.clampNorm(Mth.inverseLerp(cap.getSanity(), .4f, .8f)) * 1.43f);
+                pass.getEffect().safeGetUniform("DesaturateFactor").set((float)MathHelper.clampNorm(net.minecraft.util.math.MathHelper.inverseLerp(cap.getSanity(), .4f, .8f)) * .69f);
+                pass.getEffect().safeGetUniform("SpreadFactor").set((float)MathHelper.clampNorm(net.minecraft.util.math.MathHelper.inverseLerp(cap.getSanity(), .4f, .8f)) * 1.43f);
                 return true;
             });
         });
@@ -91,14 +93,14 @@ public class GuiHandler
             {
                 if (cap.getSanity() < .4f)
                     return false;
-                pass.getEffect().safeGetUniform("Factor").set(MathHelper.clampNorm(Mth.inverseLerp(cap.getSanity(), .4f, .8f)) * .1f);
+                pass.getEffect().safeGetUniform("Factor").set((float)MathHelper.clampNorm(net.minecraft.util.math.MathHelper.inverseLerp(cap.getSanity(), .4f, .8f)) * .1f);
                 pass.getEffect().safeGetUniform("TimeTotal").set(m_post.getTime() / 20.0f);
                 return true;
             });
         });
     }
 
-    private boolean processPlayer(LocalPlayer player, Function<ISanity, Boolean> action)
+    private boolean processPlayer(ClientPlayerEntity player, Function<ISanity, Boolean> action)
     {
         ISanity cap;
         return player != null &&
@@ -108,7 +110,7 @@ public class GuiHandler
                 action.apply(cap);
     }
 
-    private void renderSanityIndicator(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int scw, int sch)
+    private void renderSanityIndicator(MatrixStack poseStack, float partialTicks, int scw, int sch)
     {
         if (m_mc.player == null || m_mc.player.isCreative() || m_mc.player.isSpectator() || m_cap == null || !ConfigProxy.getRenderIndicator(m_mc.player.level.dimension().location()))
             return;
@@ -162,23 +164,29 @@ public class GuiHandler
             y += m_indicatorOffset;
         int vOffset = Math.round(m_cap.getSanity() * (spriteh - 2)) + 1;
 
-        RenderSystem.setShaderTexture(0, SANITY_INDICATOR);
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+//        RenderSystem.color4f(1f, 1f, 1f, 1f);
+//        RenderSystem.bindTexture(m_mc.textureManager.getTexture(SANITY_INDICATOR).getId());
+        m_mc.textureManager.bind(SANITY_INDICATOR);
+        RenderSystem.enableTexture();
         // bg
-        ForgeIngameGui.blit(poseStack, x, y, 0, 0, 0, spritew, spriteh, texw, texh);
+//        IngameGui.blit(poseStack, x, y, 0, 0, 0, spritew, spriteh, texw, texh);
+        IngameGui.blit(poseStack, x, y, 0, 0, 0, spritew, spriteh, texh, texw);
         if (m_flashTimer > 0 && ((int) m_flashTimer / 3) % 2 == 0)
         {
             // bg flash
-            ForgeIngameGui.blit(poseStack, x, y, 0, spritew, 0, spritew, spriteh, texw, texh);
+//            IngameGui.blit(poseStack, x, y, 0, spritew, 0, spritew, spriteh, texw, texh);
+            IngameGui.blit(poseStack, x, y, 0, spritew, 0, spritew, spriteh, texh, texw);
             if (m_flashSanityGain > 0)
             {
                 int flashOffset = Math.round((m_cap.getSanity() - m_flashSanityGain) * (spriteh - 2)) + 1;
                 // brain flash
-                ForgeIngameGui.blit(poseStack, x, y + flashOffset, 0, spritew * 3, flashOffset, spritew, spriteh - flashOffset, texw, texh);
+//                IngameGui.blit(poseStack, x, y + flashOffset, 0, spritew * 3, flashOffset, spritew, spriteh - flashOffset, texw, texh);
+                IngameGui.blit(poseStack, x, y + flashOffset, 0, spritew * 3, flashOffset, spritew, spriteh - flashOffset, texh, texw);
             }
         }
         // brain
-        ForgeIngameGui.blit(poseStack, x, y + vOffset, 0, spritew * 2, vOffset, spritew, spriteh - vOffset, texw, texh);
+//        IngameGui.blit(poseStack, x, y + vOffset, 0, spritew * 2, vOffset, spritew, spriteh - vOffset, texw, texh);
+        IngameGui.blit(poseStack, x, y + vOffset, 0, spritew * 2, vOffset, spritew, spriteh - vOffset, texh, texw);
         if (m_cap instanceof IPassiveSanity)
         {
             float p = ((IPassiveSanity)m_cap).getPassiveIncrease();
@@ -188,14 +196,14 @@ public class GuiHandler
             {
                 if ((absp = Math.abs(p)) >= m_passiveThreshold)
                 {
-                    m_arrowTimer = Mth.clamp(m_arrowTimer, 0f, m_maxArrowTimer);
+                    m_arrowTimer = net.minecraft.util.math.MathHelper.clamp(m_arrowTimer, 0f, m_maxArrowTimer);
                     os = (m_arrowTimer >= 12f && m_arrowTimer <= 15f) || (m_arrowTimer >= 0f && m_arrowTimer <= 3f) ?
                             0 : (((int) m_arrowTimer / 3) % 2 == 0 ? 2 : 1);
                     os *= m_arrowTimer > 12f ? 1 : -1;
                 }
                 else
                 {
-                    m_arrowTimer = Mth.clamp(m_arrowTimer, 0f, m_maxArrowTimerSmall);
+                    m_arrowTimer = net.minecraft.util.math.MathHelper.clamp(m_arrowTimer, 0f, m_maxArrowTimerSmall);
                     os = ((int) m_arrowTimer / 4) % 2;
                     os *= m_arrowTimer > 8f ? 1 : -1;
                 }
@@ -204,26 +212,32 @@ public class GuiHandler
                 {
                     if (absp < m_passiveThreshold)
                     {
-                        ForgeIngameGui.blit(poseStack, x, y + os, 0, 0, spriteh, spritew, spriteh, texw, texh);
-                        ForgeIngameGui.blit(poseStack, x, y + vOffset, 0, spritew, spriteh + vOffset - os, spritew, spriteh - vOffset + os, texw, texh);
+//                        IngameGui.blit(poseStack, x, y + os, 0, 0, spriteh, spritew, spriteh, texw, texh);
+                        IngameGui.blit(poseStack, x, y + os, 0, 0, spriteh, spritew, spriteh, texh, texw);
+//                        IngameGui.blit(poseStack, x, y + vOffset, 0, spritew, spriteh + vOffset - os, spritew, spriteh - vOffset + os, texw, texh);
+                        IngameGui.blit(poseStack, x, y + vOffset, 0, spritew, spriteh + vOffset - os, spritew, spriteh - vOffset + os, texh, texw);
                     }
                     else
                     {
-                        ForgeIngameGui.blit(poseStack, x, y + os, 0, spritew * 2, spriteh, spritew, spriteh, texw, texh);
-                        ForgeIngameGui.blit(poseStack, x, y + vOffset, 0, spritew * 3, spriteh + vOffset - os, spritew, spriteh - vOffset + os, texw, texh);
+//                        IngameGui.blit(poseStack, x, y + os, 0, spritew * 2, spriteh, spritew, spriteh, texw, texh);
+                        IngameGui.blit(poseStack, x, y + os, 0, spritew * 2, spriteh, spritew, spriteh, texh, texw);
+//                        IngameGui.blit(poseStack, x, y + vOffset, 0, spritew * 3, spriteh + vOffset - os, spritew, spriteh - vOffset + os, texw, texh);
+                        IngameGui.blit(poseStack, x, y + vOffset, 0, spritew * 3, spriteh + vOffset - os, spritew, spriteh - vOffset + os, texh, texw);
                     }
                 }
                 else
                 {
                     if (absp < m_passiveThreshold)
                     {
-                        ForgeIngameGui.blit(poseStack, x, y + os, 0, 0, spriteh * 2, spritew, spriteh, texw, texh);
-                        ForgeIngameGui.blit(poseStack, x, y + vOffset, 0, spritew, spriteh * 2 + vOffset - os, spritew, spriteh - vOffset + os, texw, texh);
+//                        IngameGui.blit(poseStack, x, y + os, 0, 0, spriteh * 2, spritew, spriteh, texw, texh);
+                        IngameGui.blit(poseStack, x, y + os, 0, 0, spriteh * 2, spritew, spriteh, texh, texw);
+//                        IngameGui.blit(poseStack, x, y + vOffset, 0, spritew, spriteh * 2 + vOffset - os, spritew, spriteh - vOffset + os, texw, texh);
+                        IngameGui.blit(poseStack, x, y + vOffset, 0, spritew, spriteh * 2 + vOffset - os, spritew, spriteh - vOffset + os, texh, texw);
                     }
                     else
                     {
-                        ForgeIngameGui.blit(poseStack, x, y + os, 0, spritew * 2, spriteh * 2, spritew, spriteh, texw, texh);
-                        ForgeIngameGui.blit(poseStack, x, y + vOffset, 0, spritew * 3, spriteh * 2 + vOffset - os, spritew, spriteh - vOffset + os, texw, texh);
+                        IngameGui.blit(poseStack, x, y + os, 0, spritew * 2, spriteh * 2, spritew, spriteh, texw, texh);
+                        IngameGui.blit(poseStack, x, y + vOffset, 0, spritew * 3, spriteh * 2 + vOffset - os, spritew, spriteh - vOffset + os, texw, texh);
                     }
                 }
             }
@@ -232,9 +246,9 @@ public class GuiHandler
         poseStack.popPose();
     }
 
-    private void renderHint(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int scw, int sch)
+    private void renderHint(MatrixStack poseStack, float partialTicks, int scw, int sch)
     {
-        if (m_mc.player == null || m_mc.player.isCreative() || m_mc.player.isSpectator() || m_hint == null || m_cap == null || m_cap.getSanity() < .5f
+        if (m_mc.player == null || m_mc.player.isCreative() || m_mc.player.isSpectator() || m_hint == null || m_showingHintTimer <= 0f || m_cap == null || m_cap.getSanity() < .5f
             || !ConfigProxy.getRenderHint(m_mc.player.level.dimension().location()))
             return;
 
@@ -246,17 +260,20 @@ public class GuiHandler
 
         float o = ((int) m_showingHintTimer % 10) / 10f;
         o = ((int) m_showingHintTimer / 10) % 2 == 0 ? o : 1 - o;
-        int opacity = Mth.clamp((int)(Mth.lerp(o, (m_showingHintTimer >= m_maxShowingHintTimer - 9f) || m_showingHintTimer < 10f ? 0f : .5f, 1f) * 0xFF), 0x10, 0xEF) << 24;
+        int opacity = net.minecraft.util.math.MathHelper.clamp((int)(net.minecraft.util.math.MathHelper.lerp(o, (m_showingHintTimer >= m_maxShowingHintTimer - 9f) || m_showingHintTimer < 10f ? 0f : .5f, 1f) * 0xFF), 0x08, 0xEF) << 24;
 
-        float pX = -gui.getFont().width(m_hint) / 2f;
-        float pY = -gui.getFont().lineHeight / 2f;
+        FontRenderer font = m_mc.font;
+        float pX = -font.width(m_hint) / 2f;
+        float pY = -font.lineHeight / 2f;
+//        float pX = -gui.getFont().width(m_hint) / 2f;
+//        float pY = -gui.getFont().lineHeight / 2f;
         if (ConfigProxy.getTwitchHint(m_mc.player.level.dimension().location()))
         {
             pX += m_hintOffsetX;
             pY += m_hintOffsetY;
         }
 
-        gui.getFont().drawShadow(poseStack, m_hint, pX, pY, 0xFFFFFF | opacity);
+        font.drawShadow(poseStack, m_hint, pX, pY, 0xFFFFFF | opacity);
 
         poseStack.popPose();
         RenderSystem.disableBlend();
@@ -341,10 +358,12 @@ public class GuiHandler
         m_prevSanity = m_cap.getSanity();
     }
 
-    public void initOverlays()
+    public void renderOverlays(MatrixStack poseStack, float partialTicks, MainWindow win)
     {
-        OverlayRegistry.registerOverlayBelow(ForgeIngameGui.HOTBAR_ELEMENT, SanityMod.MODID.concat(".sanity_indicator"), this::renderSanityIndicator);
-        OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, SanityMod.MODID.concat(".hint"), this::renderHint);
+        renderHint(poseStack, partialTicks, win.getGuiScaledWidth(), win.getGuiScaledHeight());
+        renderSanityIndicator(poseStack, partialTicks, win.getGuiScaledWidth(), win.getGuiScaledHeight());
+//        OverlayRegistry.registerOverlayBelow(ForgeIngameGui., SanityMod.MODID.concat(".sanity_indicator"), this::renderSanityIndicator);
+//        OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, SanityMod.MODID.concat(".hint"), this::renderHint);
     }
 
     public void initPostProcessor()

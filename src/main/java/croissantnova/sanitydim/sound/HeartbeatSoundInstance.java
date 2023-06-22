@@ -2,17 +2,17 @@ package croissantnova.sanitydim.sound;
 
 import croissantnova.sanitydim.config.ConfigProxy;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.client.audio.TickableSound;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.vector.Vector3d;
 
-public class HeartbeatSoundInstance extends AbstractTickableSoundInstance
+public class HeartbeatSoundInstance extends TickableSound
 {
     public float factor = 0f;
 
     public HeartbeatSoundInstance()
     {
-        super(SoundRegistry.HEARTBEAT.get(), SoundSource.AMBIENT);
+        super(SoundRegistry.HEARTBEAT.get(), SoundCategory.AMBIENT);
         volume = 0;
         delay = 0;
         looping = true;
@@ -29,7 +29,7 @@ public class HeartbeatSoundInstance extends AbstractTickableSoundInstance
             volume = 0;
     }
 
-    public void setPos(Vec3 pos)
+    public void setPos(Vector3d pos)
     {
         x = pos.x;
         y = pos.y;

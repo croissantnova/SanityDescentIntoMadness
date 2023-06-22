@@ -1,6 +1,6 @@
 package croissantnova.sanitydim.config;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ResourceLocation;
 
 public class ConfigItem
 {

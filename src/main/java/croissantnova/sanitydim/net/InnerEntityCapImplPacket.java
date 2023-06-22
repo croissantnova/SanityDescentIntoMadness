@@ -1,21 +1,21 @@
 package croissantnova.sanitydim.net;
 
+import croissantnova.sanitydim.SanityMod;
 import croissantnova.sanitydim.capability.*;
 import croissantnova.sanitydim.entity.InnerEntity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.entity.Entity;
+import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
-
+import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class InnerEntityCapImplPacket
 {
     public int m_id;
     public InnerEntityCapImpl m_cap;
-    public FriendlyByteBuf m_buf;
+    public PacketBuffer m_buf;
 
     public InnerEntityCapImplPacket()
     {
@@ -26,13 +26,13 @@ public class InnerEntityCapImplPacket
         this.m_cap = cap;
     }
 
-    public static void encode(InnerEntityCapImplPacket packet, FriendlyByteBuf buf)
+    public static void encode(InnerEntityCapImplPacket packet, PacketBuffer buf)
     {
         buf.writeInt(packet.m_id);
         packet.m_cap.serialize(buf);
     }
 
-    public static InnerEntityCapImplPacket decode(FriendlyByteBuf buf)
+    public static InnerEntityCapImplPacket decode(PacketBuffer buf)
     {
         int id = buf.readInt();
         InnerEntityCapImplPacket packet = new InnerEntityCapImplPacket();
@@ -61,9 +61,11 @@ public class InnerEntityCapImplPacket
 
                 ent.getCapability(InnerEntityCapImplProvider.CAP).ifPresent(iec ->
                 {
-                    if (iec instanceof InnerEntityCapImpl ieci)
-                        ieci.deserialize(packet.m_buf);
+                    if (iec instanceof InnerEntityCapImpl)
+                        ((InnerEntityCapImpl)iec).deserialize(packet.m_buf);
                 });
+
+                SanityMod.LOGGER.debug("YES!");
             });
         });
         ctx.get().setPacketHandled(true);

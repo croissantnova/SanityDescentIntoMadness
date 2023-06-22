@@ -4,13 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import com.google.common.collect.Maps;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
-import org.apache.commons.compress.utils.Lists;
+import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.tuple.Pair;
-
 import croissantnova.sanitydim.SanityMod;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -37,24 +33,24 @@ public class ConfigHandler
         return def.getLeft();
     }
 
-    public static void onConfigLoading(final ModConfigEvent.Loading event)
+    public static void onConfigLoading(final ModConfig.Loading event)
     {
         ConfigProxy.onConfigLoading();
     }
 
-    public static void onConfigReloading(final ModConfigEvent.Reloading event)
+    public static void onConfigReloading(final ModConfig.Reloading event)
     {
         ConfigProxy.onConfigLoading();
     }
 
     public static boolean stringEntryIsValid(Object entry)
     {
-        return entry instanceof String s && !s.isEmpty() && !s.isBlank();
+        return entry instanceof String && !((String)entry).isEmpty();
     }
 
     public static List<ConfigPassiveBlock> processPassiveBlocks(List<? extends String> raw)
     {
-        List<ConfigPassiveBlock> list = Lists.newArrayList();
+        List<ConfigPassiveBlock> list = new ArrayList<>();
 
         for (String entry : raw)
         {
@@ -120,7 +116,7 @@ public class ConfigHandler
 
     public static List<ConfigItem> processItems(List<? extends String> raw)
     {
-        List<ConfigItem> list = Lists.newArrayList();
+        List<ConfigItem> list = new ArrayList<>();
 
         for (String entry : raw)
         {
@@ -166,7 +162,7 @@ public class ConfigHandler
 
     public static List<ConfigItemCategory> processItemCats(List<? extends String> raw)
     {
-        List<ConfigItemCategory> list = Lists.newArrayList();
+        List<ConfigItemCategory> list = new ArrayList<>();
 
         for (String entry : raw)
         {

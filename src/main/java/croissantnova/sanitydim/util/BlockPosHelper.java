@@ -1,12 +1,12 @@
 package croissantnova.sanitydim.util;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 
 public abstract class BlockPosHelper
 {
-    public static Vec3 getCenter(BlockPos blockPos)
+    public static Vector3d getCenter(BlockPos blockPos)
     {
-        return new Vec3(blockPos.getX() + .5f, blockPos.getY() + .5f, blockPos.getZ() + .5f);
+        return new Vector3d(blockPos.getX() + .5f, blockPos.getY() + .5f, blockPos.getZ() + .5f);
     }
 }

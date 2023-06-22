@@ -2,17 +2,17 @@ package croissantnova.sanitydim.sound;
 
 import croissantnova.sanitydim.config.ConfigProxy;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.client.audio.TickableSound;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.vector.Vector3d;
 
-public final class InsanitySoundInstance extends AbstractTickableSoundInstance
+public final class InsanitySoundInstance extends TickableSound
 {
     public float factor = 0f;
 
     public InsanitySoundInstance()
     {
-        super(SoundRegistry.INSANITY.get(), SoundSource.AMBIENT);
+        super(SoundRegistry.INSANITY.get(), SoundCategory.AMBIENT);
         volume = 0;
         delay = 0;
         looping = true;
@@ -28,7 +28,7 @@ public final class InsanitySoundInstance extends AbstractTickableSoundInstance
             volume = 0;
     }
 
-    public void setPos(Vec3 pos)
+    public void setPos(Vector3d pos)
     {
         x = pos.x;
         y = pos.y;

@@ -1,12 +1,18 @@
 package croissantnova.sanitydim.sound;
 
-import net.minecraft.client.resources.sounds.AbstractSoundInstance;
-import net.minecraft.sounds.SoundSource;
+import net.minecraft.client.audio.TickableSound;
+import net.minecraft.util.SoundCategory;
 
-public class SwishSoundInstance extends AbstractSoundInstance
+public class SwishSoundInstance extends TickableSound
 {
     public SwishSoundInstance()
     {
-        super(SoundRegistry.SWISH.get(), SoundSource.AMBIENT);
+        super(SoundRegistry.SWISH.get(), SoundCategory.AMBIENT);
+    }
+
+    @Override
+    public void tick()
+    {
+
     }
 }

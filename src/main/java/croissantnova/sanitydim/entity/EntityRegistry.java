@@ -1,12 +1,12 @@
 package croissantnova.sanitydim.entity;
 
 import croissantnova.sanitydim.SanityMod;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobCategory;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
 
 public class EntityRegistry
 {
@@ -23,7 +23,7 @@ public class EntityRegistry
 
     public static final RegistryObject<EntityType<RottingStalker>> ROTTING_STALKER
             = DEFERRED_REGISTER.register("rotting_stalker",
-            () -> EntityType.Builder.of(RottingStalker::new, MobCategory.MONSTER).sized(1f, 2.9f).fireImmune().build("rotting_stalker"));
+            () -> EntityType.Builder.of(RottingStalker::new, EntityClassification.MONSTER).sized(1f, 2.9f).fireImmune().build("rotting_stalker"));
 
     /*public static final RegistryObject<EntityType<ShadeChomper>> SHADE_CHOMPER
             = DEFERRED_REGISTER.register("shade_chomper",

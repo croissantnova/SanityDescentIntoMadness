@@ -1,30 +1,28 @@
 package croissantnova.sanitydim.mixin;
 
 import croissantnova.sanitydim.passive.Jukebox;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.Clearable;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.inventory.IClearable;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.JukeboxTileEntity;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(JukeboxBlockEntity.class)
-public abstract class MixinJukeboxBlockEntity extends BlockEntity implements Clearable
+@Mixin(JukeboxTileEntity.class)
+public abstract class MixinJukeboxTileEntity extends TileEntity implements IClearable
 {
     @Shadow public abstract ItemStack getRecord();
 
-    public MixinJukeboxBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState)
+    public MixinJukeboxTileEntity()
     {
-        super(pType, pPos, pBlockState);
+        super(TileEntityType.JUKEBOX);
     }
 
-    @Inject(method = "setRecord(Lnet/minecraft/world/item/ItemStack;)V", at = @At("TAIL"))
+    @Inject(method = "setRecord(Lnet/minecraft/item/ItemStack;)V", at = @At("TAIL"))
     private void startPlaying(CallbackInfo ci)
     {
         if (this.getLevel() == null || this.getLevel().isClientSide())

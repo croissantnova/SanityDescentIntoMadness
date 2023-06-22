@@ -11,17 +11,17 @@ import croissantnova.sanitydim.client.SoundPlayback;
 import croissantnova.sanitydim.command.SanityCommand;
 import croissantnova.sanitydim.config.ConfigProxy;
 import croissantnova.sanitydim.entity.InnerEntity;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
@@ -32,21 +32,14 @@ import net.minecraftforge.event.world.SleepFinishedTimeEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 public class EventHandler
 {
     @SubscribeEvent
-    public void registerCaps(final RegisterCapabilitiesEvent event)
-    {
-        event.register(ISanity.class);
-        event.register(IInnerEntityCap.class);
-    }
-
-    @SubscribeEvent
     public void attachCaps(final AttachCapabilitiesEvent<Entity> event)
     {
-        if (event.getObject() instanceof Player)
+        if (event.getObject() instanceof PlayerEntity)
         {
             event.addCapability(SanityProvider.KEY, new SanityProvider());
         }
@@ -59,55 +52,55 @@ public class EventHandler
     @SubscribeEvent
     public void tickPlayer(final TickEvent.PlayerTickEvent event)
     {
-        if (event.side == LogicalSide.SERVER && event.phase == TickEvent.Phase.END && event.player instanceof ServerPlayer sp)
+        if (event.side == LogicalSide.SERVER && event.phase == TickEvent.Phase.END && event.player instanceof ServerPlayerEntity)
         {
-            SanityProcessor.tickPlayer(sp);
+            SanityProcessor.tickPlayer((ServerPlayerEntity)event.player);
         }
     }
 
     @SubscribeEvent
     public void tickLevel(final TickEvent.WorldTickEvent event)
     {
-        if (event.side == LogicalSide.SERVER && event.phase == TickEvent.Phase.END && event.world instanceof ServerLevel sl)
+        if (event.side == LogicalSide.SERVER && event.phase == TickEvent.Phase.END && event.world instanceof ServerWorld)
         {
-            SanityProcessor.tickLevel(sl);
+            SanityProcessor.tickLevel((ServerWorld)event.world);
         }
     }
 
     @SubscribeEvent
     public void onLivingDamage(final LivingDamageEvent event)
     {
-        if (event.getEntity() instanceof ServerPlayer player)
+        if (event.getEntityLiving() instanceof ServerPlayerEntity)
         {
-            SanityProcessor.handlePlayerHurt(player, event.getAmount());
+            SanityProcessor.handlePlayerHurt((ServerPlayerEntity)event.getEntityLiving(), event.getAmount());
         }
-        else if (event.getEntity() instanceof Animal animal && event.getSource().getEntity() instanceof ServerPlayer player)
+        else if (event.getEntityLiving() instanceof AnimalEntity && event.getSource().getEntity() instanceof ServerPlayerEntity)
         {
-            SanityProcessor.handlePlayerHurtAnimal(player, animal, event.getAmount());
+            SanityProcessor.handlePlayerHurtAnimal((ServerPlayerEntity)event.getSource().getEntity(), (AnimalEntity)event.getEntity(), event.getAmount());
         }
     }
 
     @SubscribeEvent
     public void onLivingDeath(final LivingDeathEvent event)
     {
-        if (event.getEntity() instanceof TamableAnimal ta && ta.getOwnerUUID() != null)
+        if (event.getEntityLiving() instanceof TameableEntity && ((TameableEntity)event.getEntityLiving()).getOwnerUUID() != null)
         {
-            SanityProcessor.handlePlayerPetDeath(ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(ta.getOwnerUUID()), ta);
+            SanityProcessor.handlePlayerPetDeath(ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(((TameableEntity)event.getEntityLiving()).getOwnerUUID()), ((TameableEntity)event.getEntityLiving()));
         }
     }
 
     @SubscribeEvent
     public void onPlayerGotAdvancement(final AdvancementEvent event)
     {
-        SanityProcessor.handlePlayerGotAdvancement((ServerPlayer)event.getEntity(), event.getAdvancement());
+        SanityProcessor.handlePlayerGotAdvancement((ServerPlayerEntity)event.getEntity(), event.getAdvancement());
     }
 
     @SubscribeEvent
     public void onPlayerBredAnimals(final BabyEntitySpawnEvent event)
     {
-        if (event.getCausedByPlayer() instanceof ServerPlayer sp)
+        if (event.getCausedByPlayer() instanceof ServerPlayerEntity)
         {
-            SanityProcessor.handlePlayerBredAnimals(sp);
+            SanityProcessor.handlePlayerBredAnimals((ServerPlayerEntity)event.getCausedByPlayer());
         }
     }
 
@@ -116,9 +109,9 @@ public class EventHandler
     {
         if (!event.getWorld().isClientSide())
         {
-            for (Player player : event.getWorld().players())
+            for (PlayerEntity player : event.getWorld().players())
             {
-                SanityProcessor.handleActiveSourceForPlayer((ServerPlayer)player, ActiveSanitySources.SLEEPING, ConfigProxy::getSleepingCooldown, ConfigProxy::getSleeping);
+                SanityProcessor.handleActiveSourceForPlayer((ServerPlayerEntity) player, ActiveSanitySources.SLEEPING, ConfigProxy::getSleepingCooldown, ConfigProxy::getSleeping);
             }
         }
     }
@@ -126,39 +119,18 @@ public class EventHandler
     @SubscribeEvent
     public void onPlayerUsedItem(final LivingEntityUseItemEvent.Finish event)
     {
-        if (event.getEntity() instanceof ServerPlayer sp)
+        if (event.getEntityLiving() instanceof ServerPlayerEntity)
         {
-            SanityProcessor.handlePlayerUsedItem(sp, event.getItem());
+            SanityProcessor.handlePlayerUsedItem((ServerPlayerEntity)event.getEntityLiving(), event.getItem());
         }
     }
 
     @SubscribeEvent
     public void onItemFished(final ItemFishedEvent event)
     {
-        if (event.getEntity() instanceof ServerPlayer sp)
+        if (event.getEntityLiving() instanceof ServerPlayerEntity)
         {
-            SanityProcessor.handlePlayerFishedItem(sp);
-        }
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @SubscribeEvent
-    public void tickLocalPlayer(final TickEvent.PlayerTickEvent event)
-    {
-        if (event.side == LogicalSide.CLIENT && event.phase == TickEvent.Phase.END && event.player instanceof LocalPlayer)
-        {
-            SoundPlayback.playSounds((LocalPlayer)event.player);
-            SanityMod.getInstance().getGui().tick(.95f);
-        }
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @SubscribeEvent
-    public void localLevelLoad(final WorldEvent.Load event)
-    {
-        if (event.getWorld() instanceof ClientLevel)
-        {
-            SoundPlayback.onClientLevelLoad((ClientLevel) event.getWorld());
+            SanityProcessor.handlePlayerFishedItem((ServerPlayerEntity)event.getEntityLiving());
         }
     }
 
@@ -167,5 +139,36 @@ public class EventHandler
     {
         SanityMod.LOGGER.info("Registering sanity command...");
         SanityCommand.register(event.getDispatcher());
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @SubscribeEvent
+    public void tickLocalPlayer(final TickEvent.PlayerTickEvent event)
+    {
+        if (event.side == LogicalSide.CLIENT && event.phase == TickEvent.Phase.END && event.player instanceof ClientPlayerEntity)
+        {
+            SoundPlayback.playSounds((ClientPlayerEntity)event.player);
+            SanityMod.getInstance().getGui().tick(.95f);
+        }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @SubscribeEvent
+    public void localLevelLoad(final WorldEvent.Load event)
+    {
+        if (event.getWorld() instanceof ClientWorld)
+        {
+            SoundPlayback.onClientLevelLoad((ClientWorld) event.getWorld());
+        }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @SubscribeEvent
+    public void renderOverlays(final RenderGameOverlayEvent.Pre event)
+    {
+        if (event.getType() == RenderGameOverlayEvent.ElementType.HOTBAR)
+        {
+            SanityMod.getInstance().getGui().renderOverlays(event.getMatrixStack(), event.getPartialTicks(), event.getWindow());
+        }
     }
 }

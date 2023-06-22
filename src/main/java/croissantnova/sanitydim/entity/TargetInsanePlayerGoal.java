@@ -3,14 +3,14 @@ package croissantnova.sanitydim.entity;
 import java.util.EnumSet;
 
 import croissantnova.sanitydim.SanityProcessor;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.ai.goal.target.TargetGoal;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.ai.goal.TargetGoal;
+import net.minecraft.entity.player.PlayerEntity;
 
 public class TargetInsanePlayerGoal extends TargetGoal
 {
-    public TargetInsanePlayerGoal(Mob pMob, boolean pMustSee)
+    public TargetInsanePlayerGoal(MobEntity pMob, boolean pMustSee)
     {
         super(pMob, pMustSee);
         setFlags(EnumSet.of(Goal.Flag.TARGET));
@@ -25,7 +25,7 @@ public class TargetInsanePlayerGoal extends TargetGoal
     @Override
     public void start()
     {
-        Player target = SanityProcessor.getMostInsanePlayer(mob.level);
+        PlayerEntity target = SanityProcessor.getMostInsanePlayer(mob.level);
         if (target != null)
         {
             mob.setTarget(target);

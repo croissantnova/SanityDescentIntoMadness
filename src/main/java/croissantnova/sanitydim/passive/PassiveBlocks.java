@@ -5,23 +5,22 @@ import croissantnova.sanitydim.capability.ISanity;
 import croissantnova.sanitydim.config.ConfigPassiveBlock;
 import croissantnova.sanitydim.config.ConfigProxy;
 import croissantnova.sanitydim.util.BlockPosHelper;
-import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.phys.HitResult;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.state.BooleanProperty;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceContext;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.jetbrains.annotations.NotNull;
-
+import javax.annotation.Nonnull;
 import java.util.Map;
 
 public class PassiveBlocks implements IPassiveSanitySource
 {
     @Override
-    public float get(@NotNull ServerPlayer player, @NotNull ISanity cap, @NotNull ResourceLocation dim)
+    public float get(@Nonnull ServerPlayerEntity player, @Nonnull ISanity cap, @Nonnull ResourceLocation dim)
     {
         float result = 0;
 
@@ -61,13 +60,13 @@ public class PassiveBlocks implements IPassiveSanitySource
                             if (flag1)
                                 continue;
 
-                            HitResult hit = player.level.clip(new ClipContext(
-                                    player.getEyePosition(),
+                            BlockRayTraceResult hit = player.level.clip(new RayTraceContext(
+                                    player.getEyePosition(1f),
                                     BlockPosHelper.getCenter(posAt),
-                                    ClipContext.Block.COLLIDER,
-                                    ClipContext.Fluid.NONE,
+                                    RayTraceContext.BlockMode.COLLIDER,
+                                    RayTraceContext.FluidMode.NONE,
                                     player));
-                            if (hit.getType() == HitResult.Type.MISS)
+                            if (hit.getType() == BlockRayTraceResult.Type.MISS)
                             {
                                 result += block.m_sanity;
                                 flag = true;

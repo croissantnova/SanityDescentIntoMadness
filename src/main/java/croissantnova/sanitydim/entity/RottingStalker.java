@@ -1,16 +1,15 @@
 package croissantnova.sanitydim.entity;
 
 import croissantnova.sanitydim.capability.InnerEntityCapImplProvider;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.level.Level;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.goal.HurtByTargetGoal;
+import net.minecraft.entity.ai.goal.LookRandomlyGoal;
+import net.minecraft.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
+import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.world.World;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -18,7 +17,6 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
-
 import java.util.concurrent.atomic.AtomicReference;
 
 public class RottingStalker extends InnerEntity implements IAnimatable
@@ -30,7 +28,7 @@ public class RottingStalker extends InnerEntity implements IAnimatable
     public static final AnimationBuilder ANIM_RUN = new AnimationBuilder().addAnimation("move.run");
     public static final AnimationBuilder ANIM_ATTACK_SWING = new AnimationBuilder().addAnimation("attack.swing");
 
-    protected RottingStalker(EntityType<? extends Monster> entityType, Level level)
+    protected RottingStalker(EntityType<? extends MonsterEntity> entityType, World level)
     {
         super(entityType, level);
     }
@@ -38,19 +36,19 @@ public class RottingStalker extends InnerEntity implements IAnimatable
     @Override
     protected void registerGoals()
     {
-        this.goalSelector.addGoal(0, new FloatGoal(this));
+//        this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0d, true));
-        this.goalSelector.addGoal(2, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, .4d));
+        this.goalSelector.addGoal(2, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(3, new WaterAvoidingRandomWalkingGoal(this, .4d));
         this.targetSelector.addGoal(0, new TargetInsanePlayerGoal(this, false));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
 
         super.registerGoals();
     }
 
-    public static AttributeSupplier buildAttributes()
+    public static AttributeModifierMap buildAttributes()
     {
-        return Monster.createMonsterAttributes()
+        return MonsterEntity.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 500.0d)
                 .add(Attributes.FOLLOW_RANGE, 256.0d)
                 .add(Attributes.ATTACK_DAMAGE, 9.0d)
@@ -61,6 +59,7 @@ public class RottingStalker extends InnerEntity implements IAnimatable
     @Override
     public void registerControllers(AnimationData data)
     {
+        // FIXME: step easing not working for some reason
         data.addAnimationController(new AnimationController<>(this, "main", 0, event ->
         {
             if (attackAnim > 0.0f)

@@ -1,41 +1,41 @@
 package croissantnova.sanitydim.capability;
 
 import croissantnova.sanitydim.SanityMod;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
+import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
-public class SanityProvider implements ICapabilitySerializable<CompoundTag>
+public class SanityProvider implements ICapabilitySerializable<CompoundNBT>
 {
     public static final ResourceLocation KEY = new ResourceLocation(SanityMod.MODID, "sanity");
-    public static final Capability<ISanity> CAP = CapabilityManager.get(new CapabilityToken<>() {});
+    @CapabilityInject(ISanity.class)
+    public static Capability<ISanity> CAP = null;
 
     private final Sanity m_cap = new Sanity();
     private final LazyOptional<ISanity> m_lazyOpt = LazyOptional.of(() -> m_cap);
 
     @Override
-    @NotNull
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side)
+    @Nonnull
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, Direction side)
     {
         return CAP.orEmpty(cap, m_lazyOpt);
     }
 
     @Override
-    public CompoundTag serializeNBT()
+    public CompoundNBT serializeNBT()
     {
-        CompoundTag nbt = new CompoundTag();
+        CompoundNBT nbt = new CompoundNBT();
         m_cap.serializeNBT(nbt);
         return nbt;
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt)
+    public void deserializeNBT(CompoundNBT nbt)
     {
         m_cap.deserializeNBT(nbt);
     }
