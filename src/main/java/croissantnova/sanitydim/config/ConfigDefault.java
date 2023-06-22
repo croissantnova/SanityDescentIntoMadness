@@ -6,8 +6,7 @@ import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.common.ForgeConfigSpec.EnumValue;
-import org.apache.commons.compress.utils.Lists;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigDefault
@@ -114,7 +113,7 @@ public class ConfigDefault
                 .comment("Nearby jukebox playing an unsettling melody gives this amount of sanity per second (this takes priority over pleasant melodies)")
                 .defineInRange("jukebox_unsettling", -.11, -100.0, 100.0);
 
-        List<String> path = Lists.newArrayList();
+        List<String> path = new ArrayList<>();
         path.add("blocks");
 
         m_passiveBlocks = builder
@@ -257,7 +256,7 @@ public class ConfigDefault
 
     private static List<String> passiveBlocksDefault()
     {
-        List<String> list = Lists.newArrayList();
+        List<String> list = new ArrayList<>();
 
         list.add("minecraft:campfire[lit=true];0.1;4");
 
@@ -266,7 +265,7 @@ public class ConfigDefault
 
     private static List<String> itemsDefault()
     {
-        List<String> list = Lists.newArrayList();
+        List<String> list = new ArrayList<>();
 
         list.add("minecraft:pufferfish;-5;0");
         list.add("minecraft:poisonous_potato;-5;0");
@@ -284,7 +283,7 @@ public class ConfigDefault
 
     private static List<String> itemCatsDefault()
     {
-        List<String> list = Lists.newArrayList();
+        List<String> list = new ArrayList<>();
 
         list.add("0;0");
         list.add("1;800.0");
