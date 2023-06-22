@@ -11,16 +11,11 @@
     "1.0.0": "https://raw.githubusercontent.com/croissantnova/SanityDescentIntoMadness/main/changelog.txt"
   },
   "1.18.2": {
-    "1.0.1": "https://raw.githubusercontent.com/croissantnova/SanityDescentIntoMadness/mc1.18.2/changelog.txt",
-    "1.0.0": "https://raw.githubusercontent.com/croissantnova/SanityDescentIntoMadness/mc1.18.2/changelog.txt"
+    "1.0.1": "https://raw.githubusercontent.com/croissantnova/SanityDescentIntoMadness/mc1.18/changelog.txt",
+    "1.0.0": "https://raw.githubusercontent.com/croissantnova/SanityDescentIntoMadness/mc1.18/changelog.txt"
   },
-  "1.18.1": {
-    "1.0.1": "https://raw.githubusercontent.com/croissantnova/SanityDescentIntoMadness/mc1.18.2/changelog.txt",
-    "1.0.0": "https://raw.githubusercontent.com/croissantnova/SanityDescentIntoMadness/mc1.18.2/changelog.txt"
-  },
-  "1.18": {
-    "1.0.1": "https://raw.githubusercontent.com/croissantnova/SanityDescentIntoMadness/mc1.18.2/changelog.txt",
-    "1.0.0": "https://raw.githubusercontent.com/croissantnova/SanityDescentIntoMadness/mc1.18.2/changelog.txt"
+  "1.16.5": {
+    "1.0.0": "https://raw.githubusercontent.com/croissantnova/SanityDescentIntoMadness/mc1.16/changelog.txt"
   },
   "promos": {
     "1.20.1-latest": "1.0.0",
@@ -31,9 +26,7 @@
     "1.19.4-recommended": "1.0.1",
     "1.18.2-latest": "1.0.1",
     "1.18.2-recommended": "1.0.1",
-    "1.18.1-latest": "1.0.1",
-    "1.18.1-recommended": "1.0.1",
-    "1.18-latest": "1.0.1",
-    "1.18-recommended": "1.0.1"
+    "1.16.5-latest": "1.0.0",
+    "1.16.5-recommended": "1.0.0"
   }
 }
