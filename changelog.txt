@@ -1,5 +1,2 @@
-mc1.19.4-forge45.1.0-1.0.1:
-- Minor config and GUI adjustments
-
-mc1.19.4-forge45.1.0-1.0.0:
+mc1.19.2-forge43.2.0-1.0.0:
 - Initial release

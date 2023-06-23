@@ -6,16 +6,16 @@ import java.util.List;
 import java.util.function.Function;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
+import com.mojang.math.Matrix4f;
 import croissantnova.sanitydim.config.ConfigProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.PostPass;
-import org.joml.Matrix4f;
 
 public class PostProcessor
 {
     private float m_time;
     private final RenderTarget m_swapBuffer;
-    private final Matrix4f m_orthoMat = new Matrix4f();
+    private Matrix4f m_orthoMat = new Matrix4f();
     public final List<PostPassEntry> passEntries = new ArrayList<>();
 
     public PostProcessor()
@@ -89,7 +89,7 @@ public class PostProcessor
     public void updateOrthoMatrix()
     {
         Minecraft mc = Minecraft.getInstance();
-        m_orthoMat.setOrtho(0.0f, (float)mc.getMainRenderTarget().width, 0.0f, (float)mc.getMainRenderTarget().height, .1f, 1000.0f);
+        m_orthoMat = Matrix4f.orthographic(0.0f, (float)mc.getMainRenderTarget().width, (float)mc.getMainRenderTarget().height, 0.0f, .1f, 1000.0f);
         for (PostPassEntry entry : passEntries)
         {
             entry.getInPass().setOrthoMatrix(m_orthoMat);

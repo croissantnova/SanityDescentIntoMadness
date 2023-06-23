@@ -14,7 +14,6 @@ import croissantnova.sanitydim.entity.InnerEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -30,12 +29,10 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.AdvancementEvent;
 import net.minecraftforge.event.entity.player.ItemFishedEvent;
-import net.minecraftforge.event.entity.player.TradeWithVillagerEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.event.level.SleepFinishedTimeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
 public class EventHandler
@@ -124,15 +121,6 @@ public class EventHandler
             {
                 SanityProcessor.handleActiveSourceForPlayer((ServerPlayer)player, ActiveSanitySources.SLEEPING, ConfigProxy::getSleepingCooldown, ConfigProxy::getSleeping);
             }
-        }
-    }
-
-    @SubscribeEvent
-    public void onTradeWithVillager(final TradeWithVillagerEvent event)
-    {
-        if (event.getEntity() instanceof ServerPlayer sp)
-        {
-            SanityProcessor.handlePlayerTradedWithVillager(sp);
         }
     }
 

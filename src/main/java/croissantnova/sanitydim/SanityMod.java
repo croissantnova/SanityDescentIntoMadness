@@ -6,15 +6,12 @@ import croissantnova.sanitydim.config.ConfigHandler;
 import croissantnova.sanitydim.entity.EntityRegistry;
 import croissantnova.sanitydim.event.ModEventHandler;
 import croissantnova.sanitydim.event.EventHandler;
-import croissantnova.sanitydim.event.SanityEventHandler;
 import croissantnova.sanitydim.item.ItemRegistry;
 import croissantnova.sanitydim.sound.SoundRegistry;
 import croissantnova.sanitydim.net.PacketHandler;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -54,14 +51,6 @@ public class SanityMod
     static
     {
         ConfigHandler.init();
-    }
-
-    private void addCreative(CreativeModeTabEvent.BuildContents event)
-    {
-        if (event.getTab() == CreativeModeTabs.TOOLS_AND_UTILITIES)
-        {
-            event.accept(ItemRegistry.GARLAND);
-        }
     }
 
     private void setup(final FMLCommonSetupEvent event)

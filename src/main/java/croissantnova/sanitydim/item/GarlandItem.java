@@ -3,6 +3,7 @@ package croissantnova.sanitydim.item;
 import croissantnova.sanitydim.client.ItemTooltipHelper;
 import croissantnova.sanitydim.item.material.FlowerArmorMaterial;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -15,7 +16,7 @@ public class GarlandItem extends ArmorItem
 {
     public GarlandItem()
     {
-        super(new FlowerArmorMaterial(), ArmorItem.Type.HELMET, new Properties()
+        super(new FlowerArmorMaterial(), EquipmentSlot.HEAD, new Properties()
                 .stacksTo(1)
                 .setNoRepair());
     }

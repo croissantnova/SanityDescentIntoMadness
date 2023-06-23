@@ -5,6 +5,7 @@ import croissantnova.sanitydim.capability.SanityProvider;
 import croissantnova.sanitydim.config.ConfigProxy;
 import croissantnova.sanitydim.sound.HeartbeatSoundInstance;
 import croissantnova.sanitydim.sound.InsanitySoundInstance;
+import croissantnova.sanitydim.util.BlockPosHelper;
 import croissantnova.sanitydim.util.MathHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -81,8 +82,11 @@ public class SoundPlayback
             {
                 miscCd = (int)(miscCd * (1f - MathHelper.clampNorm((Mth.inverseLerp(cap.getSanity(), .4f, .8f))) * .5f));
                 SoundEvent sound = MISC_SOUNDS[RAND.nextInt(MISC_SOUNDS.length)];
+                Vec3 pos = BlockPosHelper.getCenter(pickFakeStepPos(player));
                 player.level.playLocalSound(
-                        pickFakeStepPos(player),
+                        pos.x,
+                        pos.y,
+                        pos.z,
                         sound,
                         SoundSource.AMBIENT,
                         1.0f,
@@ -95,8 +99,11 @@ public class SoundPlayback
         {
             if (currentStepCd % 7 == 0)
             {
+                Vec3 pos = BlockPosHelper.getCenter(currentStepBlockPos);
                 player.level.playLocalSound(
-                        currentStepBlockPos,
+                        pos.x,
+                        pos.y,
+                        pos.z,
                         currentStepSoundType.getStepSound(),
                         SoundSource.AMBIENT,
                         currentStepSoundType.getVolume() * .5f,

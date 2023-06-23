@@ -5,22 +5,20 @@ import croissantnova.sanitydim.sound.SoundRegistry;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class FlowerArmorMaterial implements ArmorMaterial
 {
     @Override
-    public int m_266425_(ArmorItem.Type p_266807_)
+    public int getDurabilityForSlot(@Nonnull EquipmentSlot pSlot)
     {
         return 150;
     }
 
     @Override
-    public int getDurabilityForSlot(ArmorItem.Type p_266807_)
+    public int getDefenseForSlot(@Nonnull EquipmentSlot pSlot)
     {
         return 0;
     }
@@ -32,21 +30,21 @@ public class FlowerArmorMaterial implements ArmorMaterial
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public SoundEvent getEquipSound()
     {
         return SoundRegistry.FLOWERS_EQUIP.get();
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Ingredient getRepairIngredient()
     {
         return Ingredient.of(ItemTags.SMALL_FLOWERS);
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getName()
     {
         return SanityMod.MODID + ":flower";

@@ -4,6 +4,7 @@ import croissantnova.sanitydim.block.BlockStateHelper;
 import croissantnova.sanitydim.capability.ISanity;
 import croissantnova.sanitydim.config.ConfigPassiveBlock;
 import croissantnova.sanitydim.config.ConfigProxy;
+import croissantnova.sanitydim.util.BlockPosHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -62,7 +63,7 @@ public class PassiveBlocks implements IPassiveSanitySource
 
                             HitResult hit = player.level.clip(new ClipContext(
                                     player.getEyePosition(),
-                                    posAt.getCenter(),
+                                    BlockPosHelper.getCenter(posAt),
                                     ClipContext.Block.COLLIDER,
                                     ClipContext.Fluid.NONE,
                                     player));

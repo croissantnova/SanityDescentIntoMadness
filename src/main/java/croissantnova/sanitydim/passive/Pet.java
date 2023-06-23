@@ -8,9 +8,7 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.apache.commons.compress.utils.Lists;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 
 public class Pet implements IPassiveSanitySource
@@ -25,13 +23,10 @@ public class Pet implements IPassiveSanitySource
         float pet = ConfigProxy.getPet(dim);
         if (pet != 0.0f)
         {
-            List<TamableAnimal> tamablesAround = Lists.newArrayList();
-            player.level.getEntities(
+            List<TamableAnimal> tamablesAround = player.level.getEntities(
                     EntityTypeTest.forClass(TamableAnimal.class),
                     playerSurroundings,
-                    ta -> ta.isOwnedBy(player) && player.hasLineOfSight(ta),
-                    tamablesAround,
-                    1);
+                    ta -> ta.isOwnedBy(player) && player.hasLineOfSight(ta));
             if (!tamablesAround.isEmpty())
                 return pet;
         }
