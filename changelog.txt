@@ -1,2 +1,2 @@
-mc1.16-forge36.2.34-1.0.0:
+mc1.12-forge14.23.5.2859-1.0.0:
 - Initial release

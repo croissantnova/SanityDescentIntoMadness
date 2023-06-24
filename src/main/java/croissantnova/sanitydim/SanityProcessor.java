@@ -19,6 +19,7 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -28,6 +29,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 import javax.annotation.Nonnull;
@@ -54,9 +56,9 @@ public final class SanityProcessor
 
     private SanityProcessor() {}
 
-    private static float calcPassive(ServerPlayerEntity player, ISanity sanity)
+    private static float calcPassive(EntityPlayerMP player, ISanity sanity)
     {
-        ResourceLocation dim = player.level.dimension().location();
+        int dim = player.dimension;
         float passive = 0;
 
         for (IPassiveSanitySource pss : PASSIVE_SANITY_SOURCES)

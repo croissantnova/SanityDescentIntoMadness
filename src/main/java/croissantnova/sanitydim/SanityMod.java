@@ -10,8 +10,6 @@ import croissantnova.sanitydim.event.EventHandler;
 import croissantnova.sanitydim.item.ItemRegistry;
 import croissantnova.sanitydim.sound.SoundRegistry;
 import croissantnova.sanitydim.net.PacketHandler;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -20,17 +18,21 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(SanityMod.MODID)
+@Mod(modid = SanityMod.MODID, name = SanityMod.NAME, version = SanityMod.VERSION)
 public class SanityMod
 {
-    @OnlyIn(Dist.CLIENT)
+    @SideOnly(Side.CLIENT)
     private GuiHandler m_gui;
 
     private static SanityMod m_inst;
     public static final String MODID = "sanitydim";
+    public static final String NAME = "Sanity: Descent Into Madness";
+    public static final String VERSION = "1.0.0";
     public static final Logger LOGGER = LogManager.getLogger();
 
     public SanityMod()
@@ -75,13 +77,13 @@ public class SanityMod
         //EntityRenderers.register(EntityRegistry.SHADE_CHOMPER.get(), RendererShadeChomper::new);
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @SideOnly(Side.CLIENT)
     public void initGui()
     {
         if (m_gui == null) m_gui = new GuiHandler();
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @SideOnly(Side.CLIENT)
     public GuiHandler getGui()
     {
         return m_gui;
