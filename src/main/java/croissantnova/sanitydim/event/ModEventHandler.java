@@ -2,7 +2,7 @@ package croissantnova.sanitydim.event;
 
 import croissantnova.sanitydim.SanityMod;
 import croissantnova.sanitydim.client.render.RendererRottingStalker;
-import croissantnova.sanitydim.config.ConfigHandler;
+import croissantnova.sanitydim.config.ConfigManager;
 import croissantnova.sanitydim.entity.EntityRegistry;
 import croissantnova.sanitydim.entity.RottingStalker;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -24,13 +24,13 @@ public class ModEventHandler
     @SubscribeEvent
     public static void onConfigLoading(final ModConfigEvent.Loading event)
     {
-        ConfigHandler.onConfigLoading(event);
+        ConfigManager.onConfigLoading(event);
     }
 
     @SubscribeEvent
     public static void onConfigReloading(final ModConfigEvent.Reloading event)
     {
-        ConfigHandler.onConfigReloading(event);
+        ConfigManager.onConfigReloading(event);
     }
 
     @SubscribeEvent

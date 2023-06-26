@@ -59,12 +59,12 @@ public class GuiHandler
 
     static
     {
-        HINTS0 = new MutableComponent[11];
+        HINTS0 = new MutableComponent[12];
         for (int i = 0; i < HINTS0.length; i++)
         {
             HINTS0[i] = Component.translatable("gui." + SanityMod.MODID + ".hint0" + i);
         }
-        HINTS1 = new MutableComponent[8];
+        HINTS1 = new MutableComponent[9];
         for (int i = 0; i < HINTS1.length; i++)
         {
             HINTS1[i] = Component.translatable("gui." + SanityMod.MODID + ".hint1" + i);

@@ -68,7 +68,8 @@ public class ConfigDefault
     {
         builder.comment("Sanity configuration",
                 "NOTE: all sanity values are measured in percentages (i.e. 40.0 is equal to 40% of sanity bar)",
-                "NOTE: each subsequent usage of an active source or item has its effectiveness multiplied by (timeSinceLastUsage / cooldown) (capped at 1.0)").push("sanity");
+                "NOTE: each subsequent usage of an active source or item has its effectiveness multiplied by (timeSinceLastUsage / cooldown) (capped at 1.0)")
+                .push("sanity");
 
         m_posMul = builder
                 .comment("For balancing purposes: the effectiveness of all positive sanity sources will be multiplied by this number")
@@ -122,7 +123,7 @@ public class ConfigDefault
                 .comment("A block should be included as follows: block_registry_name[property1=value1,property2=value2];A;B")
                 .comment("Where A is how much sanity is gained per second and B is radius in blocks")
                 .comment("Supports boolean block state properties (can be omitted together with brackets)")
-                .defineListAllowEmpty(path, ConfigDefault::passiveBlocksDefault, ConfigHandler::stringEntryIsValid);
+                .defineListAllowEmpty(path, ConfigDefault::passiveBlocksDefault, ConfigManager::stringEntryIsValid);
 
         builder.pop();
         builder.comment("Configuration for active sanity sources").push("active");
@@ -192,7 +193,7 @@ public class ConfigDefault
                 .comment("Where A is how much sanity is gained upon usage and B is a custom category")
                 .comment("Items with same categories share the same cooldown")
                 .comment("The sanity gained will be multiplied by (timeSinceLastUsage / categoryCooldown) capping at 1.0")
-                .defineListAllowEmpty(path, ConfigDefault::itemsDefault, ConfigHandler::stringEntryIsValid);
+                .defineListAllowEmpty(path, ConfigDefault::itemsDefault, ConfigManager::stringEntryIsValid);
 
         path.clear();
         path.add("item_categories");
@@ -201,7 +202,7 @@ public class ConfigDefault
                 .comment("Define a list of custom categories for items specified in <items>")
                 .comment("A category should be included as follows: A;B")
                 .comment("Where A is a category id (integer) and B is a cooldown (in seconds) all items in this category share")
-                .defineListAllowEmpty(path, ConfigDefault::itemCatsDefault, ConfigHandler::stringEntryIsValid);
+                .defineListAllowEmpty(path, ConfigDefault::itemCatsDefault, ConfigManager::stringEntryIsValid);
 
         builder.pop();
         builder.comment("Multiplayer configuration").push("multiplayer");

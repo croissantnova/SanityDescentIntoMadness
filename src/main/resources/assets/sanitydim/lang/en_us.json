@@ -18,6 +18,7 @@
 	"gui.sanitydim.hint08": "What's there?",
 	"gui.sanitydim.hint09": "Was that me?",
 	"gui.sanitydim.hint010": "Weird...",
+	"gui.sanitydim.hint011": "Did I just see something?",
 	"gui.sanitydim.hint10": "SOMEONE'S BEHIND ME",
 	"gui.sanitydim.hint11": "One, two, three, four...",
 	"gui.sanitydim.hint12": "...five, six, seven, eight...",
@@ -26,9 +27,9 @@
 	"gui.sanitydim.hint15": "DON'T SPACE OUT",
 	"gui.sanitydim.hint16": "WHY WON'T THEY GO AWAY?!",
 	"gui.sanitydim.hint17": "TOO LOUD TOO LOUD TOO LOUD",
+	"gui.sanitydim.hint18": "THE VOICES",
 
 	"item.sanitydim.tooltip.press_shift": "§7Press §9SHIFT§7 for more information",
 	"item.sanitydim.garland": "Garland",
-	"item.sanitydim.garland.tooltip": "§7Something to help soothe the nerves\n\nSlowly restores your sanity and makes you slightly more resistant to stress",
-	"item.sanitydim.croissant": "Croissant"
+	"item.sanitydim.garland.tooltip": "§7Something to help soothe the nerves\n\nSlowly restores your sanity and makes you slightly more resistant to stress"
 }

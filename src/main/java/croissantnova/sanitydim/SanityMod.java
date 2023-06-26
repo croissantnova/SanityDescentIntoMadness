@@ -2,11 +2,10 @@ package croissantnova.sanitydim;
 
 import com.mojang.logging.LogUtils;
 import croissantnova.sanitydim.client.GuiHandler;
-import croissantnova.sanitydim.config.ConfigHandler;
+import croissantnova.sanitydim.config.ConfigManager;
 import croissantnova.sanitydim.entity.EntityRegistry;
 import croissantnova.sanitydim.event.ModEventHandler;
 import croissantnova.sanitydim.event.EventHandler;
-import croissantnova.sanitydim.event.SanityEventHandler;
 import croissantnova.sanitydim.item.ItemRegistry;
 import croissantnova.sanitydim.sound.SoundRegistry;
 import croissantnova.sanitydim.net.PacketHandler;
@@ -36,7 +35,7 @@ public class SanityMod
     {
         m_inst = this;
 
-        ConfigHandler.register();
+        ConfigManager.register();
 
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(this::setup);
@@ -53,7 +52,7 @@ public class SanityMod
 
     static
     {
-        ConfigHandler.init();
+        ConfigManager.init();
     }
 
     private void addCreative(CreativeModeTabEvent.BuildContents event)
