@@ -4,12 +4,13 @@
   "package": "croissantnova.sanitydim.mixin",
   "refmap": "sanitydim.refmap.json",
   "mixins": [
-    "MixinGameRenderer",
     "MixinThrownEgg",
     "MixinEnderMan",
     "MixinShearsItem",
     "MixinJukeboxBlockEntity"
   ],
-  "client": [],
+  "client": [
+    "MixinGameRenderer"
+  ],
   "server": []
 }

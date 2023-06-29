@@ -8,7 +8,6 @@ import java.util.Map;
 import com.google.common.collect.Maps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
-import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.tuple.Pair;
 
 import croissantnova.sanitydim.SanityMod;
@@ -54,7 +53,7 @@ public class ConfigHandler
 
     public static List<ConfigPassiveBlock> processPassiveBlocks(List<? extends String> raw)
     {
-        List<ConfigPassiveBlock> list = Lists.newArrayList();
+        List<ConfigPassiveBlock> list = new ArrayList<>();
 
         for (String entry : raw)
         {
@@ -120,7 +119,7 @@ public class ConfigHandler
 
     public static List<ConfigItem> processItems(List<? extends String> raw)
     {
-        List<ConfigItem> list = Lists.newArrayList();
+        List<ConfigItem> list = new ArrayList<>();
 
         for (String entry : raw)
         {
@@ -166,7 +165,7 @@ public class ConfigHandler
 
     public static List<ConfigItemCategory> processItemCats(List<? extends String> raw)
     {
-        List<ConfigItemCategory> list = Lists.newArrayList();
+        List<ConfigItemCategory> list = new ArrayList<>();
 
         for (String entry : raw)
         {
