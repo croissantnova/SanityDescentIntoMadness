@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class Jukebox implements IPassiveSanitySource
     public static final List<BlockPos> UNSETTLING_JUKEBOXES = new ArrayList<>();
 
     @Override
-    public float get(@NotNull ServerPlayer player, @NotNull ISanity cap, @NotNull ResourceLocation dim)
+    public float get(@Nonnull ServerPlayer player, @Nonnull ISanity cap, @Nonnull ResourceLocation dim)
     {
         for (BlockPos blockPos : UNSETTLING_JUKEBOXES)
         {

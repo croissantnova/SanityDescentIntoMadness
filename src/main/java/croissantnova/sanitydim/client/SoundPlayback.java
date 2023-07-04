@@ -22,14 +22,24 @@ public class SoundPlayback
 {
     private static InsanitySoundInstance insanity;
     private static HeartbeatSoundInstance heartbeat;
+    private static float insanityTarget;
+    private static float heartbeatTarget;
+    private static float insanityStart;
+    private static float heartbeatStart;
+    private static int insanityProgress;
+    private static int heartbeatProgress;
     private static int stepCd;
     private static int currentStepCd;
     private static int miscCd;
     private static SoundType currentStepSoundType;
     private static BlockPos currentStepBlockPos;
+
+    private static final int INSANITY_I11N_TIME = 20;
+    private static final int HEARTBEAT_I11N_TIME = 60;
     private static final SoundEvent[] MISC_SOUNDS = new SoundEvent[]
     {
             SoundEvents.CREEPER_PRIMED,
+            SoundEvents.TNT_PRIMED,
             SoundEvents.SKELETON_AMBIENT,
             SoundEvents.SKELETON_STEP,
             SoundEvents.ZOMBIE_AMBIENT,
@@ -133,8 +143,45 @@ public class SoundPlayback
         }
         player.getCapability(SanityProvider.CAP).ifPresent(cap ->
         {
-            insanity.factor = MathHelper.clampNorm(Mth.inverseLerp(cap.getSanity(), .55f, .8f));
-            heartbeat.factor = MathHelper.clampNorm(Mth.inverseLerp(cap.getSanity(), .7f, .8f));
+            float insanityFactor = MathHelper.clampNorm(Mth.inverseLerp(cap.getSanity(), .55f, .8f));
+            float heartbeatFactor = MathHelper.clampNorm(Mth.inverseLerp(cap.getSanity(), .7f, .8f));
+            if (Math.abs(insanityFactor - insanityTarget) >= .05f)
+            {
+                insanityTarget = insanityFactor;
+                insanityStart = insanity.factor;
+                insanityProgress = 0;
+            }
+            else
+            {
+                if (insanityProgress <= INSANITY_I11N_TIME)
+                    insanityTarget = insanityFactor;
+                else
+                    insanity.factor = insanityFactor;
+            }
+            if (Math.abs(heartbeatFactor - heartbeatTarget) >= .05f)
+            {
+                heartbeatTarget = heartbeatFactor;
+                heartbeatStart = heartbeat.factor;
+                heartbeatProgress = 0;
+            }
+            else
+            {
+                if (heartbeatProgress <= HEARTBEAT_I11N_TIME)
+                    heartbeatTarget = heartbeatFactor;
+                else
+                    heartbeat.factor = heartbeatFactor;
+            }
+            if (insanityProgress <= INSANITY_I11N_TIME)
+            {
+                insanity.factor = Mth.lerp((float)insanityProgress / INSANITY_I11N_TIME, insanityStart, insanityTarget);
+                insanityProgress++;
+            }
+            if (heartbeatProgress <= HEARTBEAT_I11N_TIME)
+            {
+                heartbeat.factor = Mth.lerp((float)heartbeatProgress / HEARTBEAT_I11N_TIME, heartbeatStart, heartbeatTarget);
+                heartbeatProgress++;
+            }
+
             insanity.setPos(player.getEyePosition());
             heartbeat.setPos(player.getEyePosition());
 

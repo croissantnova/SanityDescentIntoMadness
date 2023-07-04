@@ -1,12 +1,7 @@
 package croissantnova.sanitydim.entity;
 
-import croissantnova.sanitydim.SanityMod;
-import croissantnova.sanitydim.SanityProcessor;
 import croissantnova.sanitydim.capability.InnerEntityCapImplProvider;
-import croissantnova.sanitydim.capability.SanityProvider;
-import croissantnova.sanitydim.sound.SoundRegistry;
-import net.minecraft.client.Minecraft;
-import net.minecraft.sounds.SoundEvent;
+import croissantnova.sanitydim.entity.goal.TargetInsanePlayerGoal;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -87,9 +82,9 @@ public class RottingStalker extends InnerEntity implements GeoEntity
     {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 500.0d)
-                .add(Attributes.FOLLOW_RANGE, 256.0d)
-                .add(Attributes.ATTACK_DAMAGE, 9.0d)
-                .add(Attributes.MOVEMENT_SPEED, 0.45d)
+                .add(Attributes.FOLLOW_RANGE, 128.0d)
+                .add(Attributes.ATTACK_DAMAGE, 8.0d)
+                .add(Attributes.MOVEMENT_SPEED, 0.42d)
                 .build();
     }
 }
