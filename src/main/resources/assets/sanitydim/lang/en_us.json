@@ -1,5 +1,6 @@
 {
 	"entity.sanitydim.rotting_stalker": "Rotting Stalker",
+	"entity.sanitydim.sneaking_terror": "Sneaking Terror",
 	
 	"commands.sanity.set.success.single": "Set %s's sanity to %s",
 	"commands.sanity.set.success.multiple": "Set sanity to %s for %s players",
@@ -27,7 +28,7 @@
 	"gui.sanitydim.hint15": "DON'T SPACE OUT",
 	"gui.sanitydim.hint16": "WHY WON'T THEY GO AWAY?!",
 	"gui.sanitydim.hint17": "TOO LOUD TOO LOUD TOO LOUD",
-	"gui.sanitydim.hint18": "THE VOICES",
+	"gui.sanitydim.hint18": "THE VOICES... I CAN'T...",
 
 	"item.sanitydim.tooltip.press_shift": "§7Press §9SHIFT§7 for more information",
 	"item.sanitydim.garland": "Garland",

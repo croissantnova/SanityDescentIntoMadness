@@ -1,6 +1,6 @@
 package croissantnova.sanitydim.mixin;
 
-import croissantnova.sanitydim.SanityMod;
+import croissantnova.sanitydim.SanityProcessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerPlayerGameMode;
@@ -17,11 +17,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(ServerPlayerGameMode.class)
-public class MixinServerPlayerGameMode
+public abstract class MixinServerPlayerGameMode
 {
     @Shadow @Final protected ServerPlayer player;
 
-    @Inject(method = "destroyBlock(Lnet/minecraft/core/BlockPos;)Z",
+    @Inject(remap = false,
+            method = "destroyBlock(Lnet/minecraft/core/BlockPos;)Z",
             at = @At(
                     value = "INVOKE",
                     shift = At.Shift.BY,
@@ -40,6 +41,7 @@ public class MixinServerPlayerGameMode
                               boolean flag1,
                               boolean flag)
     {
-        SanityMod.LOGGER.debug(Boolean.toString(flag));
+        if (flag)
+            SanityProcessor.handlePlayerMinedBlock(player, blockPos, blockState, block, flag1);
     }
 }

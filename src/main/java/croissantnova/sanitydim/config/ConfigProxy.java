@@ -4,7 +4,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.List;
 import java.util.Map;
 
-public class ConfigProxy
+public abstract class ConfigProxy
 {
     public static float getPosMul(ResourceLocation dim)
     {
@@ -59,6 +59,26 @@ public class ConfigProxy
     public static int getDarknessThreshold(ResourceLocation dim)
     {
         return ConfigManager.proxyi("sanity.passive.darkness_threshold", dim);
+    }
+
+    public static float getLightness(ResourceLocation dim)
+    {
+        return ConfigManager.proxyd2f("sanity.passive.lightness", dim);
+    }
+
+    public static int getLightnessThreshold(ResourceLocation dim)
+    {
+        return ConfigManager.proxyi("sanity.passive.lightness_threshold", dim);
+    }
+
+    public static float getBlockStuck(ResourceLocation dim)
+    {
+        return ConfigManager.proxyd2f("sanity.passive.block_stuck", dim);
+    }
+
+    public static float getDirtPath(ResourceLocation dim)
+    {
+        return ConfigManager.proxyd2f("sanity.passive.dirt_path", dim);
     }
 
     public static float getJukeboxPleasant(ResourceLocation dim)
@@ -166,6 +186,31 @@ public class ConfigProxy
         return ConfigManager.proxyd2i("sanity.active.fishing_cd", dim);
     }
 
+    public static float getFarmlandTrample(ResourceLocation dim)
+    {
+        return ConfigManager.proxyd2f("sanity.active.farmland_trample", dim);
+    }
+
+    public static float getPottingFlower(ResourceLocation dim)
+    {
+        return ConfigManager.proxyd2f("sanity.active.potting_flower", dim);
+    }
+
+    public static int getPottingFlowerCooldown(ResourceLocation dim)
+    {
+        return ConfigManager.proxyd2i("sanity.active.potting_flower_cd", dim);
+    }
+
+    public static float getChangedDimension(ResourceLocation dim)
+    {
+        return ConfigManager.proxyd2f("sanity.active.changed_dimension", dim);
+    }
+
+    public static float getStruckByLightning(ResourceLocation dim)
+    {
+        return ConfigManager.proxyd2f("sanity.active.struck_by_lightning", dim);
+    }
+
     public static List<ConfigItem> getItems(ResourceLocation dim)
     {
         return ConfigManager.proxy("sanity.active.items", dim);
@@ -181,6 +226,21 @@ public class ConfigProxy
         return ConfigManager.getIdToItemCat(dim);
     }
 
+    public static List<ConfigBrokenBlock> getBrokenBlocks(ResourceLocation dim)
+    {
+        return ConfigManager.proxy("sanity.active.broken_blocks", dim);
+    }
+
+    public static List<ConfigBrokenBlockCategory> getBrokenBlockCats(ResourceLocation dim)
+    {
+        return ConfigManager.proxy("sanity.active.broken_block_categories", dim);
+    }
+
+    public static Map<Integer, ConfigBrokenBlockCategory> getIdToBrokenBlockCat(ResourceLocation dim)
+    {
+        return ConfigManager.getIdToBrokenBlockCat(dim);
+    }
+
     public static float getSanePlayerCompany(ResourceLocation dim)
     {
         return ConfigManager.proxyd2f("sanity.multiplayer.sane_player_company", dim);
@@ -189,6 +249,11 @@ public class ConfigProxy
     public static float getInsanePlayerCompany(ResourceLocation dim)
     {
         return ConfigManager.proxyd2f("sanity.multiplayer.insane_player_company", dim);
+    }
+
+    public static boolean getSaneSeeInnerEntities(ResourceLocation dim)
+    {
+        return ConfigManager.proxyb("sanity.entity.sane_see_inner_entities", dim);
     }
 
     public static boolean getRenderIndicator(ResourceLocation dim)
@@ -219,6 +284,21 @@ public class ConfigProxy
     public static boolean getTwitchHint(ResourceLocation dim)
     {
         return ConfigManager.proxyb("sanity.client.hints.twitch", dim);
+    }
+
+    public static boolean getRenderBtOverlay(ResourceLocation dim)
+    {
+        return ConfigManager.proxyb("sanity.client.blood_tendrils.render", dim);
+    }
+
+    public static boolean getFlashBtOnShortBurst(ResourceLocation dim)
+    {
+        return ConfigManager.proxyb("sanity.client.blood_tendrils.short_burst_flash", dim);
+    }
+
+    public static boolean getRenderBtPassive(ResourceLocation dim)
+    {
+        return ConfigManager.proxyb("sanity.client.blood_tendrils.render_passive", dim);
     }
 
     public static boolean getRenderPost(ResourceLocation dim)

@@ -4,15 +4,30 @@
   "package": "croissantnova.sanitydim.mixin",
   "refmap": "sanitydim.refmap.json",
   "mixins": [
+    "MixinAnimal",
+    "MixinChicken",
+    "MixinCow",
     "MixinEnderMan",
+    "MixinEntity",
     "MixinFlowerPotBlock",
     "MixinJukeboxBlockEntity",
+    "MixinPig",
+    "MixinServerPlayerGameMode",
     "MixinShearsItem",
+    "MixinSheep",
+    "MixinTemptGoal",
     "MixinThrownEgg",
-    "MixinServerPlayerGameMode"
+    "MixinVillager",
+    "MixinZombifiedPiglin"
   ],
   "client": [
-    "MixinGameRenderer"
+    "MixinChickenRenderer",
+    "MixinClientLevel",
+    "MixinCowRenderer",
+    "MixinGameRenderer",
+    "MixinPigRenderer",
+    "MixinSheepFurLayer",
+    "MixinSheepRenderer"
   ],
   "server": []
 }

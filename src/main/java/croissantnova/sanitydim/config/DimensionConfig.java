@@ -1,5 +1,11 @@
 package croissantnova.sanitydim.config;
 
+import com.electronwill.nightconfig.core.Config;
+import com.electronwill.nightconfig.core.file.FileConfig;
+import croissantnova.sanitydim.SanityMod;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fml.loading.FMLPaths;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -11,17 +17,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import com.electronwill.nightconfig.core.Config;
-import com.electronwill.nightconfig.core.file.FileConfig;
-
-import croissantnova.sanitydim.SanityMod;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.loading.FMLPaths;
-
-public class DimensionConfig
+public abstract class DimensionConfig
 {
     public static final Map<String, Map<ResourceLocation, Object>> configToDimStored = new HashMap<>();
     public static final Map<ResourceLocation, Map<Integer, ConfigItemCategory>> idToItemCat = new HashMap<>();
+    public static final Map<ResourceLocation, Map<Integer, ConfigBrokenBlockCategory>> idToBrokenBlockCat = new HashMap<>();
 
     private static void unloadDimension(String dim, Config config)
     {
@@ -40,7 +40,14 @@ public class DimensionConfig
                     {
                         List<ConfigItemCategory> list = ConfigManager.processItemCats(config.get(key));
                         value.put(name, list);
-                        idToItemCat.put(name, ConfigManager.getMapFromCats(list));
+                        idToItemCat.put(name, ConfigManager.getMapFromItemCats(list));
+                    }
+                    case "sanity.active.broken_blocks" -> value.put(name, ConfigManager.processBrokenBlocks(config.get(key)));
+                    case "sanity.active.broken_block_categories" ->
+                    {
+                        List<ConfigBrokenBlockCategory> list = ConfigManager.processBrokenBlockCats(config.get(key));
+                        value.put(name, list);
+                        idToBrokenBlockCat.put(name, ConfigManager.getMapFromBrokenBlockCats(list));
                     }
                     default -> value.put(name, config.get(key));
                 }
@@ -125,5 +132,6 @@ public class DimensionConfig
     {
         configToDimStored.clear();
         idToItemCat.clear();
+        idToBrokenBlockCat.clear();
     }
 }
