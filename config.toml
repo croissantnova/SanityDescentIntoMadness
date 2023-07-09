@@ -40,6 +40,18 @@
 		#Maximum light level considered to be darkness (inclusive)
 		#Range: 0 ~ 15
 		darkness_threshold = 4
+		#Players will gain this amount of sanity per second while being in the light
+		#Range: -100.0 ~ 100.0
+		lightness = 0.0
+		#Minimum light level considered to be lightness (inclusive)
+		#Range: 0 ~ 15
+		lightness_threshold = 4
+		#Players who are stuck in blocks (such as cobweb) and have their movement restricted gain this amount of sanity per second
+		#Range: -100.0 ~ 100.0
+		block_stuck = -0.09
+		#Players moving on a dirt path or a carpet receive this amount of sanity per second
+		#Range: -100.0 ~ 100.0
+		dirt_path = 0.09
 		#Nearby jukebox playing a pleasant melody gives this amount of sanity per second
 		#Range: -100.0 ~ 100.0
 		jukebox_pleasant = 0.08
@@ -47,10 +59,13 @@
 		#Range: -100.0 ~ 100.0
 		jukebox_unsettling = -0.11
 		#Define a list of blocks that affect sanity of players standing near them
-		#A block should be included as follows: block_registry_name[property1=value1,property2=value2];A;B
-		#Where A is how much sanity is gained per second and B is radius in blocks
+		#A block should be included as follows: block_registry_name[property1=value1,property2=value2];A;B;C
+		#Where A is how much sanity is gained per second, B is a radius in blocks,
+		#C is whether a block needs to be naturally generated (not placed by player) (true/false)
 		#Supports boolean block state properties (can be omitted together with brackets)
-		blocks = ["minecraft:campfire[lit=true];0.1;4"]
+		#Prefix with TAG_ and follow with a tag registry name to define all blocks with the tag
+		#NOTE: not everything may work correctly with any configuration, e.g. multiblocks like tall flowers and beds; needs testing
+		blocks = ["minecraft:campfire[lit=true];0.1;4;false"]
 
 	#Configuration for active sanity sources
 	[sanity.active]
@@ -74,7 +89,7 @@
 		advancement = 20.0
 		#Breeding two animals together gives this amount of sanity
 		#Range: -100.0 ~ 100.0
-		animal_breeding = 15.0
+		animal_breeding = 9.0
 		#Breeding animals cooldown (see notes above), real time in seconds
 		#Range: 0.0 ~ 3.4028234663852886E38
 		animal_breeding_cd = 600.0
@@ -109,16 +124,45 @@
 		#Fishing cooldown (see notes above), real time in seconds
 		#Range: 0.0 ~ 3.4028234663852886E38
 		fishing_cd = 0.0
+		#Trampling a farmland gives this amount of sanity
+		#Range: -100.0 ~ 100.0
+		farmland_trample = -2.0
+		#Potting a flower gives this amount of sanity
+		#Range: -100.0 ~ 100.0
+		potting_flower = 4.0
+		#Potting a flower cooldown (see notes above), real time in seconds
+		#Range: 0.0 ~ 3.4028234663852886E38
+		potting_flower_cd = 300.0
+		#Teleporting to another dimension gives this amount of sanity
+		#Range: -100.0 ~ 100.0
+		changed_dimension = -10.0
+		#Players gain this amount of sanity upon being struck by lightning
+		#Range: -100.0 ~ 100.0
+		struck_by_lightning = -30.0
 		#Define a list of items that will affect sanity upon their usage
 		#An item should be included as follows: item_registry_name;A;B
 		#Where A is how much sanity is gained upon usage and B is a custom category
-		#Items with same categories share the same cooldown
+		#Items with the same categories share the same cooldown
 		#The sanity gained will be multiplied by (timeSinceLastUsage / categoryCooldown) capping at 1.0
 		items = ["minecraft:pufferfish;-5;0", "minecraft:poisonous_potato;-5;0", "minecraft:spider_eye;-5;0", "minecraft:rotten_flesh;-5;0", "minecraft:chorus_fruit;-3;0", "minecraft:ender_pearl;-1;0", "minecraft:honey_bottle;6;1", "minecraft:golden_carrot;7;1", "minecraft:golden_apple;8;1", "minecraft:enchanted_golden_apple;13;1"]
 		#Define a list of custom categories for items specified in <items>
 		#A category should be included as follows: A;B
 		#Where A is a category id (integer) and B is a cooldown (in seconds) all items in this category share
 		item_categories = ["0;0", "1;800.0"]
+		#Define a list of blocks that will affect sanity of players breaking them
+		#A block should be included as follows: block_registry_name;A;B;C;D
+		#Where A is how much sanity is gained upon breakage, B is a custom category,
+		#C is whether a block has to be naturally generated (not placed by players) (true/false),
+		#D is whether a block has to be mined with a correct tool (aka resources should drop) (true/false)
+		#Prefix with TAG_ and follow with a tag registry name to define all blocks with the tag
+		#Blocks with the same categories share the same cooldown
+		#The sanity gained will be multiplied by (timeSinceLastUsage / categoryCooldown) capping at 1.0
+		#NOTE: not everything may work correctly with any configuration, e.g. multiblocks like tall flowers and beds need testing
+		broken_blocks = ["minecraft:infested_stone;-8;0;false;false", "minecraft:infested_cobblestone;-8;0;false;false", "minecraft:infested_stone_bricks;-8;0;false;false", "minecraft:infested_cracked_stone_bricks;-8;0;false;false", "minecraft:infested_mossy_stone_bricks;-8;0;false;false", "minecraft:infested_chiseled_stone_bricks;-8;0;false;false", "minecraft:infested_deepslate;-8;0;false;false"]
+		#Define a list of custom categories for blocks specified in <broken_blocks>
+		#A category should be included as follows: A;B
+		#Where A is a category id (integer) and B is a cooldown (in seconds) all blocks in this category share
+		broken_block_categories = ["0;0"]
 
 	#Multiplayer configuration
 	[sanity.multiplayer]
@@ -128,6 +172,13 @@
 		#Being around players with sanity lower than 50% gives this amount of sanity per second
 		#Range: -100.0 ~ 100.0
 		insane_player_company = -0.12
+
+	#Entities configuration
+	[sanity.entity]
+		#Whether sane players should be able to see and battle inner entities
+		#Mobs will still be there server-side and will count towards passive sanity
+		#Players who are targeted by inner entities see them regardless
+		sane_see_inner_entities = false
 
 	#Client configuration
 	[sanity.client]
@@ -158,4 +209,13 @@
 			render = true
 			#Whether to twitch inner monologue/random thoughts at low sanity levels
 			twitch = true
+
+		#Blood tendrils overlay configuration
+		[sanity.client.blood_tendrils]
+			#Whether to render blood tendrils overlay
+			render = true
+			#Whether to flash blood tendrils overlay upon losing sanity in a short burst
+			short_burst_flash = true
+			#Whether to render blood tendrils overlay when passively losing sanity
+			render_passive = true
 

@@ -13,7 +13,7 @@ import software.bernie.geckolib3.renderers.geo.layer.LayerGlowingAreasGeo;
 
 import javax.annotation.Nullable;
 
-public class RendererRottingStalker extends GeoEntityRenderer<RottingStalker>
+public class RendererRottingStalker extends RendererInnerEntity<RottingStalker>
 {
     public RendererRottingStalker(EntityRendererProvider.Context context)
     {
@@ -23,13 +23,5 @@ public class RendererRottingStalker extends GeoEntityRenderer<RottingStalker>
 //        super(renderManager, new DefaultedEntityGeoModel<>(new ResourceLocation(SanityMod.MODID, "rotting_stalker"), true));
 //
 //        addRenderLayer(new CustomGlowingGeoLayer<>(this));
-    }
-
-    @Override
-    public RenderType getRenderType(RottingStalker animatable, float partialTick, PoseStack poseStack,
-                                    @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, int packedLight,
-                                    ResourceLocation texture)
-    {
-        return RenderType.entityTranslucent(getTextureLocation(animatable), false);
     }
 }

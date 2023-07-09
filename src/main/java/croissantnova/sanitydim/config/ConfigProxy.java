@@ -1,352 +1,318 @@
 package croissantnova.sanitydim.config;
 
-import com.google.common.collect.Maps;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ConfigProxy
+public abstract class ConfigProxy
 {
-    private static List<ConfigPassiveBlock> defPassiveBlocks = new ArrayList<>();
-    private static List<ConfigItem> defItems = new ArrayList<>();
-    private static List<ConfigItemCategory> defItemCats = new ArrayList<>();
-    private static Map<Integer, ConfigItemCategory> defIdToItemCat = Maps.newHashMap();
-
-    public static float getPosMul(ResourceLocation dimension)
+    public static float getPosMul(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.posMul.containsKey(dimension)
-                ? DimensionConfig.posMul.get(dimension).floatValue() : getDef().m_posMul.get().floatValue();
-        return value;
+        return ConfigManager.proxyd2f("sanity.positive_multiplier", dim);
     }
 
-    public static float getNegMul(ResourceLocation dimension)
+    public static float getNegMul(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.negMul.containsKey(dimension)
-                ? DimensionConfig.negMul.get(dimension).floatValue() : getDef().m_negMul.get().floatValue();
-        return value;
+        return ConfigManager.proxyd2f("sanity.negative_multiplier", dim);
     }
 
-    public static float getPassive(ResourceLocation dimension)
+    public static float getPassive(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.passive.containsKey(dimension)
-                ? DimensionConfig.passive.get(dimension).floatValue() : getDef().m_passive.get().floatValue();
-        return -value / 2000f;
+        return ConfigManager.proxyd2f("sanity.passive.passive", dim);
     }
 
-    public static float getRaining(ResourceLocation dimension)
+    public static float getRaining(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.raining.containsKey(dimension)
-                ? DimensionConfig.raining.get(dimension).floatValue() : getDef().m_raining.get().floatValue();
-        return -value / 2000f;
+        return ConfigManager.proxyd2f("sanity.passive.raining", dim);
     }
 
-    public static int getHungerThreshold(ResourceLocation dimension)
+    public static int getHungerThreshold(ResourceLocation dim)
     {
-        int value = dimension != null && DimensionConfig.hungerThreshold.containsKey(dimension)
-                ? DimensionConfig.hungerThreshold.get(dimension).intValue() : getDef().m_hungerThreshold.get().intValue();
-        return value;
+        return ConfigManager.proxyi("sanity.passive.hunger_threshold", dim);
     }
 
-    public static float getHungry(ResourceLocation dimension)
+    public static float getHungry(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.hungry.containsKey(dimension)
-                ? DimensionConfig.hungry.get(dimension).floatValue() : getDef().m_hungry.get().floatValue();
-        return -value / 2000f;
+        return ConfigManager.proxyd2f("sanity.passive.hungry", dim);
     }
 
-    public static float getEnderManAnger(ResourceLocation dimension)
+    public static float getEnderManAnger(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.enderManAnger.containsKey(dimension)
-                ? DimensionConfig.enderManAnger.get(dimension).floatValue() : getDef().m_enderManAnger.get().floatValue();
-        return -value / 2000f;
+        return ConfigManager.proxyd2f("sanity.passive.ender_man_anger", dim);
     }
 
-    public static float getPet(ResourceLocation dimension)
+    public static float getPet(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.pet.containsKey(dimension)
-                ? DimensionConfig.pet.get(dimension).floatValue() : getDef().m_pet.get().floatValue();
-        return -value / 2000f;
+        return ConfigManager.proxyd2f("sanity.passive.pet", dim);
     }
 
-    public static float getMonster(ResourceLocation dimension)
+    public static float getMonster(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.monster.containsKey(dimension)
-                ? DimensionConfig.monster.get(dimension).floatValue() : getDef().m_monster.get().floatValue();
-        return -value / 2000f;
+        return ConfigManager.proxyd2f("sanity.passive.monster", dim);
     }
 
-    public static float getDarkness(ResourceLocation dimension)
+    public static float getDarkness(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.darkness.containsKey(dimension)
-                ? DimensionConfig.darkness.get(dimension).floatValue() : getDef().m_darkness.get().floatValue();
-        return -value / 2000f;
+        return ConfigManager.proxyd2f("sanity.passive.darkness", dim);
     }
 
-    public static int getDarknessThreshold(ResourceLocation dimension)
+    public static int getDarknessThreshold(ResourceLocation dim)
     {
-        int value = dimension != null && DimensionConfig.darknessThreshold.containsKey(dimension)
-                ? DimensionConfig.darknessThreshold.get(dimension).intValue() : getDef().m_darknessThreshold.get().intValue();
-        return value;
+        return ConfigManager.proxyi("sanity.passive.darkness_threshold", dim);
     }
 
-    public static float getJukeboxPleasant(ResourceLocation dimension)
+    public static float getLightness(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.jukeboxPleasant.containsKey(dimension)
-                ? DimensionConfig.jukeboxPleasant.get(dimension).floatValue() : getDef().m_jukeboxPleasant.get().floatValue();
-        return -value / 2000f;
+        return ConfigManager.proxyd2f("sanity.passive.lightness", dim);
     }
 
-    public static float getJukeboxUnsettling(ResourceLocation dimension)
+    public static int getLightnessThreshold(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.jukeboxUnsettling.containsKey(dimension)
-                ? DimensionConfig.jukeboxUnsettling.get(dimension).floatValue() : getDef().m_jukeboxUnsettling.get().floatValue();
-        return -value / 2000f;
+        return ConfigManager.proxyi("sanity.passive.lightness_threshold", dim);
     }
 
-    public static List<ConfigPassiveBlock> getPassiveBlocks(ResourceLocation dimension)
+    public static float getBlockStuck(ResourceLocation dim)
     {
-        List<ConfigPassiveBlock> value = dimension != null && DimensionConfig.passiveBlocksProcessed.containsKey(dimension)
-                ? DimensionConfig.passiveBlocksProcessed.get(dimension) : defPassiveBlocks;
-        return value;
+        return ConfigManager.proxyd2f("sanity.passive.block_stuck", dim);
     }
 
-    public static float getSleeping(ResourceLocation dimension)
+    public static float getDirtPath(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.sleeping.containsKey(dimension)
-                ? DimensionConfig.sleeping.get(dimension).floatValue() : getDef().m_sleeping.get().floatValue();
-        return -value / 100f;
+        return ConfigManager.proxyd2f("sanity.passive.dirt_path", dim);
     }
 
-    public static int getSleepingCooldown(ResourceLocation dimension)
+    public static float getJukeboxPleasant(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.sleepingCd.containsKey(dimension)
-                ? DimensionConfig.sleepingCd.get(dimension).floatValue() : getDef().m_sleepingCd.get().floatValue();
-        return Math.round(value * 20);
+        return ConfigManager.proxyd2f("sanity.passive.jukebox_pleasant", dim);
     }
 
-    public static float getHurtRatio(ResourceLocation dimension)
+    public static float getJukeboxUnsettling(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.hurtRatio.containsKey(dimension)
-                ? DimensionConfig.hurtRatio.get(dimension).floatValue() : getDef().m_hurtRatio.get().floatValue();
-        return -value / 100f;
+        return ConfigManager.proxyd2f("sanity.passive.jukebox_unsettling", dim);
     }
 
-    public static float getBabyChickenSpawning(ResourceLocation dimension)
+    public static List<ConfigPassiveBlock> getPassiveBlocks(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.babyChickenSpawning.containsKey(dimension)
-                ? DimensionConfig.babyChickenSpawning.get(dimension).floatValue() : getDef().m_babyChickenSpawning.get().floatValue();
-        return -value / 100f;
+        return ConfigManager.proxy("sanity.passive.blocks", dim);
     }
 
-    public static int getBabyChickenSpawningCooldown(ResourceLocation dimension)
+    public static float getSleeping(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.babyChickenSpawningCd.containsKey(dimension)
-                ? DimensionConfig.babyChickenSpawningCd.get(dimension).floatValue() : getDef().m_babyChickenSpawningCd.get().floatValue();
-        return Math.round(value * 20f);
+        return ConfigManager.proxyd2f("sanity.active.sleeping", dim);
     }
 
-    public static float getAdvancement(ResourceLocation dimension)
+    public static int getSleepingCooldown(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.advancement.containsKey(dimension)
-                ? DimensionConfig.advancement.get(dimension).floatValue() : getDef().m_advancement.get().floatValue();
-        return -value / 100f;
+        return ConfigManager.proxyd2i("sanity.active.sleeping_cd", dim);
     }
 
-    public static float getAnimalBreeding(ResourceLocation dimension)
+    public static float getHurtRatio(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.animalBreeding.containsKey(dimension)
-                ? DimensionConfig.animalBreeding.get(dimension).floatValue() : getDef().m_animalBreeding.get().floatValue();
-        return -value / 100f;
+        return ConfigManager.proxyd2f("sanity.active.hurt_ratio", dim);
     }
 
-    public static int getAnimalBreedingCooldown(ResourceLocation dimension)
+    public static float getBabyChickenSpawning(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.animalBreedingCd.containsKey(dimension)
-                ? DimensionConfig.animalBreedingCd.get(dimension).floatValue() : getDef().m_animalBreedingCd.get().floatValue();
-        return Math.round(value * 20f);
+        return ConfigManager.proxyd2f("sanity.active.baby_chicken_spawn", dim);
     }
 
-    public static float getAnimalHurtRatio(ResourceLocation dimension)
+    public static int getBabyChickenSpawningCooldown(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.animalHurtRatio.containsKey(dimension)
-                ? DimensionConfig.animalHurtRatio.get(dimension).floatValue() : getDef().m_animalHurtRatio.get().floatValue();
-        return -value / 100f;
+        return ConfigManager.proxyd2i("sanity.active.baby_chicken_spawn_cd", dim);
     }
 
-    public static float getPetDeath(ResourceLocation dimension)
+    public static float getAdvancement(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.petDeath.containsKey(dimension)
-                ? DimensionConfig.petDeath.get(dimension).floatValue() : getDef().m_petDeath.get().floatValue();
-        return -value / 100f;
+        return ConfigManager.proxyd2f("sanity.active.advancement", dim);
     }
 
-    public static float getVillagerTrade(ResourceLocation dimension)
+    public static float getAnimalBreeding(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.villagerTrade.containsKey(dimension)
-                ? DimensionConfig.villagerTrade.get(dimension).floatValue() : getDef().m_villagerTrade.get().floatValue();
-        return -value / 100f;
+        return ConfigManager.proxyd2f("sanity.active.animal_breeding", dim);
     }
 
-    public static int getVillagerTradeCooldown(ResourceLocation dimension)
+    public static int getAnimalBreedingCooldown(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.villagerTradeCd.containsKey(dimension)
-                ? DimensionConfig.villagerTradeCd.get(dimension).floatValue() : getDef().m_villagerTradeCd.get().floatValue();
-        return Math.round(value * 20f);
+        return ConfigManager.proxyd2i("sanity.active.animal_breeding_cd", dim);
     }
 
-    public static float getShearing(ResourceLocation dimension)
+    public static float getAnimalHurtRatio(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.shearing.containsKey(dimension)
-                ? DimensionConfig.shearing.get(dimension).floatValue() : getDef().m_shearing.get().floatValue();
-        return -value / 100f;
+        return ConfigManager.proxyd2f("sanity.active.animal_hurt_ratio", dim);
     }
 
-    public static int getShearingCooldown(ResourceLocation dimension)
+    public static float getPetDeath(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.shearingCd.containsKey(dimension)
-                ? DimensionConfig.shearingCd.get(dimension).floatValue() : getDef().m_shearingCd.get().floatValue();
-        return Math.round(value * 20f);
+        return ConfigManager.proxyd2f("sanity.active.pet_death", dim);
     }
 
-    public static float getEating(ResourceLocation dimension)
+    public static float getVillagerTrade(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.eating.containsKey(dimension)
-                ? DimensionConfig.eating.get(dimension).floatValue() : getDef().m_eating.get().floatValue();
-        return -value / 100f;
+        return ConfigManager.proxyd2f("sanity.active.villager_trade", dim);
     }
 
-    public static int getEatingCooldown(ResourceLocation dimension)
+    public static int getVillagerTradeCooldown(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.eatingCd.containsKey(dimension)
-                ? DimensionConfig.eatingCd.get(dimension).floatValue() : getDef().m_eatingCd.get().floatValue();
-        return Math.round(value * 20f);
+        return ConfigManager.proxyd2i("sanity.active.villager_trade_cd", dim);
     }
 
-    public static float getFishing(ResourceLocation dimension)
+    public static float getShearing(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.fishing.containsKey(dimension)
-                ? DimensionConfig.fishing.get(dimension).floatValue() : getDef().m_fishing.get().floatValue();
-        return -value / 100f;
+        return ConfigManager.proxyd2f("sanity.active.shearing", dim);
     }
 
-    public static int getFishingCooldown(ResourceLocation dimension)
+    public static int getShearingCooldown(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.fishingCd.containsKey(dimension)
-                ? DimensionConfig.fishingCd.get(dimension).floatValue() : getDef().m_fishingCd.get().floatValue();
-        return Math.round(value * 20f);
+        return ConfigManager.proxyd2i("sanity.active.shearing_cd", dim);
     }
 
-    public static List<ConfigItem> getItems(ResourceLocation dimension)
+    public static float getEating(ResourceLocation dim)
     {
-        List<ConfigItem> value = dimension != null && DimensionConfig.itemsProcessed.containsKey(dimension)
-                ? DimensionConfig.itemsProcessed.get(dimension) : defItems;
-        return value;
+        return ConfigManager.proxyd2f("sanity.active.eating", dim);
     }
 
-    public static List<ConfigItemCategory> getItemCats(ResourceLocation dimension)
+    public static int getEatingCooldown(ResourceLocation dim)
     {
-        List<ConfigItemCategory> value = dimension != null && DimensionConfig.itemCatsProcessed.containsKey(dimension)
-                ? DimensionConfig.itemCatsProcessed.get(dimension) : defItemCats;
-        return value;
+        return ConfigManager.proxyd2i("sanity.active.eating_cd", dim);
     }
 
-    public static Map<Integer, ConfigItemCategory> getIdToItemCat(ResourceLocation dimension)
+    public static float getFishing(ResourceLocation dim)
     {
-        Map<Integer, ConfigItemCategory> value = dimension != null && DimensionConfig.idToItemCat.containsKey(dimension)
-                ? DimensionConfig.idToItemCat.get(dimension) : defIdToItemCat;
-        return value;
+        return ConfigManager.proxyd2f("sanity.active.fishing", dim);
     }
 
-    public static float getSanePlayerCompany(ResourceLocation dimension)
+    public static int getFishingCooldown(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.sanePlayerCompany.containsKey(dimension)
-                ? DimensionConfig.sanePlayerCompany.get(dimension).floatValue() : getDef().m_sanePlayerCompany.get().floatValue();
-        return -value / 2000f;
+        return ConfigManager.proxyd2i("sanity.active.fishing_cd", dim);
     }
 
-    public static float getInsanePlayerCompany(ResourceLocation dimension)
+    public static float getFarmlandTrample(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.insanePlayerCompany.containsKey(dimension)
-                ? DimensionConfig.insanePlayerCompany.get(dimension).floatValue() : getDef().m_insanePlayerCompany.get().floatValue();
-        return -value / 2000f;
+        return ConfigManager.proxyd2f("sanity.active.farmland_trample", dim);
     }
 
-    public static boolean getRenderIndicator(ResourceLocation dimension)
+    public static float getPottingFlower(ResourceLocation dim)
     {
-        boolean value = dimension != null && DimensionConfig.renderIndicator.containsKey(dimension)
-                ? DimensionConfig.renderIndicator.get(dimension).booleanValue() : getDef().m_renderIndicator.get().booleanValue();
-        return value;
+        return ConfigManager.proxyd2f("sanity.active.potting_flower", dim);
     }
 
-    public static boolean getTwitchIndicator(ResourceLocation dimension)
+    public static int getPottingFlowerCooldown(ResourceLocation dim)
     {
-        boolean value = dimension != null && DimensionConfig.twitchIndicator.containsKey(dimension)
-                ? DimensionConfig.twitchIndicator.get(dimension).booleanValue() : getDef().m_twitchIndicator.get().booleanValue();
-        return value;
+        return ConfigManager.proxyd2i("sanity.active.potting_flower_cd", dim);
     }
 
-    public static float getIndicatorScale(ResourceLocation dimension)
+    public static float getChangedDimension(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.indicatorScale.containsKey(dimension)
-                ? DimensionConfig.indicatorScale.get(dimension).floatValue() : getDef().m_indicatorScale.get().floatValue();
-        return value;
+        return ConfigManager.proxyd2f("sanity.active.changed_dimension", dim);
     }
 
-    public static SanityIndicatorLocation getIndicatorLocation(ResourceLocation dimension)
+    public static float getStruckByLightning(ResourceLocation dim)
     {
-        SanityIndicatorLocation value = dimension != null && DimensionConfig.indicatorLocation.containsKey(dimension)
-                ? DimensionConfig.indicatorLocation.get(dimension) : getDef().m_indicatorLocation.get();
-        return value;
+        return ConfigManager.proxyd2f("sanity.active.struck_by_lightning", dim);
     }
 
-    public static boolean getRenderHint(ResourceLocation dimension)
+    public static List<ConfigItem> getItems(ResourceLocation dim)
     {
-        boolean value = dimension != null && DimensionConfig.renderHint.containsKey(dimension)
-                ? DimensionConfig.renderHint.get(dimension).booleanValue() : getDef().m_renderHint.get().booleanValue();
-        return value;
+        return ConfigManager.proxy("sanity.active.items", dim);
     }
 
-    public static boolean getTwitchHint(ResourceLocation dimension)
+    public static List<ConfigItemCategory> getItemCats(ResourceLocation dim)
     {
-        boolean value = dimension != null && DimensionConfig.twitchHint.containsKey(dimension)
-                ? DimensionConfig.twitchHint.get(dimension).booleanValue() : getDef().m_twitchHint.get().booleanValue();
-        return value;
+        return ConfigManager.proxy("sanity.active.item_categories", dim);
     }
 
-    public static boolean getRenderPost(ResourceLocation dimension)
+    public static Map<Integer, ConfigItemCategory> getIdToItemCat(ResourceLocation dim)
     {
-        boolean value = dimension != null && DimensionConfig.renderPost.containsKey(dimension)
-                ? DimensionConfig.renderPost.get(dimension).booleanValue() : getDef().m_renderPost.get().booleanValue();
-        return value;
+        return ConfigManager.getIdToItemCat(dim);
     }
 
-    public static boolean getPlaySounds(ResourceLocation dimension)
+    public static List<ConfigBrokenBlock> getBrokenBlocks(ResourceLocation dim)
     {
-        boolean value = dimension != null && DimensionConfig.playSounds.containsKey(dimension)
-                ? DimensionConfig.playSounds.get(dimension).booleanValue() : getDef().m_playSounds.get().booleanValue();
-        return value;
+        return ConfigManager.proxy("sanity.active.broken_blocks", dim);
     }
 
-    public static float getInsanityVolume(ResourceLocation dimension)
+    public static List<ConfigBrokenBlockCategory> getBrokenBlockCats(ResourceLocation dim)
     {
-        float value = dimension != null && DimensionConfig.insanityVolume.containsKey(dimension)
-                ? DimensionConfig.insanityVolume.get(dimension).floatValue() : getDef().m_insanityVolume.get().floatValue();
-        return value;
+        return ConfigManager.proxy("sanity.active.broken_block_categories", dim);
     }
 
-    public static ConfigDefault getDef()
+    public static Map<Integer, ConfigBrokenBlockCategory> getIdToBrokenBlockCat(ResourceLocation dim)
     {
-        return ConfigHandler.getDefault();
+        return ConfigManager.getIdToBrokenBlockCat(dim);
     }
 
-    public static void onConfigLoading()
+    public static float getSanePlayerCompany(ResourceLocation dim)
     {
-        defPassiveBlocks = ConfigHandler.processPassiveBlocks(getDef().m_passiveBlocks.get());
-        defItems = ConfigHandler.processItems(getDef().m_items.get());
-        defItemCats = ConfigHandler.processItemCats(getDef().m_itemCats.get());
-        defIdToItemCat = ConfigHandler.getMapFromCats(defItemCats);
+        return ConfigManager.proxyd2f("sanity.multiplayer.sane_player_company", dim);
+    }
+
+    public static float getInsanePlayerCompany(ResourceLocation dim)
+    {
+        return ConfigManager.proxyd2f("sanity.multiplayer.insane_player_company", dim);
+    }
+
+    public static boolean getSaneSeeInnerEntities(ResourceLocation dim)
+    {
+        return ConfigManager.proxyb("sanity.entity.sane_see_inner_entities", dim);
+    }
+
+    public static boolean getRenderIndicator(ResourceLocation dim)
+    {
+        return ConfigManager.proxyb("sanity.client.indicator.render", dim);
+    }
+
+    public static boolean getTwitchIndicator(ResourceLocation dim)
+    {
+        return ConfigManager.proxyb("sanity.client.indicator.twitch", dim);
+    }
+
+    public static float getIndicatorScale(ResourceLocation dim)
+    {
+        return ConfigManager.proxyd2f("sanity.client.indicator.scale", dim);
+    }
+
+    public static SanityIndicatorLocation getIndicatorLocation(ResourceLocation dim)
+    {
+        return ConfigManager.proxy("sanity.client.indicator.location", dim);
+    }
+
+    public static boolean getRenderHint(ResourceLocation dim)
+    {
+        return ConfigManager.proxyb("sanity.client.hints.render", dim);
+    }
+
+    public static boolean getTwitchHint(ResourceLocation dim)
+    {
+        return ConfigManager.proxyb("sanity.client.hints.twitch", dim);
+    }
+
+    public static boolean getRenderBtOverlay(ResourceLocation dim)
+    {
+        return ConfigManager.proxyb("sanity.client.blood_tendrils.render", dim);
+    }
+
+    public static boolean getFlashBtOnShortBurst(ResourceLocation dim)
+    {
+        return ConfigManager.proxyb("sanity.client.blood_tendrils.short_burst_flash", dim);
+    }
+
+    public static boolean getRenderBtPassive(ResourceLocation dim)
+    {
+        return ConfigManager.proxyb("sanity.client.blood_tendrils.render_passive", dim);
+    }
+
+    public static boolean getRenderPost(ResourceLocation dim)
+    {
+        return ConfigManager.proxyb("sanity.client.render_post", dim);
+    }
+
+    public static boolean getPlaySounds(ResourceLocation dim)
+    {
+        return ConfigManager.proxyb("sanity.client.play_sounds", dim);
+    }
+
+    public static float getInsanityVolume(ResourceLocation dim)
+    {
+        return ConfigManager.proxyd2f("sanity.client.insanity_volume", dim);
     }
 }

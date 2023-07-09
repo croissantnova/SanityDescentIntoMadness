@@ -1,9 +1,5 @@
 package croissantnova.sanitydim.entity;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import croissantnova.sanitydim.capability.ISanity;
 import croissantnova.sanitydim.capability.SanityProvider;
 import net.minecraft.core.BlockPos;
@@ -11,9 +7,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class InnerEntitySpawner
 {
@@ -48,7 +49,7 @@ public abstract class InnerEntitySpawner
 
     public static boolean trySpawnForPlayer(ServerPlayer player)
     {
-        if (player == null || player.isCreative() || player.isSpectator() || player.level == null)
+        if (player == null || player.isCreative() || player.isSpectator() || player.level.getDifficulty().equals(Difficulty.PEACEFUL))
             return false;
 
         PLAYER_TO_SPAWN_TIMEOUT.putIfAbsent(player, 0);
@@ -65,11 +66,11 @@ public abstract class InnerEntitySpawner
         if (s.getSanity() < SPAWN_THRESHOLD || getInnerEntitiesInRadius(player.level, player.blockPosition(), detectionRad).size() >= 3)
             return false;
 
-        RottingStalker entity = EntityRegistry.ROTTING_STALKER.get().create(player.level);
+        int index = RAND.nextInt(EntityRegistry.INNER_ENTITIES.size());
+        InnerEntity entity = EntityRegistry.INNER_ENTITIES.get(index).get().create(player.level);
         if (entity == null)
             return false;
 
-//        CreepingNightmare entity = EntityRegistry.CREEPING_NIGHTMARE.get().create(player.level);
         BlockPos trialPos = BlockPos.randomBetweenClosed(RAND, 1,
                 player.blockPosition().getX() - spawnRad,
                 player.blockPosition().getY(),
