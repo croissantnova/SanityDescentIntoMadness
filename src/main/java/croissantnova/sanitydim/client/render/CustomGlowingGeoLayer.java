@@ -7,11 +7,25 @@ import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class CustomGlowingGeoLayer<T extends GeoAnimatable> extends AutoGlowingGeoLayer<T>
 {
+    private static Method getEmissiveResource;
+
+    static
+    {
+        try
+        {
+            getEmissiveResource = AutoGlowingTexture.class.getDeclaredMethod("getEmissiveResource", ResourceLocation.class);
+            getEmissiveResource.setAccessible(true);
+        }
+        catch (Exception ignored)
+        {
+            getEmissiveResource = null;
+        }
+    }
+
     public CustomGlowingGeoLayer(GeoRenderer<T> renderer)
     {
         super(renderer);
@@ -20,21 +34,19 @@ public class CustomGlowingGeoLayer<T extends GeoAnimatable> extends AutoGlowingG
     @Override
     protected RenderType getRenderType(T animatable)
     {
-        Method getEmissiveResource = null;
-        try {
-            getEmissiveResource = AutoGlowingTexture.class.getDeclaredMethod("getEmissiveResource", ResourceLocation.class);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
+        if (getEmissiveResource != null)
+        {
+            ResourceLocation res = null;
+            try
+            {
+                res = (ResourceLocation) getEmissiveResource.invoke(AutoGlowingTexture.class, getTextureResource(animatable));
+            }
+            catch (Exception ignored) {}
+
+            if (res != null)
+                return RenderType.eyes(res);
         }
-        getEmissiveResource.setAccessible(true);
-        ResourceLocation res;
-        try {
-            res = (ResourceLocation) getEmissiveResource.invoke(AutoGlowingTexture.class, getTextureResource(animatable));
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
-        return RenderType.eyes(res);
+
+        return null;
     }
 }

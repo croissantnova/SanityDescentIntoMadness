@@ -2,6 +2,7 @@ package croissantnova.sanitydim.passive;
 
 import croissantnova.sanitydim.block.BlockStateHelper;
 import croissantnova.sanitydim.capability.ISanity;
+import croissantnova.sanitydim.capability.SanityLevelChunkProvider;
 import croissantnova.sanitydim.config.ConfigPassiveBlock;
 import croissantnova.sanitydim.config.ConfigProxy;
 import net.minecraft.core.BlockPos;
@@ -13,14 +14,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PassiveBlocks implements IPassiveSanitySource
 {
     @Override
-    public float get(@NotNull ServerPlayer player, @NotNull ISanity cap, @NotNull ResourceLocation dim)
+    public float get(@Nonnull ServerPlayer player, @Nonnull ISanity cap, @Nonnull ResourceLocation dim)
     {
         float result = 0;
 
@@ -29,8 +31,8 @@ public class PassiveBlocks implements IPassiveSanitySource
             if (block.m_sanity == 0.0f)
                 continue;
 
-            Block regBlock = ForgeRegistries.BLOCKS.getValue(block.m_name);
-            if (regBlock == null)
+            Block regBlock = null;
+            if (!block.m_isTag && ((regBlock = ForgeRegistries.BLOCKS.getValue(block.m_name)) == null || regBlock.defaultBlockState().isAir()))
                 continue;
 
             boolean flag = false;
@@ -45,8 +47,20 @@ public class PassiveBlocks implements IPassiveSanitySource
                         BlockPos posAt = new BlockPos((int)x, (int)y, (int)z);
                         BlockState stateAt = player.level.getBlockState(posAt);
 
-                        if (regBlock == stateAt.getBlock())
+                        if (block.m_isTag && stateAt.getTags().anyMatch(tag -> tag.location().equals(block.m_name)) || regBlock == stateAt.getBlock())
                         {
+                            if (block.m_naturallyGend)
+                            {
+                                AtomicBoolean placedArtificially = new AtomicBoolean(false);
+                                player.getLevel().getChunkAt(posAt).getCapability(SanityLevelChunkProvider.CAP).ifPresent(sl ->
+                                {
+                                    if (sl.getArtificiallyPlacedBlocks().contains(posAt))
+                                        placedArtificially.set(true);
+                                });
+                                if (placedArtificially.get())
+                                    continue;
+                            }
+
                             boolean flag1 = false;
                             for (Map.Entry<String, Boolean> entry : block.m_props.entrySet())
                             {

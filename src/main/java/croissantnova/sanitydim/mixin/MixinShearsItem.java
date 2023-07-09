@@ -1,7 +1,8 @@
 package croissantnova.sanitydim.mixin;
 
-import croissantnova.sanitydim.SanityMod;
 import croissantnova.sanitydim.SanityProcessor;
+import croissantnova.sanitydim.capability.SanityProvider;
+import croissantnova.sanitydim.client.render.layer.Blackout;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,12 +16,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ShearsItem.class)
 public abstract class MixinShearsItem
 {
-    @Inject(method = "interactLivingEntity", at = @At(
+    @Inject(remap = false,
+            method = "interactLivingEntity", at = @At(
                     value = "INVOKE_ASSIGN",
-                    target = "Lnet/minecraftforge/common/IForgeShearable;onSheared(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;I)Ljava/util/List;"))
+                    target = "Lnet/minecraftforge/common/IForgeShearable;onSheared(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;I)Ljava/util/List;"),
+            cancellable = true)
     private void interactLivingEntity(ItemStack stack, net.minecraft.world.entity.player.Player playerIn, LivingEntity entity, net.minecraft.world.InteractionHand hand, CallbackInfoReturnable<InteractionResult> ci)
     {
-        if (playerIn instanceof ServerPlayer sp)
-            SanityProcessor.handlePlayerUsedShears(sp);
+        if (!playerIn.getLevel().isClientSide())
+        {
+            playerIn.getCapability(SanityProvider.CAP).ifPresent(s ->
+            {
+                if (s.getSanity() >= Blackout.THRESHOLD)
+                    ci.setReturnValue(InteractionResult.PASS);
+            });
+
+            if (playerIn instanceof ServerPlayer sp)
+                SanityProcessor.handlePlayerUsedShears(sp);
+        }
     }
 }
