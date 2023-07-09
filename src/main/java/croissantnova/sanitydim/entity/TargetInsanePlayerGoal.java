@@ -3,10 +3,13 @@ package croissantnova.sanitydim.entity;
 import java.util.EnumSet;
 
 import croissantnova.sanitydim.SanityProcessor;
+import croissantnova.sanitydim.capability.InnerEntityCapImplProvider;
+import croissantnova.sanitydim.net.PacketHandler;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.network.PacketDistributor;
 
 public class TargetInsanePlayerGoal extends TargetGoal
 {

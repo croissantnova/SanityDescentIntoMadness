@@ -5,22 +5,24 @@ import croissantnova.sanitydim.sound.SoundRegistry;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
 public class FlowerArmorMaterial implements ArmorMaterial
 {
     @Override
-    public int getDefenseForSlot(@NotNull EquipmentSlot slot)
+    public int getDurabilityForSlot(EquipmentSlot pSlot)
     {
-        return 0;
+        return 150;
     }
 
     @Override
-    public int getDurabilityForSlot(@NotNull EquipmentSlot slot)
+    public int getDefenseForSlot(EquipmentSlot pSlot)
     {
-        return 150;
+        return 0;
     }
 
     @Override

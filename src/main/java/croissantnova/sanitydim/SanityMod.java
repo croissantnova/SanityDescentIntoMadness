@@ -2,18 +2,18 @@ package croissantnova.sanitydim;
 
 import com.mojang.logging.LogUtils;
 import croissantnova.sanitydim.client.GuiHandler;
-import croissantnova.sanitydim.config.ConfigHandler;
+import croissantnova.sanitydim.config.ConfigManager;
 import croissantnova.sanitydim.entity.EntityRegistry;
-import croissantnova.sanitydim.event.ModEventHandler;
 import croissantnova.sanitydim.event.EventHandler;
+import croissantnova.sanitydim.event.ModEventHandler;
 import croissantnova.sanitydim.item.ItemRegistry;
-import croissantnova.sanitydim.sound.SoundRegistry;
 import croissantnova.sanitydim.net.PacketHandler;
+import croissantnova.sanitydim.sound.SoundRegistry;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -33,14 +33,13 @@ public class SanityMod
     {
         m_inst = this;
 
-        ConfigHandler.register();
+        ConfigManager.register();
 
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(this::setup);
         modEventBus.addListener(this::clientSetup);
         modEventBus.addListener(ModEventHandler::addEntityAttributes);
         modEventBus.addListener(ModEventHandler::onConfigLoading);
-//        modEventBus.addListener(ModEventHandler::registerOverlaysEvent);
         modEventBus.addListener(ModEventHandler::registerEntityRenderersEvent);
         MinecraftForge.EVENT_BUS.register(new EventHandler());
         EntityRegistry.register(modEventBus);
@@ -50,7 +49,7 @@ public class SanityMod
 
     static
     {
-        ConfigHandler.init();
+        ConfigManager.init();
     }
 
     private void setup(final FMLCommonSetupEvent event)
@@ -64,7 +63,6 @@ public class SanityMod
 
         initGui();
         getGui().initOverlays();
-        //EntityRenderers.register(EntityRegistry.SHADE_CHOMPER.get(), RendererShadeChomper::new);
     }
 
     @OnlyIn(Dist.CLIENT)

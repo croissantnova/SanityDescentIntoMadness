@@ -48,16 +48,6 @@ public class RottingStalker extends InnerEntity implements IAnimatable
         super.registerGoals();
     }
 
-    public static AttributeSupplier buildAttributes()
-    {
-        return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 500.0d)
-                .add(Attributes.FOLLOW_RANGE, 256.0d)
-                .add(Attributes.ATTACK_DAMAGE, 9.0d)
-                .add(Attributes.MOVEMENT_SPEED, 0.45d)
-                .build();
-    }
-
     @Override
     public void registerControllers(AnimationData data)
     {
@@ -91,5 +81,15 @@ public class RottingStalker extends InnerEntity implements IAnimatable
     public AnimationFactory getFactory()
     {
         return m_factory;
+    }
+
+    public static AttributeSupplier buildAttributes()
+    {
+        return Monster.createMonsterAttributes()
+                .add(Attributes.MAX_HEALTH, 500.0d)
+                .add(Attributes.FOLLOW_RANGE, 256.0d)
+                .add(Attributes.ATTACK_DAMAGE, 9.0d)
+                .add(Attributes.MOVEMENT_SPEED, 0.45d)
+                .build();
     }
 }

@@ -1,3 +1,26 @@
+mc1.18-forge40.2.0-1.1.0:
+- Added new inner entity: Sneaking Terror
+- Added new GUI overlay element for indicating a sanity loss
+- Added new mechanic: on low sanity some passive animals now turn into shadow versions of themselves and run away from insane players
+- Added new mechanic: passive animals are now not tempted by food if the player holding it is insane
+- Added new mechanic: zombified piglins now target insane players
+- Added new mechanic: villagers now refuse to trade with insane players
+- Added config options for being in the light
+- Added config options for walking on dirt paths and carpets
+- Added config options for being stuck in blocks
+- Added config options for trampling farmlands
+- Added config options for potting flowers
+- Added config options for changing dimensions
+- Added config options for being struck by lightning
+- Added config options for breaking blocks (by default includes infested blocks)
+- Added config options for toggling visibility of inner entities for sane players
+- Added config options for new GUI overlay element
+- Adjusted config options for passive blocks
+- Adjusted config options for breeding animals
+
+- Fixed the bug where a vignette effect would appear suddenly at 60% sanity
+- Fixed the bug that would crash a server on startup in some cases
+
 mc1.18-forge40.2.0-1.0.1:
 - Fixed config comments
 

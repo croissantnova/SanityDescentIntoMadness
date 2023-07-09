@@ -1,5 +1,6 @@
 package croissantnova.sanitydim.net;
 
+import croissantnova.sanitydim.SanityMod;
 import croissantnova.sanitydim.capability.*;
 import croissantnova.sanitydim.entity.InnerEntity;
 import net.minecraft.client.Minecraft;

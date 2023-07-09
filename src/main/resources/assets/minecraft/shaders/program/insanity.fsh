@@ -26,5 +26,5 @@ void main() {
     vec4 color = texture(DiffuseSampler, texCoord);
 	color.rgb = desaturate(spread(color.rgb, SpreadFactor), DesaturateFactor);
 	//color.xyz *= vec3(0.308, 0.265, 0.242) * 2.3;
-    fragColor = color * .91;
+    fragColor = color;// * .91;
 }

@@ -1,11 +1,7 @@
 package croissantnova.sanitydim;
 
-import java.util.*;
-import java.util.function.Function;
 import croissantnova.sanitydim.capability.*;
-import croissantnova.sanitydim.config.ConfigItem;
-import croissantnova.sanitydim.config.ConfigItemCategory;
-import croissantnova.sanitydim.config.ConfigProxy;
+import croissantnova.sanitydim.config.*;
 import croissantnova.sanitydim.entity.InnerEntity;
 import croissantnova.sanitydim.entity.InnerEntitySpawner;
 import croissantnova.sanitydim.item.ItemRegistry;
@@ -27,10 +23,17 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
 
 public final class SanityProcessor
 {
@@ -47,9 +50,12 @@ public final class SanityProcessor
             new Pet(),
             new Monster(),
             new Darkness(),
+            new Lightness(),
             new PassiveBlocks(),
             new PlayerCompany(),
-            new Jukebox()
+            new Jukebox(),
+            new BlockStuck(),
+            new DirtPath()
     );
 
     private SanityProcessor() {}
@@ -70,7 +76,7 @@ public final class SanityProcessor
         ItemStack headItem = player.getItemBySlot(EquipmentSlot.HEAD);
         if (headItem.is(ItemRegistry.GARLAND.get()))
         {
-            // FIXME: garland is hardcoded
+            // TODO: unhardcode
             passive -= .00005 * ConfigProxy.getPosMul(dim);
             if (garlandTimer <= 0)
                 headItem.hurtAndBreak(player.isInWaterOrRain() ? 2 : 1, player, ent -> {});
@@ -130,7 +136,7 @@ public final class SanityProcessor
 
             float passive = calcPassive(player, s);
             float snapshot = s.getSanity();
-            // passive premultiplied so no need for Sanity#addSanity
+            // passive premultiplied so no need for SanityProcessor#addSanity
             s.setSanity(s.getSanity() + passive);
             if (s instanceof IPassiveSanity ps)
             {
@@ -148,6 +154,15 @@ public final class SanityProcessor
                     Map.Entry<Integer, Integer> entry = it.next();
                     itemCds.put(entry.getKey(), itemCds.get(entry.getKey()) - 1);
                     if (itemCds.get(entry.getKey()) <= 0)
+                        it.remove();
+                }
+
+                Map<Integer, Integer> brokenBlocksCds = ps.getBrokenBlocksCooldowns();
+                for (Iterator<Map.Entry<Integer, Integer>> it = brokenBlocksCds.entrySet().iterator(); it.hasNext();)
+                {
+                    Map.Entry<Integer, Integer> entry = it.next();
+                    brokenBlocksCds.put(entry.getKey(), brokenBlocksCds.get(entry.getKey()) - 1);
+                    if (brokenBlocksCds.get(entry.getKey()) <= 0)
                         it.remove();
                 }
             }
@@ -168,7 +183,10 @@ public final class SanityProcessor
                     if (iec instanceof InnerEntityCapImpl ieci)
                     {
                         if (ieci.hasTarget() && ie.getTarget() == null || !ieci.hasTarget() && ie.getTarget() != null)
+                        {
                             ieci.setHasTarget(ie.getTarget() != null);
+                            ieci.setPlayerTargetUUID(ie.getTarget() instanceof ServerPlayer sp ? sp.getUUID() : null);
+                        }
 
                         if (ieci.getDirty())
                         {
@@ -202,6 +220,11 @@ public final class SanityProcessor
 
     public static Player getMostInsanePlayer(final Level levelIn)
     {
+        return getMostInsanePlayer(levelIn, SANITY_TARGET_THRESHOLD);
+    }
+
+    public static Player getMostInsanePlayer(final Level levelIn, float sanityThreshold)
+    {
         if (levelIn == null)
             return null;
 
@@ -215,7 +238,7 @@ public final class SanityProcessor
             if (s == null)
                 continue;
             float sanity = s.getSanity();
-            if (sanity >= SANITY_TARGET_THRESHOLD && sanity > maxSanity)
+            if (sanity >= sanityThreshold && sanity > maxSanity)
             {
                 maxSanity = s.getSanity();
                 toReturn = player;
@@ -249,6 +272,17 @@ public final class SanityProcessor
                 addSanity(s, sanitySupplier.apply(dimLoc), player);
 //                s.setSanity(s.getSanity() + sanitySupplier.apply(dimLoc));
         });
+    }
+
+    public static void handlePlayerSlept(ServerLevel level)
+    {
+        for (ServerPlayer player : level.players())
+        {
+            if (player.isCreative() || player.isSpectator())
+                continue;
+
+            SanityProcessor.handleActiveSourceForPlayer(player, ActiveSanitySources.SLEEPING, ConfigProxy::getSleepingCooldown, ConfigProxy::getSleeping);
+        }
     }
 
     public static void handlePlayerHurt(ServerPlayer player, float amount)
@@ -362,7 +396,6 @@ public final class SanityProcessor
             if (s instanceof IPersistentSanity ps)
             {
                 ResourceLocation dim = player.level.dimension().location();
-                Map<Integer, Integer> itemCds = ps.getItemCooldowns();
 
                 for (ConfigItem citem : ConfigProxy.getItems(dim))
                 {
@@ -381,6 +414,8 @@ public final class SanityProcessor
                         addSanity(s, citem.m_sanity, player);
                         return;
                     }
+
+                    Map<Integer, Integer> itemCds = ps.getItemCooldowns();
 
                     if (!itemCds.containsKey(citem.m_cat) || itemCds.get(citem.m_cat) <= 0)
                     {
@@ -414,5 +449,138 @@ public final class SanityProcessor
                 ConfigProxy::getFishingCooldown,
                 ConfigProxy::getFishing
         );
+    }
+
+    public static void handlePlayerMinedBlock(ServerPlayer player, BlockPos blockPos, BlockState blockState, Block block, boolean correctTool)
+    {
+        if (player == null)
+            return;
+
+        ServerLevel level = player.getLevel();
+        LevelChunk levelChunk = level.getChunkAt(blockPos);
+
+        if (player.isCreative() || player.isSpectator())
+        {
+            levelChunk.getCapability(SanityLevelChunkProvider.CAP).ifPresent(sl ->
+            {
+                sl.getArtificiallyPlacedBlocks().remove(blockPos);
+                levelChunk.setUnsaved(true);
+            });
+            return;
+        }
+
+        player.getCapability(SanityProvider.CAP).ifPresent(s ->
+        {
+            if (s instanceof IPersistentSanity ps)
+            {
+                ResourceLocation dim = level.dimension().location();
+
+                for (ConfigBrokenBlock cbblock : ConfigProxy.getBrokenBlocks(dim))
+                {
+                    if (!(cbblock.m_isTag && blockState.getTags().anyMatch(tag -> tag.location().equals(cbblock.m_name)) ||
+                            block.equals(ForgeRegistries.BLOCKS.getValue(cbblock.m_name))))
+                    {
+                        continue;
+                    }
+
+                    if (cbblock.m_toolRequired && !correctTool)
+                        return;
+
+                    if (!ConfigProxy.getIdToBrokenBlockCat(dim).containsKey(cbblock.m_cat))
+                    {
+                        SanityMod.LOGGER.warn("player " + player.getDisplayName().getString() + " mined " + cbblock.m_name + " from category " + cbblock.m_cat + ", but no such category is present");
+                        return;
+                    }
+
+                    // skip if artifically placed and block needs to be naturally gend
+                    if (cbblock.m_naturallyGend)
+                    {
+                        AtomicBoolean flag = new AtomicBoolean(false);
+                        levelChunk.getCapability(SanityLevelChunkProvider.CAP).ifPresent(sl ->
+                        {
+                            if (sl.getArtificiallyPlacedBlocks().remove(blockPos))
+                            {
+                                flag.set(true);
+                                levelChunk.setUnsaved(true);
+                            }
+                        });
+                        if (flag.get())
+                            return;
+                    }
+
+                    ConfigBrokenBlockCategory cat = ConfigProxy.getIdToBrokenBlockCat(dim).get(cbblock.m_cat);
+                    if (cat.m_cd <= 0)
+                    {
+                        addSanity(s, cbblock.m_sanity, player);
+                        return;
+                    }
+
+                    Map<Integer, Integer> brokenBlockCds = ps.getBrokenBlocksCooldowns();
+
+                    if (!brokenBlockCds.containsKey(cbblock.m_cat) || brokenBlockCds.get(cbblock.m_cat) <= 0)
+                    {
+                        addSanity(s, cbblock.m_sanity, player);
+                    }
+                    else
+                    {
+                        int timePassed = cat.m_cd - brokenBlockCds.get(cbblock.m_cat);
+                        addSanity(s, cbblock.m_sanity * MathHelper.clampNorm((float)timePassed / cat.m_cd), player);
+                    }
+
+                    brokenBlockCds.put(cbblock.m_cat, cat.m_cd);
+
+                    return;
+                }
+            }
+        });
+    }
+
+    public static void handlePlayerTrampledFarmland(ServerPlayer player)
+    {
+        if (player == null || player.isCreative() || player.isSpectator())
+            return;
+
+        player.getCapability(SanityProvider.CAP).ifPresent(s ->
+        {
+            addSanity(s, ConfigProxy.getFarmlandTrample(player.level.dimension().location()), player);
+        });
+    }
+
+    public static void handlePlayerPottedFlower(ServerPlayer player)
+    {
+        if (player == null || player.isCreative() || player.isSpectator())
+            return;
+
+        player.getCapability(SanityProvider.CAP).ifPresent(s ->
+        {
+            handleActiveSourceForPlayer(
+                    player,
+                    ActiveSanitySources.POTTING_FLOWER,
+                    ConfigProxy::getPottingFlowerCooldown,
+                    ConfigProxy::getPottingFlower
+            );
+        });
+    }
+
+    public static void handlePlayerChangedDimensions(ServerPlayer player)
+    {
+        if (player == null || player.isCreative() || player.isSpectator())
+            return;
+
+        player.getCapability(SanityProvider.CAP).ifPresent(s ->
+        {
+            addSanity(s, ConfigProxy.getChangedDimension(player.level.dimension().location()), player);
+        });
+    }
+
+    public static void handlePlayerStruckByLightning(ServerPlayer player)
+    {
+        if (player == null || player.isCreative() || player.isSpectator())
+            return;
+
+        player.getCapability(SanityProvider.CAP).ifPresent(s ->
+        {
+            addSanity(s, ConfigProxy.getStruckByLightning(player.level.dimension().location()), player);
+        });
     }
 }
