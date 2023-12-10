@@ -43,7 +43,7 @@ public final class SanityProcessor
 
     public static final int MAX_GARLAND_TIMER = 60;
     public static final float SANITY_TARGET_THRESHOLD = .87f;
-    public static final List<IPassiveSanitySource> PASSIVE_SANITY_SOURCES = Arrays.asList(
+    public static final List<IPassiveSanitySource> PASSIVE_SANITY_SOURCES = new ArrayList<>(Arrays.asList(
             new Passive(),
             new InWaterOrRain(),
             new Hungry(),
@@ -57,7 +57,7 @@ public final class SanityProcessor
             new Jukebox(),
             new BlockStuck(),
             new DirtPath()
-    );
+    ));
 
     private SanityProcessor() {}
 
