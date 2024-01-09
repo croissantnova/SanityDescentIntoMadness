@@ -1,6 +1,6 @@
 {
-	"entity.sanitydim.rotting_stalker": "Гнилой сталкер",
-	"entity.sanitydim.sneaking_terror": "Крадущийся ужас",
+	"entity.sanitydim.rotting_stalker": "Вёдерник",
+	"entity.sanitydim.sneaking_terror": "Чернобог",
 	
 	"commands.sanity.set.success.single": "Здравомыслие %s установлено в %s",
 	"commands.sanity.set.success.multiple": "Здравомыслие установлено в %s для %s игроков",
@@ -9,7 +9,7 @@
 	"commands.sanity.config.reload": "Успешно перезагружены конфигурации измерений",
 	
 	"gui.sanitydim.hint00": "Что это за звуки?",
-	"gui.sanitydim.hint01": "Я чувствую себя немного неловко",
+	"gui.sanitydim.hint01": "Мне немного неловко",
 	"gui.sanitydim.hint02": "Что это было?",
 	"gui.sanitydim.hint03": "Какое странное чувство…",
 	"gui.sanitydim.hint04": "Мне это не нравится…",
@@ -19,8 +19,8 @@
 	"gui.sanitydim.hint08": "Что там?",
 	"gui.sanitydim.hint09": "Это был я?",
 	"gui.sanitydim.hint010": "Странно…",
-	"gui.sanitydim.hint011": "Я только что что-то увидел?",
-	"gui.sanitydim.hint10": "КТО-ТО ПОЗАДИ МЕНЯ",
+	"gui.sanitydim.hint011": "Что я только что увидел?",
+	"gui.sanitydim.hint10": "КТО-ТО СЗАДИ МЕНЯ",
 	"gui.sanitydim.hint11": "Раз, два, три, четыре…",
 	"gui.sanitydim.hint12": "…пять, шесть, семь, восемь…",
 	"gui.sanitydim.hint13": "ОНИ У МЕНЯ В ГОЛОВЕ",
@@ -32,5 +32,5 @@
 
 	"item.sanitydim.tooltip.press_shift": "§7Нажмите §9SHIFT§7 для дополнительной информации",
 	"item.sanitydim.garland": "Венок",
-	"item.sanitydim.garland.tooltip": "§7Что-нибудь, что поможет успокоить нервы\n\nМедленно восстанавливает ваше здравомыслие и делает вас немного более устойчивыми к стрессу"
+	"item.sanitydim.garland.tooltip": "§7То, что поможет успокоить нервы\n\nМедленно восстанавливает ваше здравомыслие и делает вас немного более стрессоустойчивым"
 }
