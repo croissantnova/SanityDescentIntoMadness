@@ -1,0 +1,36 @@
+{
+	"entity.sanitydim.rotting_stalker": "Çürüyen İzleyici",
+	"entity.sanitydim.sneaking_terror": "Gizli Terör",
+	
+	"commands.sanity.set.success.single": "%s'nin akıl sağlığı %s olarak ayarlandı",
+	"commands.sanity.set.success.multiple": "%1$s kişinin akıl sağlığı %2$s olarak ayarlandı",
+	"commands.sanity.add.success.single": "%2$s'ye %1$s akıl sağlığı eklendi",
+	"commands.sanity.add.success.multiple": "%2$s kişiye %1$s akıl sağlığı eklendi",
+	"commands.sanity.config.reload": "Boyut yapılandırmaları başarılı bir şekilde yeniden yüklendi",
+	
+	"gui.sanitydim.hint00": "Bu sesler ne?",
+	"gui.sanitydim.hint01": "Biraz garip hissediyorum",
+	"gui.sanitydim.hint02": "O neydi?",
+	"gui.sanitydim.hint03": "Ne kadar da garip bir his...",
+	"gui.sanitydim.hint04": "Bunu hiç sevmedim...",
+	"gui.sanitydim.hint05": "He?",
+	"gui.sanitydim.hint06": "Hmm?",
+	"gui.sanitydim.hint07": "Ne?",
+	"gui.sanitydim.hint08": "Orada ne var?",
+	"gui.sanitydim.hint09": "O benmiydim?",
+	"gui.sanitydim.hint010": "Garip...",
+	"gui.sanitydim.hint011": "Bir şeymi gördüm?",
+	"gui.sanitydim.hint10": "ARKAMDA BİŞEY VAR",
+	"gui.sanitydim.hint11": "Bir, iki, üç, dört...",
+	"gui.sanitydim.hint12": "...beş, altı, yedi, sekiz...",
+	"gui.sanitydim.hint13": "KAFAMDALAR",
+	"gui.sanitydim.hint14": "BENİ RAHAT BIRAKIN",
+	"gui.sanitydim.hint15": "KAÇIŞMAYIN",
+	"gui.sanitydim.hint16": "NEDEN GİTMİYORLAR?!",
+	"gui.sanitydim.hint17": "ÇOK SESLİ ÇOK SESLİ ÇOK SESLİ",
+	"gui.sanitydim.hint18": "SESLER... BEN...",
+
+	"item.sanitydim.tooltip.press_shift": "§7Daha çok bilgi için §9SHIFT§7'e bas",
+	"item.sanitydim.garland": "Çiçek Tacı",
+	"item.sanitydim.garland.tooltip": "§7Sinirleri yatıştıran birşey\n\nYavaşça akıl sağlığını yeniler ve seni stresse birazcık daha dayanıklı yapar."
+}
