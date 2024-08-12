@@ -17,7 +17,7 @@
 		passive = 0.0
 		#Sanity gain per second during rainy weather or in water
 		#Range: -100.0 ~ 100.0
-		raining = -0.2
+		raining = 0 
 		#Players' sanity will start getting affected with food levels at and below this threshold (in half-drumsticks)
 		#Range: 0 ~ 20
 		hunger_threshold = 8
@@ -42,7 +42,7 @@
 		darkness_threshold = 4
 		#Players will gain this amount of sanity per second while being in the light
 		#Range: -100.0 ~ 100.0
-		lightness = 0.0
+		lightness = 0.1
 		#Minimum light level considered to be lightness (inclusive)
 		#Range: 0 ~ 15
 		lightness_threshold = 4
@@ -54,7 +54,7 @@
 		dirt_path = 0.09
 		#Nearby jukebox playing a pleasant melody gives this amount of sanity per second
 		#Range: -100.0 ~ 100.0
-		jukebox_pleasant = 0.08
+		jukebox_pleasant = 0.15
 		#Nearby jukebox playing an unsettling melody gives this amount of sanity per second (this takes priority over pleasant melodies)
 		#Range: -100.0 ~ 100.0
 		jukebox_unsettling = -0.11
