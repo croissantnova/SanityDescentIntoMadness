@@ -17,7 +17,7 @@
 		passive = 0.0
 		#Sanity gain per second during rainy weather or in water
 		#Range: -100.0 ~ 100.0
-		raining = -0.2
+		raining = 0
 		#Players' sanity will start getting affected with food levels at and below this threshold (in half-drumsticks)
 		#Range: 0 ~ 20
 		hunger_threshold = 8
@@ -33,7 +33,7 @@
 		#Players will gain this amount of sanity per second while being near any monsters
 		#This value is doubled if the monster is aggressive towards the player
 		#Range: -100.0 ~ 100.0
-		monster = -0.1
+		monster = -0.08
 		#Players will gain this amount of sanity per second while being in the dark
 		#Range: -100.0 ~ 100.0
 		darkness = -0.15
@@ -42,13 +42,13 @@
 		darkness_threshold = 4
 		#Players will gain this amount of sanity per second while being in the light
 		#Range: -100.0 ~ 100.0
-		lightness = 0.0
+		lightness = 0.1
 		#Minimum light level considered to be lightness (inclusive)
 		#Range: 0 ~ 15
 		lightness_threshold = 4
 		#Players who are stuck in blocks (such as cobweb) and have their movement restricted gain this amount of sanity per second
 		#Range: -100.0 ~ 100.0
-		block_stuck = -0.09
+		block_stuck = -0.05
 		#Players moving on a dirt path or a carpet receive this amount of sanity per second
 		#Range: -100.0 ~ 100.0
 		dirt_path = 0.09
