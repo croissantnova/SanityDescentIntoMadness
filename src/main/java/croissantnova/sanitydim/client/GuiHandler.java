@@ -15,7 +15,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -26,6 +25,7 @@ import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import org.joml.Matrix4f;
 
+import java.util.Objects;
 import java.util.Random;
 import java.util.function.Function;
 
@@ -35,10 +35,8 @@ public class GuiHandler
     private static final float PASSIVE_THRESHOLD = .0002f;
     private static final float BT_DELAY = 5f * 20;
 
-    public static final ResourceLocation SANITY_INDICATOR = new ResourceLocation(SanityMod.MODID, "textures/sanity_indicator.png");
-    public static final ResourceLocation BLOOD_TENDRILS_OVERLAY = new ResourceLocation(SanityMod.MODID, "textures/overlay/blood_tendrils.png");
-    public static final MutableComponent[] HINTS0;
-    public static final MutableComponent[] HINTS1;
+    public static final ResourceLocation SANITY_INDICATOR = new ResourceLocation(SanityMod.MOD_ID, "textures/sanity_indicator.png");
+    public static final ResourceLocation BLOOD_TENDRILS_OVERLAY = new ResourceLocation(SanityMod.MOD_ID, "textures/overlay/blood_tendrils.png");
 
     private final Minecraft m_mc;
     private ISanity m_cap;
@@ -62,25 +60,11 @@ public class GuiHandler
     private float m_btAlpha;
     private double m_btTimer;
 
-    private MutableComponent m_hint;
+    private MutableComponent m_hintComponent;
 
     public GuiHandler()
     {
         m_mc = Minecraft.getInstance();
-    }
-
-    static
-    {
-        HINTS0 = new MutableComponent[12];
-        for (int i = 0; i < HINTS0.length; i++)
-        {
-            HINTS0[i] = Component.translatable("gui." + SanityMod.MODID + ".hint0" + i);
-        }
-        HINTS1 = new MutableComponent[9];
-        for (int i = 0; i < HINTS1.length; i++)
-        {
-            HINTS1[i] = Component.translatable("gui." + SanityMod.MODID + ".hint1" + i);
-        }
     }
 
     private void initSanityPostProcess()
@@ -253,7 +237,7 @@ public class GuiHandler
 
     private void renderHint(ForgeGui gui, GuiGraphics guiGraphics, float partialTicks, int scw, int sch)
     {
-        if (m_mc.player == null || m_mc.player.isCreative() || m_mc.player.isSpectator() || m_hint == null || m_cap == null || m_cap.getSanity() < .5f
+        if (m_mc.player == null || m_mc.player.isCreative() || m_mc.player.isSpectator() || m_hintComponent == null || m_cap == null || m_cap.getSanity() < .5f
             || !ConfigProxy.getRenderHint(m_mc.player.level().dimension().location()))
             return;
 
@@ -269,7 +253,7 @@ public class GuiHandler
         o = ((int) m_showingHintTimer / 10) % 2 == 0 ? o : 1 - o;
         int opacity = Mth.clamp((int)(Mth.lerp(o, (m_showingHintTimer >= m_maxShowingHintTimer - 9f) || m_showingHintTimer < 10f ? 0f : .5f, 1f) * 0xFF), 0x10, 0xEF) << 24;
 
-        float pX = -gui.getFont().width(m_hint) / 2f;
+        float pX = -gui.getFont().width(m_hintComponent) / 2f;
         float pY = -gui.getFont().lineHeight / 2f;
         if (ConfigProxy.getTwitchHint(m_mc.player.level().dimension().location()))
         {
@@ -277,7 +261,7 @@ public class GuiHandler
             pY += m_hintOffsetY;
         }
 
-        gui.getFont().drawInBatch(m_hint, pX, pY, 0xFFFFFF | opacity, true, poseStack.last().pose(), guiGraphics.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
+        gui.getFont().drawInBatch(m_hintComponent, pX, pY, 0xFFFFFF | opacity, true, poseStack.last().pose(), guiGraphics.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
 
         poseStack.popPose();
         RenderSystem.disableBlend();
@@ -347,30 +331,33 @@ public class GuiHandler
         m_prevSanity = m_cap.getSanity();
     }
 
+    public void triggerInsomniaHint() {
+
+    }
+
     private void tickHint(float dt)
     {
-        if (m_cap.getSanity() <= .4f || !ConfigProxy.getRenderHint(m_mc.player.level().dimension().location()))
+        if (m_cap.getSanity() <= .4f || !ConfigProxy.getRenderHint(Objects.requireNonNull(m_mc.player).level().dimension().location()))
             return;
 
         if (m_hintTimer <= 0f && m_showingHintTimer <= 0f)
         {
-            int id;
             if (m_cap.getSanity() <= .7f)
             {
-                id = m_random.nextInt(HINTS0.length);
-                m_hint = HINTS0[id];
+                SanityHint hint = SanityHintProvider.PARANOID.getRandomHint();
+                m_hintComponent = hint.component();
                 m_hintTimer = 2000;
 
-                if (ConfigProxy.getPlaySounds(m_mc.player.level().dimension().location()) && id == 2)
+                if (ConfigProxy.getPlaySounds(m_mc.player.level().dimension().location()) && hint.swish())
                     m_mc.getSoundManager().play(new SwishSoundInstance());
             }
             else
             {
-                id = m_random.nextInt(HINTS1.length);
-                m_hint = HINTS1[id];
+                SanityHint hint = SanityHintProvider.INSANE.getRandomHint();
+                m_hintComponent = hint.component();
                 m_hintTimer = 600;
 
-                if (ConfigProxy.getPlaySounds(m_mc.player.level().dimension().location()) && id == 0)
+                if (ConfigProxy.getPlaySounds(m_mc.player.level().dimension().location()) && hint.swish())
                     m_mc.getSoundManager().play(new SwishSoundInstance());
             }
 
@@ -428,9 +415,9 @@ public class GuiHandler
 
     public void initOverlays(final RegisterGuiOverlaysEvent event)
     {
-        event.registerBelow(VanillaGuiOverlay.HOTBAR.id(), SanityMod.MODID.concat(".sanity_indicator"), this::renderSanityIndicator);
-        event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), SanityMod.MODID.concat(".hint"), this::renderHint);
-        event.registerAbove(VanillaGuiOverlay.VIGNETTE.id(), SanityMod.MODID.concat(".blood_tendrils_overlay"), this::renderBloodTendrilsOverlay);
+        event.registerBelow(VanillaGuiOverlay.HOTBAR.id(), SanityMod.MOD_ID.concat(".sanity_indicator"), this::renderSanityIndicator);
+        event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), SanityMod.MOD_ID.concat(".hint"), this::renderHint);
+        event.registerAbove(VanillaGuiOverlay.VIGNETTE.id(), SanityMod.MOD_ID.concat(".blood_tendrils_overlay"), this::renderBloodTendrilsOverlay);
     }
 
     public void initPostProcessor()

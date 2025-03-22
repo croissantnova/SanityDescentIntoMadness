@@ -1,5 +1,8 @@
 package croissantnova.sanitydim.capability;
 
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 import java.util.UUID;
 
 public interface IInnerEntityCap
@@ -8,7 +11,7 @@ public interface IInnerEntityCap
 
     void setHasTarget(boolean value);
 
-    UUID getPlayerTargetUUID();
+    Optional<UUID> getPlayerTargetUUID();
 
     void setPlayerTargetUUID(UUID value);
 }

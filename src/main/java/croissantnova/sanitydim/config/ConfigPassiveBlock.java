@@ -7,10 +7,10 @@ import java.util.Map;
 
 public class ConfigPassiveBlock
 {
-    public float m_sanity;
-    public float m_rad;
-    public boolean m_naturallyGend;
-    public boolean m_isTag;
-    public ResourceLocation m_name;
-    public Map<String, Boolean> m_props = new HashMap<>();
+    public float sanity;
+    public float radius;
+    public boolean naturallyGenerated;
+    public boolean isTag;
+    public ResourceLocation name;
+    public Map<String, Boolean> blockProperties = new HashMap<>();
 }

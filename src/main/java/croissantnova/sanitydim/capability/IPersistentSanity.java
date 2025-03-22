@@ -16,6 +16,10 @@ public interface IPersistentSanity
 
     int getEnderManAngerTimer();
 
+    void setDeathScore(float value);
+
+    float getDeathScore();
+
     void setStuckMotionMultiplier(Vec3 multiplier);
 
     Vec3 getStuckMotionMultiplier();

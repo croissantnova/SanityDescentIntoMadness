@@ -11,7 +11,7 @@ public class PacketHandler
 
     public static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel CHANNEL_INSTANCE = NetworkRegistry.newSimpleChannel(
-            new ResourceLocation(SanityMod.MODID, "main"),
+            new ResourceLocation(SanityMod.MOD_ID, "main"),
             () -> PROTOCOL_VERSION,
             PROTOCOL_VERSION::equals,
             PROTOCOL_VERSION::equals);

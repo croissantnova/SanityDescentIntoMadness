@@ -9,48 +9,38 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
-public class TargetInsanePlayerGoal extends TargetGoal
-{
-    private final float m_sanityThreshold;
-    private boolean m_alertSameType;
-    @Nullable
-    private Class<?>[] m_toIgnoreAlert;
-    private Player m_insanePlayer;
+public class TargetInsanePlayerGoal extends TargetGoal {
+    private final float sanityThreshold;
+    private boolean alertSameType;
+    private Class<?>[] toIgnoreAlert = new Class<?>[0];
+    private Player insanePlayer;
 
-    public TargetInsanePlayerGoal(Mob pMob, boolean pMustSee, float sanityThreshold)
-    {
+    public TargetInsanePlayerGoal(Mob pMob, boolean pMustSee, float sanityThreshold) {
         super(pMob, pMustSee);
         setFlags(EnumSet.of(Goal.Flag.TARGET));
-        m_sanityThreshold = sanityThreshold;
+        this.sanityThreshold = sanityThreshold;
     }
 
-    public TargetInsanePlayerGoal(Mob pMob, boolean pMustSee)
-    {
+    public TargetInsanePlayerGoal(Mob pMob, boolean pMustSee) {
         this(pMob, pMustSee, -1f);
     }
 
     @Override
-    public boolean canUse()
-    {
-        return (m_insanePlayer = getMostInsanePlayer()) != null;
+    public boolean canUse() {
+        return (insanePlayer = getMostInsanePlayer()) != null;
     }
 
     @Override
-    public void start()
-    {
-        Player target = m_insanePlayer;
-        if (target != null)
-        {
+    public void start() {
+        Player target = insanePlayer;
+        if (target != null) {
             mob.setTarget(target);
             targetMob = mob.getTarget();
-            if (m_alertSameType)
-            {
+            if (alertSameType) {
                 alertOthers();
             }
         }
@@ -58,66 +48,59 @@ public class TargetInsanePlayerGoal extends TargetGoal
         super.start();
     }
 
-    public TargetInsanePlayerGoal setAlertOthers(Class<?>... pReinforcementTypes)
-    {
-        m_alertSameType = true;
-        m_toIgnoreAlert = pReinforcementTypes;
+    public TargetInsanePlayerGoal setAlertOthers(Class<?>... pReinforcementTypes) {
+        alertSameType = true;
+        toIgnoreAlert = pReinforcementTypes;
         return this;
     }
 
-    private Player getMostInsanePlayer()
-    {
-        return m_sanityThreshold < 0f ? SanityProcessor.getMostInsanePlayer(mob.level()) : SanityProcessor.getMostInsanePlayer(mob.level(), m_sanityThreshold);
+    private Player getMostInsanePlayer() {
+        return sanityThreshold < 0f ? SanityProcessor.getMostInsanePlayer(mob.level()) : SanityProcessor.getMostInsanePlayer(mob.level(), sanityThreshold);
     }
 
-    protected void alertOthers()
-    {
-        double d0 = this.getFollowDistance();
-        AABB aabb = AABB.unitCubeFromLowerCorner(mob.position()).inflate(d0, 10.0D, d0);
-        List<? extends Mob> list = mob.level().getEntitiesOfClass(mob.getClass(), aabb, EntitySelector.NO_SPECTATORS);
-        Iterator iterator = list.iterator();
+    protected void alertOthers() {
+        double followDistance = this.getFollowDistance();
+        AABB searchArea = AABB.unitCubeFromLowerCorner(mob.position()).inflate(followDistance, 10.0, followDistance);
+        List<? extends Mob> mobsInRange = mob.level().getEntitiesOfClass(mob.getClass(), searchArea, EntitySelector.NO_SPECTATORS);
 
-        while(true)
-        {
-            Mob mob;
-            while(true)
-            {
-                if (!iterator.hasNext())
-                {
-                    return;
-                }
-
-                mob = (Mob)iterator.next();
-                if (this.mob != mob && mob.getTarget() == null && (!(this.mob instanceof TamableAnimal) || ((TamableAnimal)this.mob).getOwner() == ((TamableAnimal)mob).getOwner()) && !mob.isAlliedTo(this.mob.getTarget()))
-                {
-                    if (m_toIgnoreAlert == null)
-                    {
-                        break;
-                    }
-
-                    boolean flag = false;
-
-                    for(Class<?> oclass : m_toIgnoreAlert)
-                    {
-                        if (mob.getClass() == oclass)
-                        {
-                            flag = true;
-                            break;
-                        }
-                    }
-
-                    if (!flag)
-                    {
-                        break;
-                    }
-                }
+        for (Mob mobInRange : mobsInRange) {
+            if (shouldAlertMob(mobInRange)) {
+                this.alertOther(mobInRange, mob.getTarget());
             }
-
-            this.alertOther(mob, mob.getTarget());
         }
+
     }
 
-    protected void alertOther(Mob pMob, LivingEntity pTarget) {
+    private boolean shouldAlertMob(@NotNull Mob otherMob) {
+        if (otherMob == mob || otherMob.getTarget() != null) {
+            return false;
+        }
+
+        if (mob instanceof TamableAnimal tamable) {
+            if (tamable.getOwner() != ((TamableAnimal) otherMob).getOwner()) {
+                return false;
+            }
+        }
+
+        Optional<LivingEntity> target = Optional.ofNullable(mob.getTarget());
+        if (target.isPresent() && otherMob.isAlliedTo(target.get())) {
+            return false;
+        }
+
+        return !shouldIgnoreAlertFor(otherMob);
+    }
+
+    private boolean shouldIgnoreAlertFor(@NotNull Mob otherMob) {
+        for (Class<?> ignoreClass : toIgnoreAlert) {
+            if (otherMob.getClass() == ignoreClass) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    protected void alertOther(@NotNull Mob pMob, LivingEntity pTarget) {
         pMob.setTarget(pTarget);
     }
 }

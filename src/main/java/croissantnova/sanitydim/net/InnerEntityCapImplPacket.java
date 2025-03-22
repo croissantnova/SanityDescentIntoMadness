@@ -1,8 +1,8 @@
 package croissantnova.sanitydim.net;
 
-import croissantnova.sanitydim.SanityMod;
-import croissantnova.sanitydim.capability.*;
-import croissantnova.sanitydim.entity.InnerEntity;
+import croissantnova.sanitydim.capability.InnerEntityCapImpl;
+import croissantnova.sanitydim.capability.InnerEntityCapImplProvider;
+import croissantnova.sanitydim.entity.NightmareEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
@@ -57,7 +57,7 @@ public class InnerEntityCapImplPacket
 
                 Entity ent = Minecraft.getInstance().player.level().getEntity(packet.m_id);
 
-                if (!(ent instanceof InnerEntity))
+                if (!(ent instanceof NightmareEntity))
                     return;
 
                 ent.getCapability(InnerEntityCapImplProvider.CAP).ifPresent(iec ->

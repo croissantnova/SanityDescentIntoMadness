@@ -1,6 +1,7 @@
 package croissantnova.sanitydim.config;
 
 import net.minecraft.resources.ResourceLocation;
+
 import java.util.List;
 import java.util.Map;
 
@@ -76,7 +77,7 @@ public abstract class ConfigProxy
         return ConfigManager.proxyd2f("sanity.passive.block_stuck", dim);
     }
 
-    public static float getDirtPath(ResourceLocation dim)
+    public static float getStandingOnCarpetSanity(ResourceLocation dim)
     {
         return ConfigManager.proxyd2f("sanity.passive.dirt_path", dim);
     }
@@ -139,6 +140,14 @@ public abstract class ConfigProxy
     public static float getAnimalHurtRatio(ResourceLocation dim)
     {
         return ConfigManager.proxyd2f("sanity.active.animal_hurt_ratio", dim);
+    }
+
+    public static float getRottingStalkerKillRatio(ResourceLocation dim) {
+        return ConfigManager.proxyd2f(ConfigEntryOld.ROTTING_STALKER_KILL_RATIO.getProxyKey(), dim);
+    }
+
+    public static float getSneakingTerrorKillRatio(ResourceLocation dim) {
+        return ConfigManager.proxyd2f(ConfigEntryOld.SNEAKING_TERROR_KILL_RATIO.getProxyKey(), dim);
     }
 
     public static float getPetDeath(ResourceLocation dim)
@@ -251,9 +260,17 @@ public abstract class ConfigProxy
         return ConfigManager.proxyd2f("sanity.multiplayer.insane_player_company", dim);
     }
 
-    public static boolean getSaneSeeInnerEntities(ResourceLocation dim)
+    public static boolean canSaneSeeNightmares(ResourceLocation dim)
     {
         return ConfigManager.proxyb("sanity.entity.sane_see_inner_entities", dim);
+    }
+
+    public static int getInnerEntitySpawnChanceSeconds(ResourceLocation dim) {
+        return ConfigManager.proxyi("sanity.entity.spawn_chance_seconds", dim);
+    }
+
+    public static int getInnerEntityDespawnMobsDistance(ResourceLocation dim) {
+        return ConfigManager.proxyi(ConfigEntryOld.INNER_ENTITY_DESPAWN_MOBS_DISTANCE.getProxyKey(), dim);
     }
 
     public static boolean getRenderIndicator(ResourceLocation dim)

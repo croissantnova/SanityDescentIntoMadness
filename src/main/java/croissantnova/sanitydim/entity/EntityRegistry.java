@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 
 public class EntityRegistry
 {
-    public static final DeferredRegister<EntityType<?>> DEFERRED_REGISTER = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, SanityMod.MODID);
+    public static final DeferredRegister<EntityType<?>> DEFERRED_REGISTER = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, SanityMod.MOD_ID);
 
     public static final RegistryObject<EntityType<RottingStalker>> ROTTING_STALKER
             = DEFERRED_REGISTER.register("rotting_stalker",
@@ -24,7 +24,7 @@ public class EntityRegistry
             = DEFERRED_REGISTER.register("sneaking_terror",
             () -> EntityType.Builder.of(SneakingTerror::new, MobCategory.MONSTER).sized(1.3f, 4f).fireImmune().build("sneaking_terror"));
 
-    public static final List<Supplier<EntityType<? extends InnerEntity>>> INNER_ENTITIES = Arrays.asList(
+    public static final List<Supplier<EntityType<? extends NightmareEntity>>> INNER_ENTITIES = Arrays.asList(
             ROTTING_STALKER::get,
             SNEAKING_TERROR::get);
 

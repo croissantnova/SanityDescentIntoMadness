@@ -4,10 +4,8 @@ import croissantnova.sanitydim.SanityMod;
 import croissantnova.sanitydim.sound.SoundRegistry;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,7 +47,7 @@ public class FlowerArmorMaterial implements ArmorMaterial
     @NotNull
     public String getName()
     {
-        return SanityMod.MODID + ":flower";
+        return SanityMod.MOD_ID + ":flower";
     }
 
     @Override

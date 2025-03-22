@@ -5,7 +5,7 @@ import croissantnova.sanitydim.SanityProcessor;
 import croissantnova.sanitydim.capability.*;
 import croissantnova.sanitydim.client.SoundPlayback;
 import croissantnova.sanitydim.command.SanityCommand;
-import croissantnova.sanitydim.entity.InnerEntity;
+import croissantnova.sanitydim.entity.NightmareEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -37,7 +37,6 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.TradeWithVillagerEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.event.level.SleepFinishedTimeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.server.ServerLifecycleHooks;
@@ -57,7 +56,7 @@ public class EventHandler
     {
         if (event.getObject() instanceof Player)
             event.addCapability(SanityProvider.KEY, new SanityProvider());
-        else if (event.getObject() instanceof InnerEntity)
+        else if (event.getObject() instanceof NightmareEntity)
             event.addCapability(InnerEntityCapImplProvider.KEY, new InnerEntityCapImplProvider());
     }
 
@@ -84,17 +83,32 @@ public class EventHandler
     @SubscribeEvent
     public void onLivingDamage(final LivingDamageEvent event)
     {
-        if (event.getEntity() instanceof ServerPlayer player)
+        Entity hurtEntity = event.getEntity();
+        Entity sourceEntity = event.getSource().getEntity();
+
+        if (hurtEntity instanceof ServerPlayer player) {
             SanityProcessor.handlePlayerHurt(player, event.getAmount());
-        else if (event.getEntity() instanceof Animal animal && event.getSource().getEntity() instanceof ServerPlayer player)
-            SanityProcessor.handlePlayerHurtAnimal(player, animal, event.getAmount());
+            
+            if (sourceEntity instanceof NightmareEntity nightmareEntity) {
+                new NightmareHurtPlayerEvent(player, nightmareEntity);
+            }
+        }
+        else if (hurtEntity instanceof Animal animal
+                && sourceEntity instanceof ServerPlayer player) {
+            new PlayerHurtAnimalEvent(player, animal, event.getAmount());
+        }
     }
 
     @SubscribeEvent
     public void onLivingDeath(final LivingDeathEvent event)
     {
-        if (event.getEntity() instanceof TamableAnimal ta && ta.getOwnerUUID() != null)
+        Entity entity = event.getEntity();
+        if (entity instanceof TamableAnimal ta && ta.getOwnerUUID() != null) {
             SanityProcessor.handlePlayerPetDeath(ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(ta.getOwnerUUID()), ta);
+        }
+        else if (entity instanceof NightmareEntity nightmareEntity && event.getSource().getEntity() instanceof ServerPlayer player) {
+            new PlayerKillNightmareEvent(player, nightmareEntity);
+        }
     }
 
     @SubscribeEvent
@@ -108,13 +122,6 @@ public class EventHandler
     {
         if (event.getCausedByPlayer() instanceof ServerPlayer sp)
             SanityProcessor.handlePlayerBredAnimals(sp);
-    }
-
-    @SubscribeEvent
-    public void onSleepFinished(final SleepFinishedTimeEvent event)
-    {
-        if (!event.getLevel().isClientSide() && event.getLevel() instanceof ServerLevel sl)
-            SanityProcessor.handlePlayerSlept(sl);
     }
 
     @SubscribeEvent

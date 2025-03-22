@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SanityProvider implements ICapabilitySerializable<CompoundTag>
 {
-    public static final ResourceLocation KEY = new ResourceLocation(SanityMod.MODID, "sanity");
+    public static final ResourceLocation KEY = new ResourceLocation(SanityMod.MOD_ID, "sanity");
     public static final Capability<ISanity> CAP = CapabilityManager.get(new CapabilityToken<>() {});
 
     private final Sanity m_cap = new Sanity();

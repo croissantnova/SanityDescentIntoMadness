@@ -1,8 +1,8 @@
 package croissantnova.sanitydim.event;
 
 import croissantnova.sanitydim.SanityMod;
-import croissantnova.sanitydim.client.render.RendererRottingStalker;
-import croissantnova.sanitydim.client.render.RendererSneakingTerror;
+import croissantnova.sanitydim.client.render.RottingStalkerRenderer;
+import croissantnova.sanitydim.client.render.SneakingTerrorRenderer;
 import croissantnova.sanitydim.config.ConfigManager;
 import croissantnova.sanitydim.entity.EntityRegistry;
 import croissantnova.sanitydim.entity.RottingStalker;
@@ -44,7 +44,7 @@ public class ModEventHandler
     @SubscribeEvent
     public static void registerEntityRenderersEvent(final EntityRenderersEvent.RegisterRenderers event)
     {
-        event.registerEntityRenderer(EntityRegistry.ROTTING_STALKER.get(), RendererRottingStalker::new);
-        event.registerEntityRenderer(EntityRegistry.SNEAKING_TERROR.get(), RendererSneakingTerror::new);
+        event.registerEntityRenderer(EntityRegistry.ROTTING_STALKER.get(), RottingStalkerRenderer::new);
+        event.registerEntityRenderer(EntityRegistry.SNEAKING_TERROR.get(), SneakingTerrorRenderer::new);
     }
 }

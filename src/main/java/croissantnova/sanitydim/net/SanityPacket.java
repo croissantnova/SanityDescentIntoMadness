@@ -1,7 +1,5 @@
 package croissantnova.sanitydim.net;
 
-import java.util.function.Supplier;
-
 import croissantnova.sanitydim.capability.Sanity;
 import croissantnova.sanitydim.capability.SanityProvider;
 import net.minecraft.client.Minecraft;
@@ -9,6 +7,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
+
+import java.util.function.Supplier;
 
 public class SanityPacket
 {

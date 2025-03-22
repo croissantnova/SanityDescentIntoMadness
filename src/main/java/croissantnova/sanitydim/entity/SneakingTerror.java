@@ -19,7 +19,7 @@ import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class SneakingTerror extends InnerEntity implements GeoEntity
+public class SneakingTerror extends NightmareEntity implements GeoEntity
 {
     private final AnimatableInstanceCache m_animCache = GeckoLibUtil.createInstanceCache(this);
 
@@ -68,10 +68,10 @@ public class SneakingTerror extends InnerEntity implements GeoEntity
     public static AttributeSupplier buildAttributes()
     {
         return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 700.0d)
+                .add(Attributes.MAX_HEALTH, 200.0d)
                 .add(Attributes.FOLLOW_RANGE, 128.0d)
                 .add(Attributes.ATTACK_DAMAGE, 16.0d)
-                .add(Attributes.MOVEMENT_SPEED, .21d)
+                .add(Attributes.MOVEMENT_SPEED, .25d)
                 .add(Attributes.KNOCKBACK_RESISTANCE, .8d)
                 .add(Attributes.ATTACK_KNOCKBACK, 1.0d)
                 .build();

@@ -17,25 +17,26 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
-@Mod(SanityMod.MODID)
+@Mod(SanityMod.MOD_ID)
 public class SanityMod
 {
     @OnlyIn(Dist.CLIENT)
     private GuiHandler m_gui;
 
     private static SanityMod m_inst;
-    public static final String MODID = "sanitydim";
+    public static final String MOD_ID = "sanitydim";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public SanityMod()
+    public SanityMod(@NotNull FMLJavaModLoadingContext context)
     {
         m_inst = this;
 
         ConfigManager.register();
 
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        IEventBus modEventBus = context.getModEventBus();
         modEventBus.addListener(this::setup);
         modEventBus.addListener(this::clientSetup);
         modEventBus.addListener(ModEventHandler::addEntityAttributes);
@@ -50,7 +51,7 @@ public class SanityMod
 
     static
     {
-        ConfigManager.init();
+        ConfigManager.initialize();
     }
 
     private void setup(final FMLCommonSetupEvent event)
@@ -63,7 +64,7 @@ public class SanityMod
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         initGui();
-        //EntityRenderers.register(EntityRegistry.SHADE_CHOMPER.get(), RendererShadeChomper::new);
+        //EntityRenderers.register(EntityRegistry.SHADE_CHOMPER.getConfigValue(), RendererShadeChomper::new);
     }
 
     @OnlyIn(Dist.CLIENT)

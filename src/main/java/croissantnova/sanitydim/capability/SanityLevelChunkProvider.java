@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class SanityLevelChunkProvider implements ICapabilitySerializable<CompoundTag>
 {
-    public static final ResourceLocation KEY = new ResourceLocation(SanityMod.MODID, "sanity_level");
+    public static final ResourceLocation KEY = new ResourceLocation(SanityMod.MOD_ID, "sanity_level");
     public static final Capability<ISanityLevelChunk> CAP = CapabilityManager.get(new CapabilityToken<>() {});
 
     private final SanityLevelChunk m_cap = new SanityLevelChunk();

@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class BlackoutSheepEyesLayer<T extends Sheep> extends BlackoutEyesLayer<T, SheepModel<T>>
 {
-    public static final ResourceLocation EYES_LOCATION = new ResourceLocation(SanityMod.MODID, "textures/entity/sheep_blackout_eyes.png");
+    public static final ResourceLocation EYES_LOCATION = new ResourceLocation(SanityMod.MOD_ID, "textures/entity/sheep_blackout_eyes.png");
 
     public BlackoutSheepEyesLayer(RenderLayerParent<T, SheepModel<T>> pRenderer)
     {

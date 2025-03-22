@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class InnerEntityCapImplProvider implements ICapabilityProvider
 {
-    public static final ResourceLocation KEY = new ResourceLocation(SanityMod.MODID, "inner_entity_cap");
+    public static final ResourceLocation KEY = new ResourceLocation(SanityMod.MOD_ID, "inner_entity_cap");
     public static final Capability<IInnerEntityCap> CAP = CapabilityManager.get(new CapabilityToken<>() {});
 
     private final InnerEntityCapImpl m_cap = new InnerEntityCapImpl();

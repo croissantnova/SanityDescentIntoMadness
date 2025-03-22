@@ -6,11 +6,17 @@ A Minecraft mod that brings the sanity mechanic from [Don't Starve](https://stor
 
 ## Requirements
 
-<a aria-label="Minecraft Forge" href="https://files.minecraftforge.net/net/minecraftforge/forge/index_1.19.4.html">
-<img alt="" src="https://img.shields.io/badge/Minecraft%20Forge-1.19.4--45.1.0-dfa86a?style=for-the-badge">
+<a aria-label="Minecraft Forge" href="https://files.minecraftforge.net/net/minecraftforge/forge/index_1.20.1.html">
+<img alt="" src="https://img.shields.io/badge/Minecraft%20Forge-1.20.1--47.3.0-dfa86a?style=for-the-badge">
 </a>
 <a aria-label="GeckoLib" href="https://modrinth.com/mod/geckolib">
-<img alt="" src="https://img.shields.io/badge/geckolib-4.2-52da6a?style=for-the-badge">
+<img alt="" src="https://img.shields.io/badge/geckolib-4.7-52da6a?style=for-the-badge">
+</a>
+
+## Optional Requirements
+
+<a aria-label="Legendary Survival Overhaul" href="https://www.curseforge.com/minecraft/mc-mods/legendary-survival-overhaul">
+<img alt="" src="https://img.shields.io/badge/Legendary_Survival_Overhaul-1.20.1--2.2.28-blue">
 </a>
 
 ## Description
@@ -40,9 +46,11 @@ You're free to include this mod in your modpacks.
 ## Credits
 
 croissantnova - programmer and artist,<br/>
-[toujourspareil](https://twitter.com/toujourspareil_) - artist.
+[toujourspareil](https://twitter.com/toujourspareil_) - artist.<br/>
+[Desynq](https://github.com/Desynq) - maintainer
 <br/><br/>
 Sound effects provided by [Zapsplat](https://www.zapsplat.com/)
 
 ## License
-See [license](https://raw.githubusercontent.com/croissantnova/SanityDescentIntoMadness/main/LICENSE).
+
+See [license](LICENSE).

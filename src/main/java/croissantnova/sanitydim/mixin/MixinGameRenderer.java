@@ -1,13 +1,12 @@
 package croissantnova.sanitydim.mixin;
 
+import croissantnova.sanitydim.SanityMod;
+import croissantnova.sanitydim.client.GuiHandler;
+import net.minecraft.client.renderer.GameRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import croissantnova.sanitydim.SanityMod;
-import croissantnova.sanitydim.client.GuiHandler;
-import net.minecraft.client.renderer.GameRenderer;
 
 @Mixin(GameRenderer.class)
 public abstract class MixinGameRenderer

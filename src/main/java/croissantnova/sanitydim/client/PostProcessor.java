@@ -1,15 +1,16 @@
 package croissantnova.sanitydim.client;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Function;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import croissantnova.sanitydim.config.ConfigProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.PostPass;
 import org.joml.Matrix4f;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
 
 public class PostProcessor
 {

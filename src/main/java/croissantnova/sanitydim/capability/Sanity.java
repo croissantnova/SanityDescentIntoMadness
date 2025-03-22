@@ -13,33 +13,31 @@ public class Sanity implements ISanity, IPassiveSanity, IPersistentSanity
 {
     private boolean m_dirty = true;
     private int m_emAngerTimer;
+    private float deathScore;
     private float m_sanityVal;
     private float m_passive;
     private Vec3 m_stuckMultiplier;
 
-    private final int[] m_cds = new int[ActiveSanitySources.AMOUNT];
+    private final int[] cooldowns = new int[ActiveSanitySources.AMOUNT];
     private final Map<Integer, Integer> m_itemCds = new HashMap<>();
     private final Map<Integer, Integer> m_brokenBlocksCds = new HashMap<>();
-
-    public Sanity()
-    {
-    }
 
     @Override
     public void serializeNBT(CompoundTag tag)
     {
         tag.putFloat("sanity.sanity", m_sanityVal);
         tag.putInt("sanity.ender_man_anger_timer", m_emAngerTimer);
+        tag.putFloat("sanity.death_count", deathScore);
 
         // TODO: do lazy serialization instead
-        tag.putInt("sanity.sleeping", m_cds[ActiveSanitySources.SLEEPING]);
-        tag.putInt("sanity.baby_chicken_spawn", m_cds[ActiveSanitySources.SPAWNING_BABY_CHICKEN]);
-        tag.putInt("sanity.animal_breeding", m_cds[ActiveSanitySources.BREEDING_ANIMALS]);
-        tag.putInt("sanity.villager_trade", m_cds[ActiveSanitySources.VILLAGER_TRADE]);
-        tag.putInt("sanity.shearing", m_cds[ActiveSanitySources.SHEARING]);
-        tag.putInt("sanity.eating", m_cds[ActiveSanitySources.EATING]);
-        tag.putInt("sanity.fishing", m_cds[ActiveSanitySources.FISHING]);
-        tag.putInt("sanity.potting_flower", m_cds[ActiveSanitySources.POTTING_FLOWER]);
+        tag.putInt("sanity.sleeping", cooldowns[ActiveSanitySources.SLEEPING]);
+        tag.putInt("sanity.baby_chicken_spawn", cooldowns[ActiveSanitySources.SPAWNING_BABY_CHICKEN]);
+        tag.putInt("sanity.animal_breeding", cooldowns[ActiveSanitySources.BREEDING_ANIMALS]);
+        tag.putInt("sanity.villager_trade", cooldowns[ActiveSanitySources.VILLAGER_TRADE]);
+        tag.putInt("sanity.shearing", cooldowns[ActiveSanitySources.SHEARING]);
+        tag.putInt("sanity.eating", cooldowns[ActiveSanitySources.EATING]);
+        tag.putInt("sanity.fishing", cooldowns[ActiveSanitySources.FISHING]);
+        tag.putInt("sanity.potting_flower", cooldowns[ActiveSanitySources.POTTING_FLOWER]);
 
         serializeItemCds(tag);
         serializeBrokenBlocksCds(tag);
@@ -50,15 +48,16 @@ public class Sanity implements ISanity, IPassiveSanity, IPersistentSanity
     {
         setSanity(tag.getFloat("sanity.sanity"));
         setEnderManAngerTimer(tag.getInt("sanity.ender_man_anger_timer"));
+        setDeathScore(tag.getFloat("sanity.death_count"));
 
-        m_cds[ActiveSanitySources.SLEEPING] = tag.getInt("sanity.sleeping");
-        m_cds[ActiveSanitySources.SPAWNING_BABY_CHICKEN] = tag.getInt("sanity.baby_chicken_spawn");
-        m_cds[ActiveSanitySources.BREEDING_ANIMALS] = tag.getInt("sanity.animal_breeding");
-        m_cds[ActiveSanitySources.VILLAGER_TRADE] = tag.getInt("sanity.villager_trade");
-        m_cds[ActiveSanitySources.SHEARING] = tag.getInt("sanity.shearing");
-        m_cds[ActiveSanitySources.EATING] = tag.getInt("sanity.eating");
-        m_cds[ActiveSanitySources.FISHING] = tag.getInt("sanity.fishing");
-        m_cds[ActiveSanitySources.POTTING_FLOWER] = tag.getInt("sanity.potting_flower");
+        cooldowns[ActiveSanitySources.SLEEPING] = tag.getInt("sanity.sleeping");
+        cooldowns[ActiveSanitySources.SPAWNING_BABY_CHICKEN] = tag.getInt("sanity.baby_chicken_spawn");
+        cooldowns[ActiveSanitySources.BREEDING_ANIMALS] = tag.getInt("sanity.animal_breeding");
+        cooldowns[ActiveSanitySources.VILLAGER_TRADE] = tag.getInt("sanity.villager_trade");
+        cooldowns[ActiveSanitySources.SHEARING] = tag.getInt("sanity.shearing");
+        cooldowns[ActiveSanitySources.EATING] = tag.getInt("sanity.eating");
+        cooldowns[ActiveSanitySources.FISHING] = tag.getInt("sanity.fishing");
+        cooldowns[ActiveSanitySources.POTTING_FLOWER] = tag.getInt("sanity.potting_flower");
 
         deserializeItemCds(tag);
         deserializeBrokenBlocksCooldowns(tag);
@@ -115,7 +114,7 @@ public class Sanity implements ISanity, IPassiveSanity, IPersistentSanity
     @Override
     public int[] getActiveSourcesCooldowns()
     {
-        return m_cds;
+        return cooldowns;
     }
 
     @Override
@@ -140,6 +139,16 @@ public class Sanity implements ISanity, IPassiveSanity, IPersistentSanity
     public int getEnderManAngerTimer()
     {
         return m_emAngerTimer;
+    }
+
+    @Override
+    public void setDeathScore(float value) {
+        deathScore = value;
+    }
+
+    @Override
+    public float getDeathScore() {
+        return deathScore;
     }
 
     @Override

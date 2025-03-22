@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class BlackoutChickenEyesLayer<T extends LivingEntity> extends BlackoutEyesLayer<T, ChickenModel<T>>
 {
-    public static final ResourceLocation EYES_LOCATION = new ResourceLocation(SanityMod.MODID, "textures/entity/chicken_blackout_eyes.png");
+    public static final ResourceLocation EYES_LOCATION = new ResourceLocation(SanityMod.MOD_ID, "textures/entity/chicken_blackout_eyes.png");
 
     public BlackoutChickenEyesLayer(RenderLayerParent<T, ChickenModel<T>> pRenderer)
     {

@@ -76,7 +76,7 @@ public abstract class DimensionConfig
         }
         catch (IOException e)
         {
-            SanityMod.LOGGER.warn("unable to create example dimension config, refer to github to see one");
+            SanityMod.LOGGER.warn("unable to createFloatConfig example dimension config, refer to github to see one");
         }
     }
 
@@ -89,14 +89,14 @@ public abstract class DimensionConfig
             configToDimStored.put(entry.getKey(), new HashMap<>());
         }
 
-        Path dimPath = Paths.get(FMLPaths.CONFIGDIR.get().toString(), SanityMod.MODID + File.separator + "dimension");
+        Path dimPath = Paths.get(FMLPaths.CONFIGDIR.get().toString(), SanityMod.MOD_ID + File.separator + "dimension");
         try
         {
             Files.createDirectories(dimPath);
         }
         catch (IOException e)
         {
-            SanityMod.LOGGER.warn("unable to create dimension config directory: " + dimPath);
+            SanityMod.LOGGER.warn("unable to createFloatConfig dimension config directory: " + dimPath);
             return;
         }
 

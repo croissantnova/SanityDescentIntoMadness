@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 600,
+  "experience": 2.5,
+  "ingredient": {
+    "item": "sanitydim:nightmare_flesh"
+  },
+  "result": "sanitydim:nightmare_leather"
+}

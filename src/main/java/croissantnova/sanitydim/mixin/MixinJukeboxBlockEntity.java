@@ -1,6 +1,6 @@
 package croissantnova.sanitydim.mixin;
 
-import croissantnova.sanitydim.passive.Jukebox;
+import croissantnova.sanitydim.sources.passive.Jukebox;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Clearable;
 import net.minecraft.world.level.block.entity.BlockEntity;
