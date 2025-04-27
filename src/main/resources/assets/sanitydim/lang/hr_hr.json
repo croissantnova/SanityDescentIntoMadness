@@ -1,0 +1,36 @@
+{
+	"entity.sanitydim.rotting_stalker": "Truli Lovac",
+	"entity.sanitydim.sneaking_terror": "Šuljeći Teror",
+	
+	"commands.sanity.set.success.single": "Podesio %s-ovo mentalno zdravlje na %s",
+	"commands.sanity.set.success.multiple": "Podesio mentalno zdravlje na %s za %s igrača",
+	"commands.sanity.add.success.single": "Dodao %s mentalnog zdravlja %s-u",
+	"commands.sanity.add.success.multiple": "Dodao %s mentalnog zdravlja za %s igrača",
+	"commands.sanity.config.reload": "Uspješno ponovo učitao dimenzijske konfiguracije",
+	
+	"gui.sanitydim.hint00": "Kakvi su to zvukovi?",
+	"gui.sanitydim.hint01": "Osjećam se pomalo neugodno",
+	"gui.sanitydim.hint02": "Što je to bilo?",
+	"gui.sanitydim.hint03": "Kako čudan osjećaj...",
+	"gui.sanitydim.hint04": "Ovo mi se ne sviđa...",
+	"gui.sanitydim.hint05": "Ha?",
+	"gui.sanitydim.hint06": "Hm?",
+	"gui.sanitydim.hint07": "Što?",
+	"gui.sanitydim.hint08": "Što je tamo?",
+	"gui.sanitydim.hint09": "Jesam li to bio ja?",
+	"gui.sanitydim.hint010": "Čudno...",
+	"gui.sanitydim.hint011": "Jesam li vidio nešto?",
+	"gui.sanitydim.hint10": "NETKO JE IZA MENE",
+	"gui.sanitydim.hint11": "Jedan, dva, tri, četiri...",
+	"gui.sanitydim.hint12": "...pet, šest, sedam, osam...",
+	"gui.sanitydim.hint13": "ONI SU MI U GLAVI",
+	"gui.sanitydim.hint14": "OSTAVI ME NA MIRU",
+	"gui.sanitydim.hint15": "NEMOJ SE UKOČITI",
+	"gui.sanitydim.hint16": "ZAŠTO ONI NEĆE OTIĆI?!",
+	"gui.sanitydim.hint17": "PRE GLASNO PRE GLASNO PRE GLASNO",
+	"gui.sanitydim.hint18": "ZVUKOVI... NE MOGU...",
+
+	"item.sanitydim.tooltip.press_shift": "§7Stisni §9SHIFT§7 za više informacije",
+	"item.sanitydim.garland": "Vijenac",
+	"item.sanitydim.garland.tooltip": "§7Nešto što pomaže ulagati žile\n\nPovećava vaše mentalno zdravlje i malo vam povećava otpor stresu"
+}
