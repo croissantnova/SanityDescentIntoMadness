@@ -1,0 +1,36 @@
+{
+	"entity.sanitydim.rotting_stalker": "Вёдерник",
+	"entity.sanitydim.sneaking_terror": "Чернобог",
+	
+	"commands.sanity.set.success.single": "Значение рассудка %s установлено на %s",
+	"commands.sanity.set.success.multiple": "Значение рассудка установлено на %s для %s игроков",
+	"commands.sanity.add.success.single": "Добавлено %s рассудка игроку %s",
+	"commands.sanity.add.success.multiple": "Добавлено %s рассудка для %s игроков",
+	"commands.sanity.config.reload": "Конфигурация измерений успешно перезагружена",
+	
+	"gui.sanitydim.hint00": "Что это за звуки?",
+	"gui.sanitydim.hint01": "Мне как-то не по себе...",
+	"gui.sanitydim.hint02": "Что это было?",
+	"gui.sanitydim.hint03": "Какое странное чувство...",
+	"gui.sanitydim.hint04": "Мне это не нравится...",
+	"gui.sanitydim.hint05": "А?",
+	"gui.sanitydim.hint06": "М-м?",
+	"gui.sanitydim.hint07": "Что?",
+	"gui.sanitydim.hint08": "Кто там?",
+	"gui.sanitydim.hint09": "Это был я?",
+	"gui.sanitydim.hint010": "Странно...",
+	"gui.sanitydim.hint011": "Мне показалось, или я что-то видел?",
+	"gui.sanitydim.hint10": "КТО-ТО СЗАДИ",
+	"gui.sanitydim.hint11": "Раз, два, три, четыре...",
+	"gui.sanitydim.hint12": "...пять, шесть, семь, восемь...",
+	"gui.sanitydim.hint13": "ОНИ У МЕНЯ В ГОЛОВЕ",
+	"gui.sanitydim.hint14": "ОСТАВЬТЕ МЕНЯ В ПОКОЕ",
+	"gui.sanitydim.hint15": "НЕЛЬЗЯ ТЕРЯТЬ БДИТЕЛЬНОСТЬ",
+	"gui.sanitydim.hint16": "ПОЧЕМУ ОНИ НЕ УХОДЯТ?!",
+	"gui.sanitydim.hint17": "СЛИШКОМ ГРОМКО СЛИШКОМ ГРОМКО СЛИШКОМ ГРОМКО",
+	"gui.sanitydim.hint18": "ГОЛОСА... Я НЕ МОГУ...",
+
+	"item.sanitydim.tooltip.press_shift": "§7Нажмите §9SHIFT§7 для подробностей",
+	"item.sanitydim.garland": "Венок",
+	"item.sanitydim.garland.tooltip": "§7Нечто, способное успокоить душу\n\nПостепенно восстанавливает рассудок и повышает стрессоустойчивость"
+}
